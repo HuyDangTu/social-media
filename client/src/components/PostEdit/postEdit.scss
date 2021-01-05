@@ -1,0 +1,72 @@
+@import '../ultils/initial.scss';
+
+.edit_post{
+    .create_post_form{
+        width: 100%;
+        margin: auto;
+    
+        border-radius: 5px;
+        .field_container{  
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            .formField_container{
+                width: 100%;
+                input{
+                    padding: 5px;
+                    width: 100%;
+                    border-radius: 5px;
+                    border: 1px solid #d4d4d4;
+                }
+            }
+        }
+        .description_input{
+            position: relative;
+            width: 100%;
+            display: flex;
+            margin-bottom: 20px;
+            z-index: 1;
+            .emoji_button{
+                width: 25px;
+                color: #d1d1d1;
+                margin-left: 10px;
+            }
+            .emoji_picker{
+                position: absolute;
+               
+            }
+            span{
+                width: 100%;
+                .description_textarea{
+                    width: 100%;
+                    border: none;
+                    margin:0;
+                    border-bottom: 1px solid #d4d4d4; 
+                }
+            }
+        }
+        .button_wrapper{
+            display: flex;
+            justify-content: flex-end;
+       
+            .cancel_button{
+                border-radius: 5px;
+                width: 100px;
+                padding: 10px;
+                background-color: transparent;
+                border: 1px solid #cfcfcf;
+                color: black;
+            }
+            .create_button{
+                border-radius: 5px;
+                width: 100px;
+                padding: 10px;
+                background-color: $primaryColor;
+                color: white;
+                margin-left: 10px;
+                border: none;
+            }
+        }
+    }
+}

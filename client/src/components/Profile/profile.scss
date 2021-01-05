@@ -1,0 +1,249 @@
+@import '../ultils/initial.scss';
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+// @mixin  text-font {
+//     font-family: 'Monserrat', sans-serif;
+// }
+
+.pro_header{
+    padding-bottom: 24px;
+    border-bottom: solid 0.1px rgba(0,0,0,0.1);
+}
+.Profile
+{
+.shop_container{
+    width: 100%;
+    margin-top: 24px;
+    
+    .img_contain{
+        display: flex;
+        justify-content: center;
+       img{
+           width: 160px;
+           height: 160px;
+            object-fit: cover;
+           border-radius:80px;
+       }
+    }
+
+}
+.action_contain
+{
+    justify-content: left;
+.prolile_header{
+    justify-content: left;
+    display: flex;
+    padding-bottom: 16px;
+    align-items: center;
+    .name{
+        font-size: 24px;
+        margin-right: 24px;
+    }
+    .follow_options
+    {
+        font-size: 16px;
+        background-color: #f2f9ff;
+        border: solid 0.1px #f2f9ff;
+        color: #7166F9;
+        padding: 5px 30px;
+        border-radius: 3px;
+        margin-right: 8px;
+    }
+    .secondary_btn
+    {
+        height: 100%;   
+        font-size: 16px;
+        color: black;
+        padding: 5px 30px;
+        border: solid 0.1px rgba(0,0,0,0.2);
+        border-radius: 3px;
+        margin-right: 8px;
+    }
+   
+}
+}
+.profile_number
+{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    .number_holder{
+        // margin: auto;
+        // justify-content: center;
+        text-align: center;
+        .number{
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+
+}
+.bio
+{
+    font-size: 16px;
+    font-weight: bold;
+}
+.divide_type{
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    ul{
+        display: flex;
+        justify-content: space-between;
+        li{
+            display: block;
+            text-decoration: none;
+            padding-bottom: 8px;
+            margin-left: 24px;
+        }
+    }
+    .photo_type{
+        display: flex;
+        justify-content: center;
+        border-top: solid 1px black;
+        border-radius: 0px;
+        width: 100%;
+        padding:0px;
+        padding-top:16px;
+        align-items: center;
+        h2{
+            font-size: 16px;
+        
+            margin-left: 8px;
+            margin-bottom: 0px !important;
+        }
+    }
+    .diselected{
+        border-top: none !important;
+ opacity: 0.6 !important;
+    }
+}
+.image_contain
+{
+   height: 314.26px;
+   margin-bottom: 30px;
+position: relative;
+    img{
+        display: block;
+        width:100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    .img_overlay{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 15px;
+        right: 0;
+        height: 100%;
+        width: calc(100% - 30px);
+        opacity: 0;
+        transition: .5s ease;
+        background-color: rgba(0,0,0,0.6);
+        z-index: 12;
+        color: white;
+        justify-content: center;
+        align-items: center;
+        .overlay_info{
+            position: absolute;
+            display: flex;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            
+            align-items: center;
+            justify-content: center;
+            .hearts
+            {
+                h2{
+                    font-size: 20px;
+                    padding:0px;
+                    margin:0px;
+                    margin-left:8px;
+                    font-weight: 500;
+                }
+                padding:0px;
+                display: flex;
+                align-items: center;
+            justify-content: center;
+                margin-right:32px;
+          
+            }
+            .comments
+            {
+                h2{
+                    font-size: 20px;
+                    padding:0px;
+                    margin:0px;
+                    margin-left:8px;
+                    font-weight: 500;
+                }
+                padding:0px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              
+            }
+        }
+
+    }
+
+
+}
+.image_contain:hover .img_overlay {
+    opacity: 1;
+  }
+  
+.dialog_cont
+{
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding:12px 24px;
+        h5{
+            align-self: center;
+            font-size:20px;
+            margin:0px;
+        }
+
+    }
+    .follow_list{
+        padding: 24px;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        
+        .list_info{
+            display: flex;
+            align-items: center;
+            img{
+                width: 40px;
+                height: 40px;
+                object-fit: cover;
+                border-radius: 20px;
+                margin-right:16px
+            }
+            h2{
+            font-size: 16px;
+            margin-right:64px;
+            }
+        }
+        .minibtn{
+            border: solid 0.5px grey;
+        }
+    }
+}  
+}

@@ -1,0 +1,42 @@
+$secondcolor: #F4F2ED;
+$primaryColor:#154100;
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer{
+    @include text-font();
+    background-color: $secondcolor;
+    color: $primaryColor;
+    padding: 20px;
+}
+
+.footer__container{
+    @include default();
+    width: 80%;
+    margin: auto;
+}
+
+.footer__container__left,.footer__container__right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    .tag{
+        font-size: 15px;
+    }
+}
+
+.bussiness-info {
+    display: flex;
+    flex-direction: column;
+    .tag{
+        padding-top: 5px
+    }
+}

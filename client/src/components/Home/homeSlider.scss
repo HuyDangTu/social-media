@@ -1,0 +1,38 @@
+$secondcolor: #F4F2ED;
+$primaryColor:#154100;
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+.slider_action{
+    @include text-font();
+    color: white;
+    position: absolute;
+    bottom: 100px;
+    margin-left: 50px;
+
+ 
+    .slide_title{
+     font-size: 50px;
+     font-weight: bold;
+    }
+    .slide_low_title{
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+}
+.slider_image{
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

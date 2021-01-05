@@ -1,0 +1,172 @@
+@import '../ultils/initial.scss';
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+@mixin general{
+    padding: 10px;
+    width: 100%;
+    height: calc_width(72);
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.register_page_container{
+    .left{
+        background-image: url('../../asset/register-page/bg.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom;
+        height: 100vh;
+        .register_slogan{
+            padding-top: calc_width(100);
+            padding-left: calc_width(100);
+            display: flex;
+            flex-direction: column;
+            img{
+                width: calc_width(88);
+                height: calc_width(88);
+                margin-bottom: 20px;
+            }
+            h1{
+                background: none;
+                font-size: calc_width(60);
+                color: white;
+            }
+        }
+    }
+}
+
+.register{
+    height: 100vh;
+    overflow: auto;
+}
+.register__container{
+    @include default();
+    box-sizing: border-box;
+    padding: calc_width(78) calc_width(219) calc_width(78) calc_width(219);
+    overflow: auto;
+    .register__form{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .avt_wrapper{
+            margin-bottom: 20px;
+            img{
+                width: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        .errorLabel{
+            color: red;
+        }
+        .register__row1{
+            display: flex;
+            justify-content: space-between;
+           
+            .formField_container{
+                width: 49%;
+                .formBlock{
+                    
+                    input{
+                        height: calc_width(0);
+                        @include general;
+                        color: black;
+                        border: 1px solid #CBCBCB;
+                    }
+                     .label_input{
+                    color: $linkColor;
+                    margin-bottom: 2.5px;
+                    }
+                }
+            }
+        }
+        .register__row2{
+            width: 100%;
+             .display_input{
+                height: calc_width(0);
+                @include general;
+                color: black;
+                border: 1px solid #CBCBCB;
+                margin-bottom: 20px;
+            }
+            .formField_container{
+            .formBlock{
+                
+                input{
+                    width: 100%;
+                    height: calc_width(60);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                }
+                 .label_input{
+                    color: $linkColor;
+                    margin-bottom: 2.5px;
+                }
+            }
+        }
+        }
+        .register__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(56);
+                height: calc_width(56);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(78);              
+            }
+        }
+        .facebook_signin_button{
+            @include general();
+            background-color: $darkBlueColor;
+            color: white;
+            border: none;
+            width: 100%;
+            font-size: calc_width(24);
+            img{
+                width: calc_width(30);
+                padding-right: 5px;
+            }
+        }
+        .register_wrapper{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            a{
+                margin-left: 10px;
+                color: $primaryColor;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+        }
+        .register__button{
+            @include general;
+            background-color: $primaryColor;
+            color: white;
+            border: none;
+        }
+        ////
+        .facebook_signin_button, 
+        .or_label,
+        .register__logo,
+        .register__button
+        {
+            margin-bottom: 20px;
+        } 
+    }
+}
+
+

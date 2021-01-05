@@ -1,0 +1,110 @@
+@import '../../../ultils/initial.scss';
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.disable{
+    opacity: 0.6 !important;
+    border: none;
+}
+
+.editAccount{
+    .tittle{
+        margin: 20px;
+        border-bottom: 1px solid #d4d4d4;
+    }
+    .setting_detail{
+        .setting_type{
+            margin-bottom: 16px;
+            align-items: flex-start;
+            .label{
+                display: flex;
+                justify-content:flex-end;
+                box-sizing: border-box;
+                padding: 5px;
+                img{
+                    width: 60px;
+                    height: 60px;
+                    object-fit: cover;
+                    border-radius: 30px;
+                }
+                h3{
+                    font-size: 16px;
+                }
+                .overlay{
+                    position: absolute;
+                    justify-content: center;
+                    align-items: center;
+                    width: 60px;
+                    height:60px;
+                    padding: 10px 5px 5px 10px;
+                    background: rgba(0,0,0,0.3);
+                    border-radius: 30px;
+                }
+            
+            }
+            // .flexbox
+            // {
+            //     display: flex !important;
+            //     align-items: flex-start !important;
+            // }
+            .field{
+                justify-content: right;
+            
+                h2{
+                    font-size: 20px;
+                }
+                h5{
+                    width: fit-content;
+                    display: flex;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                .formField_container{
+                    width: 100%;
+                    input{
+                        padding: 5px;
+                        width: 100%;
+                        border-radius: 5px;
+                        border: 1px solid #d4d4d4;
+                    }
+                    textarea{
+                        padding: 5px;
+                        width: 100%;
+                        border-radius: 5px;
+                        border: 1px solid #d4d4d4;
+                    }
+                }
+                .send_btn{
+                    padding:8px;
+                    background-color: #7166F9;
+                    color: white;
+                }
+                input[type="file"] {
+                    display: none;
+                }
+                .custom-file-upload {
+                
+                    display: inline-block;
+                    cursor: pointer;
+                }
+                h6{
+                    color: #7166F9;
+                    font-size: 16px;
+                }
+            } 
+            
+        }
+    }
+}

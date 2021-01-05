@@ -1,0 +1,140 @@
+@import '../ultils/initial.scss';
+
+.storyPage{
+    width: 100%;
+    height: 100%;
+    background: rgba($color: #000000, $alpha: 0.7);
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    left:0;
+
+    .story_add_button{
+        .avatar{
+            position: relative;
+            margin: 0;
+            background: #C6E6FF;
+            width: calc_height(100);
+            height: calc_height(100);
+            border-radius: 50%;
+            padding: 5px;
+            border: 2px solid $primaryColor;
+        }
+        .add_icon{
+                background: $primaryColor;
+                color: white;
+                
+                display: flex;
+                justify-content: center;
+                border-radius: 50%;
+                
+                width: calc_height(30);
+                height: calc_height(30);
+
+
+                font-size: 10px;
+                border: 1px solid white ;
+
+                position: absolute;
+                bottom: 0;
+                right: 0;
+        }
+    }
+    .stories{
+        border-radius: 5px 5px 0px 0px;
+        background: white;
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 20px;
+        ul{
+            list-style-type: none;
+            user-select: none;
+            display: flex;
+            overflow-y: auto;
+            margin:0;
+            padding: 10px 0px 10px 0px;
+            li{
+                padding: 0 10px;
+                
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            li:first-child{
+                padding-left: 20px;
+            }
+            li:last-child{
+                padding-right: 20px;
+            }
+        }
+        .has-story{
+            .story_wrapper{
+                border-radius: 50%;
+                width: calc_height(100);
+                height: calc_height(100);
+                padding: 2px;
+                background: linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+                img{
+                    padding: 4px;
+                    background:currentColor;
+                    border-radius: 50%;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+            span{
+                color: black;
+                font-weight: 500;
+                font-size: 13px;
+                max-width: 60px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .current_story{
+        width: 80%;
+        margin: 0 auto;
+        border-radius: 0px 0px 5px 5px;
+        .info{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .user_avt{
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            img{
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+        .user_info{
+            padding-left: 10px;
+            .user_name{
+                color: white;
+            }
+        }
+    }
+    .story_wrapper{
+        height: 650px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    
+    }
+}::-webkit-scrollbar {
+    display: none;
+}

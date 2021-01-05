@@ -1,0 +1,48 @@
+$redColor: #E96865;
+$blueColor: #C6E6FF;
+$darkBlueColor: #5d96ff;
+$secondcolor: #F4F2ED;
+$primaryColor:#7166F9;
+$linkColor: #707070;
+
+@function calc_width($element_width) {
+    @return (100vw * $element_width / 1920);
+}
+@function calc_height($element_height) {
+    @return (100vh * $element_height / 1280);
+}
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+@mixin general{
+    padding: 10px;
+    width: 100%;
+    height: calc_width(72);
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+button:focus {
+    outline: none; 
+}
+input:focus {
+    outline: none; 
+}
+div:focus{
+    outline:none;
+}
+textarea:focus{
+    outline:none;
+}

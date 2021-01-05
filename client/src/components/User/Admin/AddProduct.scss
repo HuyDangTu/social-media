@@ -1,0 +1,77 @@
+@import '../../ultils/initial.scss';
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1{
+    font-size: 20px;
+    font-weight: bold;
+    color: $primaryColor;
+    background: white;
+    padding: 10px;
+}
+form{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    flex-direction: column;
+    .form_fields{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        .form_devider{
+                width: 49%;
+                .formBlock{
+                    input{
+                        padding: 10px;
+                        width: 100%;
+                        height: 40px;
+                        color: black;
+                        box-shadow: 1px 1px 5px #CBCBCB;
+                        border:none;
+                    }
+                    .label_input{
+                        margin: 15px 0px 5px 0px;
+                        font-weight: bold;
+                    }
+                    textarea{
+                        padding: 10px;
+                        width: 100%;
+                        height: 60px;
+                        color: black;
+                        box-shadow: 1px 1px 5px #CBCBCB;
+                        border:none;
+                    }
+                    select{
+                        padding: 10px;
+                        width: 100%;
+                        height: 40px;
+                        color: black;
+                        box-shadow: 1px 1px 5px #CBCBCB;
+                        border:none;
+                    }
+                
+                }
+                .create__button{
+                    margin-top: 44px;
+                    width: 100%;
+                    height: 40px;
+                    background-color: $primaryColor;
+                    color: white;
+                    border: none;
+                }
+            }
+    }
+}
+

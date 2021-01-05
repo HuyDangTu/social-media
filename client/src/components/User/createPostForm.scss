@@ -1,0 +1,137 @@
+@import '../ultils/initial.scss';
+
+.create_post{
+    .create_post_form{
+        width: 60%;
+        margin: auto;
+        box-shadow: 1px 1px 6px #d4d4d4;
+        padding: 20px;
+        border-radius: 5px;
+        .user_info,textarea,.dropzone_container{
+            margin-bottom: 20px;
+        }
+        .user_info{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            .avatar{
+                border-radius: 50%;
+                object-fit: cover;
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+        }
+       
+        .field_container{  
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            .formField_container{
+                width: 49.5%;
+                ul.react-autocomplete-input{
+                    margin-top: 20px;
+                }
+                input{
+                    padding: 5px;
+                    width: 100%;
+                    border-radius: 5px;
+                    border: 1px solid #d4d4d4;
+                }
+            }
+        }
+        .dropzone_wrapper{
+            .dropzone_container{
+                margin-bottom: 10px;
+                width:100px;
+                .dropzone_Add_button{
+                    position: relative;
+                    background: #84abff;
+                    width:100%;
+                    height: 35px;
+                    margin:0;
+                    border-radius: 5px;
+                    svg{
+                        color: white;    
+                        position: absolute;
+                        width: 15px;
+                        height: 15px;  
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
+            .process_bar{
+                width: 100%;
+            }
+        }
+        .uploaded_image_display{
+            display: flex;
+            justify-content:flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            .dropzone_UploadedImg_wrapper{
+                margin:0;
+                margin-top: 10px;
+                margin-right: 1.3333%;
+                width: 32%;
+                position: relative;
+                .delete_image_icon{
+                    position: absolute;
+                    right: -8px;
+                    top: -8px;
+                    font-size: 20px;
+                    color: grey;
+                    background: white;
+                    border-radius:  50%;
+                }
+                .uploaded_img{
+                    margin:0;
+                    background-position: center;
+                    background-size: cover;
+                    background-repeat: no-repeat; 
+                    width: 100%;
+                    height:200px;
+                }
+            }
+            
+        }
+        .description_input{
+            position: relative;
+            width: 100%;
+            display: flex;
+            margin-bottom: 20px;
+            z-index: 1;
+            ul.react-autocomplete-input{
+                margin-top: 20px;
+            }
+            .emoji_button{
+                width: 25px;
+                color: #d1d1d1;
+                margin-left: 10px;
+            }
+            .emoji_picker{
+                position: absolute;
+               
+            }
+            span{
+                width: 100%;
+                .description_textarea{
+                    font-weight: normal;
+                    width: 100%;
+                    border: none;
+                    margin:0;
+                    border-bottom: 1px solid #d4d4d4; 
+                }
+            }
+        }
+        .create_button{
+            @include general;
+            background-color: $primaryColor;
+            color: white;
+            border: none;
+        }
+    }
+}

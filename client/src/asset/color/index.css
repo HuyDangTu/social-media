@@ -1,0 +1,15 @@
+:root{
+    --color-1: #f4f9f4;
+    --color-2: #6c9894;
+    --logo-color: #a7d7c5;
+    --text-color-primary: #f4f9f4;
+    --nav-text-color: #494f4e;
+    --nav-hover-color: #c7d9d5;
+    --nav-color:#e2ede8;
+    --logo-width: 108.5px;
+    --logo-height: 132.5px;
+    --logo-top:  25px;
+    --logo-left: 10px;   
+    --font-size-description: 90px;
+}
+

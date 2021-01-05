@@ -1,0 +1,59 @@
+@import '../ultils/initial.scss';
+
+.reportForm{
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    h5{
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    h6{
+        width: 100%;
+    }
+    .reportPolicies{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+        .policy_content{
+            box-sizing: border-box;
+            margin: 0px 10px 10px 0px;
+            background: $blueColor;
+            padding:5px 10px 5px 10px;
+            border-radius: 5px;
+        }
+        .active_policy_content{
+            box-sizing: border-box;
+            margin: 0px 10px 10px 0px;
+            background: $redColor;
+            padding:5px 10px 5px 10px;
+            border-radius: 5px;
+        }
+    }
+    .btn_wrapper{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: row;
+        p{
+            margin:0;
+            color: white;
+            padding: 5px 15px 5px 15px;
+            font-size: 15px;
+            border-radius: 5px;
+        }
+        .send_button{
+            margin-left: 20px;
+            background-color: $primaryColor;
+            font-weight: bold;
+        }
+        .cancel_btn{
+            color: $primaryColor;
+            border: 1px solid $primaryColor;
+            font-weight: bold;
+        }
+    }
+}

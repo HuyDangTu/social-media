@@ -1,0 +1,45 @@
+@import '../ultils/initial.scss';
+
+.chart_container{
+    margin-top: 20px;
+    box-shadow: 1px 1px 5px #d4d4d4;
+    padding: 10px;
+    border-radius: 5px;
+    .chart_wrapper{
+        h5{
+            margin: 0;
+        }
+        ul{
+            padding: 0;
+            margin: 0;
+            li{
+                list-style: none;
+                border-bottom: 1px solid #d4d4d4;
+                padding: 10px 0px 10px 0px;
+                a{
+                    color: black;
+                    font-weight: 500;  
+                }
+                p{
+                    margin:0;
+                }
+            }
+        }
+    }
+    .see_more_container{
+        margin: 10px 0px 0px 0px;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        button{
+            box-sizing: border-box;
+            justify-self: right;
+            background: $primaryColor;
+            color: white;
+            font-size: 13px;
+            padding: 5px 15px 5px 15px;
+            border: none;
+            border-radius: 5px;
+        }
+    }
+}

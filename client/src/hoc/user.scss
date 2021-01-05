@@ -1,0 +1,50 @@
+$secondcolor: #F4F2ED;
+$primaryColor:#154100;
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+.userLayout{
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+    .userLayout_container{
+        display: flex;
+        .row{
+            width: 100%;
+        }
+        .col-xl-3{
+            .userLayout_left_nav{
+                div{
+                    margin-bottom: 20px;
+                    h2{
+                        font-size: 20px;
+                        font-weight: bold;
+                        color:$primaryColor;
+                        padding: 0px 0px 10px 0px;
+                        border-bottom: 1px solid $secondcolor;
+                    }
+                    .links{
+            
+                        font-size: 15px;
+                        display: flex;
+                        flex-direction: column;
+                        a{
+                            color: #636363
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

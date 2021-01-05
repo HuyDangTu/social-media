@@ -1,0 +1,183 @@
+@import '../ultils/initial.scss';
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+@mixin size{
+ 
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin general{
+    padding: 10px;
+    width: 100%;
+    height: calc_width(72);
+    font-size: 15px;
+    border-radius: 5px;
+}
+.login__container{
+    .left{
+    background-image: url('../../asset/login-page/login_bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom; 
+    height: 100vh; 
+        .login_slogan{
+            padding-top: calc_width(100);
+            padding-left: calc_width(100);
+            display: flex;
+            flex-direction: column;
+            img{
+                width: calc_width(88);
+                height: calc_width(88);
+                margin-bottom: 20px;
+            }
+            h1{
+                background: none;
+                font-size: calc_width(60);
+                color: white;
+            }
+        }
+    }
+}
+.signin__container{
+    @include default();
+    padding: 0px calc_width(219) 0px calc_width(219);
+
+    .signin__form{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        
+        .signin__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(56);
+                height: calc_width(56);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(78);              
+            }
+        }
+
+        .facebook_signin_button{
+            @include general();
+            background-color: $darkBlueColor;
+            color: white;
+            border: none;
+            width: 100%;
+            font-size: calc_width(24);
+            img{
+                width: calc_width(30);
+                padding-right: 5px;
+            }
+        }
+        .gmail_signin_button{
+            @include general();
+            background-color: $redColor;
+            color: white;
+            border: none;
+            width: 100%;
+            font-size: calc_width(24);
+            img{
+                width: calc_width(30);
+                padding-right: 5px;
+            }
+        }
+        .userName_label{
+            width: 100%;
+            color: $linkColor;
+        }
+        .error_message{
+            width: 100%;
+            p{
+            color: red;
+            width: 100%;
+            }
+        }
+        .password_container{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: $linkColor;
+            a{
+                color: $primaryColor;
+                font-weight: 500;
+                text-decoration: underline;
+            }
+        }
+        .register_wrapper{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            a{
+                margin-left: 10px;
+                color: $primaryColor;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+        }
+        .signin__button{
+            @include general;
+            background-color: $primaryColor;
+            color: white;
+            border: none;
+        }
+
+        .formField_container{
+        width: 100%;
+            .formBlock{
+                input{
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+
+                    border: 1px solid #CBCBCB;
+                }
+                .label_input{
+                    color: $linkColor;
+                    margin-bottom: 2.5px;
+                }
+            }
+
+        }
+   
+        //////////////////////
+        .facebook_signin_button,
+        .gmail_signin_button{
+            margin-bottom: 5px;
+        } 
+        ////
+        .password_container
+        {
+            margin-bottom: 2.5px;
+        }
+        ////
+        .signin__logo,
+        .signin__button
+        {
+            margin-bottom: 20px;
+        }
+        ////
+        .or_label{
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+    }
+}
+
+

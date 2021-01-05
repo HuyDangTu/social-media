@@ -1,0 +1,57 @@
+$secondcolor: #F4F2ED;
+$primaryColor:#154100;
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin  text-font {
+    font-family: 'Montserrat', sans-serif;
+}
+.shop_container{
+    width: 70%;
+    margin: auto;
+}
+.shop_options{
+    padding-top: 10px;
+    .shop_grids{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        
+        .grid_btn{
+            font-size: 20px;
+            margin-left: 10px;
+        }
+    }
+}
+
+.load_more_container{
+    box-sizing: border-box;
+    margin: 0 auto;
+    width: 100%;        
+    margin: 20px 0px 20px 0px;
+    span{
+        
+        box-shadow: 1px 1px 10px #999999;
+        box-sizing: border-box;
+
+        margin: auto;
+        padding: 20px;
+
+        width: 150px;
+        height: 50px;
+        background-color: $primaryColor;
+    
+        display: flex;
+        align-items: center;
+        justify-content: center;
+       color: white;
+    }
+}

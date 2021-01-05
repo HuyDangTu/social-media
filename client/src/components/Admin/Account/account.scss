@@ -1,0 +1,58 @@
+@import '../../ultils/initial.scss';
+
+.account{
+    padding: 10px;
+    h4{
+        color: #969696
+    }
+    .avt{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .button{
+        display: flex;
+        .filter,.sort{
+           
+           button{
+               background: #b3b3b3;
+               border: none;
+               color: white;
+               width: 100px;
+           }
+        }
+        .filter{
+            margin-left: 10px;
+        }
+    }
+    .report-list{
+        width: 100%;
+        .name,
+        .role,
+        .userName,
+        .email{
+            width: 25%;
+        }
+        .table-header{
+            th{
+                padding: 10px 10px 10px 0px;
+                border-bottom: 1px solid #dddddd;
+            }
+        }
+        .table-content{
+            td{
+                padding: 10px 10px 10px 0px;
+                border-bottom: 1px solid #dddddd;
+            }
+        }
+    }
+    .add_btn{
+        border: none;
+        border-radius: 5px;
+        padding: 6px 15px 6px 15px;
+        color: white;
+        background: $primaryColor;   
+        float: right; 
+    }
+}

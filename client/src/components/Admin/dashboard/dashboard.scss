@@ -1,0 +1,79 @@
+@import '../../ultils/initial.scss';
+
+.dashboard{
+    padding: 10px;
+    h4{
+        color: #969696
+    }
+    .button{
+        display: flex;
+        .filter,.sort{
+           
+           button{
+               background: #b3b3b3;
+               border: none;
+               color: white;
+               width: 100px;
+           }
+        }
+        .filter{
+            margin-left: 10px;
+        }
+    }
+    .wrapper{
+        display: flex;
+        align-items: center;
+        .avt{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .report_info{
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            .name{
+                font-weight: bold;
+            }
+            .date{
+                color:#919191;
+            }
+            p{
+                margin: 0;
+                padding: 0;
+            }
+        }
+       
+    }
+    .report-list{
+        width: 100%;
+        .report{
+            width: 55%;
+        }
+        .status,.admin{
+            width: 22.5%;
+        }
+        .table-header{
+            th{
+                padding: 10px;
+                border-bottom: 1px solid #dddddd;
+            }
+        }
+        .table-content{
+            td{
+                padding: 10px;
+                border-bottom: 1px solid #dddddd;
+            }
+        }
+    }
+    .loadmore{
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        background: $primaryColor;  
+        color: white; 
+        float: right; 
+        margin: 20px;
+    }
+}

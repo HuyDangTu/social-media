@@ -1,0 +1,37 @@
+@import '../ultils/initial.scss';
+
+@mixin default{
+    padding: 0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+@mixin size{
+ 
+}
+
+@mixin linkColor{
+    color:  $primaryColor;
+}
+
+@mixin general{
+    padding: 10px;
+    width: 100%;
+    height: calc_width(72);
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.gmail_signin_button{
+    @include general();
+    background-color: $redColor;
+    color: white;
+    border: none;
+    width: 100%;
+    font-size: calc_width(24);
+    margin-bottom: 10px;
+    img{
+        width: calc_width(30);
+        padding-right: 5px;
+    }
+}

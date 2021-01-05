@@ -1,0 +1,120 @@
+@import '../../ultils/initial.scss';
+
+
+.report_detail{
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    padding: 10px;
+    .user_info{
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            img{
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+            .name{
+                font-weight: bold;
+                padding: 10px;
+            }
+    }
+    .policy_content{
+        box-sizing: border-box;
+        width: fit-content; 
+        float: left;
+        margin: 0px 10px 10px 0px;
+        background: $blueColor;
+        padding:5px 10px 5px 10px;
+        border-radius: 5px;
+    }
+    .report_info{
+        display: flex;
+        flex-direction: column;
+        .button_wrapper{
+            display:flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .btn_invalid{
+                border: none;
+                padding: 10px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                background: $darkBlueColor;
+                margin-bottom: 20px;
+                color: white;
+            }
+            .btn_delete{
+                border: none;
+                padding: 10px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                background: $redColor;
+                color: white;
+            }
+            
+        }
+       
+    }
+    .content_wrapper{
+        width: 100%;
+     
+        .images{
+            width: 100%;
+            height: 100%;
+   
+            img{
+                object-fit: cover;
+                width: 100%;
+                height:100%;
+                border-radius: 5px;
+            }
+        }
+        .likes{
+            margin-top: 10px;
+            img{
+            width: 25px;
+            margin-right: 10px;
+            }
+        }
+         .comment_list{
+                display: flex;
+                flex-direction: column; 
+                overflow-y: scroll;
+                .view_more_cmt{
+                    text-decoration: underline;             
+                    color: #7c7c7c;
+                }
+                .comment{
+                    display: flex;
+                    justify-content: flex-start;
+                    margin-bottom: 10px;
+                    width: 100%;
+                    .user_avt{
+                        img{
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            margin-right: 10px;
+                            object-fit: cover;
+                        }
+                    }
+                    .content{
+                        flex-grow: 2;
+                        p{
+                            font-size: 14px;;
+                            margin:0;
+                            color: #a5a5a5
+                        }
+                    }
+                    .like_button{
+                        img{
+                            width: 20px;
+                        }
+                    }
+                }
+            }
+    }
+}
