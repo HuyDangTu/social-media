@@ -120,9 +120,11 @@ class  Card extends Component {
         this.setState({ showEditor: !this.state.showEditor})
         this.toggleDropdown();
     }
+
     closeEditor = () => {
         this.setState({ showEditor: !this.state.showEditor })
     }
+
     defaultLink = (item, i) => {
         switch(item.name){
             case 'Like':
@@ -209,7 +211,7 @@ class  Card extends Component {
     closeReportForm(){
         this.setState({ 
             DialogShowing: false,
-             reportData: {} 
+            reportData: {} 
         }) 
     }
 
@@ -220,6 +222,7 @@ class  Card extends Component {
                     isReportFormShow={this.state.DialogShowing}
                     reportData={this.state.reportData}
                     list={this.props.policies.policyList}
+                    handleSnackBar={(mess) => { this.props.handleSnackBar(mess)}}
                     closeReportForm={()=>this.closeReportForm()}
                 />
             }
@@ -228,6 +231,7 @@ class  Card extends Component {
                     open={this.state.DialogShowing}
                     TransitionComponent={Transition}
                     keepMounted
+                    handleSnackBar={this.props.handleSnackBar()}
                     onClose={() => { this.setState({ DialogShowing: false }) }}>
                     <div className="deleteConfirm">
                         <h5> Bạn chắc chắn muốn xóa bài viết này?</h5>
@@ -235,7 +239,7 @@ class  Card extends Component {
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false})}>Hủy</p>
                             <p className="confirm_btn" onClick={() => this.props.dispatch(deletePost(this.props.post._id))
                                 .then(() => {
-                                    this.setState({setSnack: true});
+                                    this.props.handleSnackBar("Đã xóa bài viết")
                                     this.props.history.push('/newfeed');
                                 })}>Xóa</p>
                         </div>
@@ -275,11 +279,9 @@ class  Card extends Component {
                                         <div className="dropdown" onClick={this.handleBodyClick}>
                                             <div>
                                                 <p onClick={()=>this.props.dispatch(hidePost(this.props._id)).then(()=>{
-                                                    this.setSnack()
+                                                    this.props.handleSnackBar("Đã ẩn bài viết")
                                                 })}>Ẩn</p>
                                             </div>
-                                            <hr />
-                                            <div onClick={this.setSnack}></div>
                                             <hr />
                                             <div>
                                                 <Link to={`/postDetail/${this.props._id}`} >chi tiết bài viết</Link>
@@ -295,7 +297,7 @@ class  Card extends Component {
                                                 </>
                                                 :""
                                             }
-
+                                            <hr />
                                             {
                                                 props.postedBy[0]._id === this.props.user.userData._id ?
                                                 <div>
@@ -319,7 +321,6 @@ class  Card extends Component {
                                                         })}}>Báo cáo</p>
                                                 </div>
                                             }
-                                        
                                         </div>
                                     </NativeClickListener>
                                     : null
@@ -328,7 +329,7 @@ class  Card extends Component {
                             </div>
                             {
                                 this.state.showEditor ? 
-                                <PostEdit description={props.description} close={this.closeEditor} ActionType="newFeed" userTag={props.userTag} postId={props._id}/>
+                                <PostEdit description={props.description} close={this.closeEditor} handleSnackBar={(mess)=>{this.props.handleSnackBar(mess)}} ActionType="newFeed" userTag={props.userTag} postId={props._id}/>
                                 :
                                 <div className="description">
                                     {this.handleDescription(props.description,props.userTag)}
@@ -389,17 +390,6 @@ class  Card extends Component {
                 {
                     this.confirmDialog(this.state.dialogType)
                 }
-
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left'
-                    }}
-                    open={this.state.setSnack}
-                    onClose={() => this.setState({ setSnack: false })}
-                    autoHideDuration={1000}>
-                    <MuiAlert elevation={6} variant="filled" severity="success" message="Thành công">Thành công</MuiAlert>    
-                </Snackbar>
             </div>
         );
     }

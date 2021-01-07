@@ -55,13 +55,9 @@ class Report extends Component {
                     reportCompleted: false
                 });
                 this.props.closeReportForm()}}>
-           
             <div className="reportForm">
                 <h5> BÁO CÁO VI PHẠM </h5>
                 {
-                    this.state.reportCompleted ?
-                        "Cảm ơn bạn đã báo cáo!"
-                    :
                     <div>
                         <h6>Hãy chọn chính sách vi phạm</h6>
                         <div className="reportPolicies">
@@ -81,8 +77,8 @@ class Report extends Component {
                                 .then(response => {
                                     this.setState({
                                         reportPolicy: [],
-                                        reportCompleted: true, 
-                                    })
+                                        reportCompleted: true,
+                                    }, () => { this.props.closeReportForm(); this.props.handleSnackBar("Đã gửi báo cáo")})
                                 })}}>
                                 Báo cáo</p>
                         </div>

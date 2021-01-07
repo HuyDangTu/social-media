@@ -27,7 +27,10 @@ const postSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
-    hidden: [],
+    hidden: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);
