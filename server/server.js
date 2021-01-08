@@ -443,7 +443,7 @@ function findPost(postId,userHiddenPost){
         {
             "$project": {
                 "_id": 1,
-                "dateDifference": { $subtract: [new Date(), "$createdAt"] },
+                "dateDifference": { $trunc: { $divide: [{ $subtract: [new Date(), "$createdAt"] }, 1000 * 60 * 60 * 24] } },
                 "images": 1,
                 "comments": {
                     "_id": 1,
@@ -677,7 +677,7 @@ app.post('/api/users/newfeed',auth,(req,res)=>{
             "$match": { "postedBy": { "$in": [...req.user.followings, req.user._id] } }
         },
         {
-            "$match": { "hidden": true }
+            "$match": { "hidden": false }
         },
         {
             "$match": { "_id": { "$nin": req.user.hiddenPost } }
@@ -1582,9 +1582,8 @@ app.post('/api/users/reset_user',(req,res)=>{
                 if(err) return res.json({success: false,err});
                 sendEmail(user.email,user.name,null,"reset_password",user);
                 return res.json({success:true})
-            })
-        }
-    )
+        })
+    })
 })
 
 //=======================
