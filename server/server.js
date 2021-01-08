@@ -545,8 +545,6 @@ app.get('/api/posts/postDetail',auth,(req,res)=>{
     })    
 })
 
-
-
 app.post('/api/users/postsIncludedTags', auth, (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 6;
@@ -1307,15 +1305,15 @@ app.put('/api/posts/deleteComment', auth, (req, res) => {
     }, {
         new: true
     }).exec((err, post) => {
-        if (err) return 
-        Comment.remove({ "_id": ObjectId(req.body.commentId) })
-        .exec((err) => {
-            if (err) res.status(400).json(err);
-            findPost(req.body.postId, req.user.hiddenPost).then((post) => {
-                console.log(post);
-                res.status(200).json(post);
-            })
+        if (err) res.status(400).json(err);
+        findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+            console.log(post);
+            res.status(200).json(post);
         })
+        // if (err) return 
+        // Comment.remove({ "_id": ObjectId(req.body.commentId) })
+        // .exec((err) => {
+        // })
     }); 
 })
 
@@ -1354,6 +1352,8 @@ app.get('/api/policies/getAll', auth, (req, res) => {
     })
 })
 
+
+
 app.post('/api/story/create', auth, (req, res) => {
     
     let story = new Story({
@@ -1368,6 +1368,8 @@ app.post('/api/story/create', auth, (req, res) => {
     })
 
 })
+
+
 
 function getStory() {
     console.log(userHiddenPost);
@@ -1411,6 +1413,24 @@ app.put('/api/tags/follow', auth, (req, res) => {
         if (err) res.status(400).json(err);
             res.status(200).json({tag});
     })
+})
+
+app.post('/api/tags/getTagId', (req, res) => {
+    Tag.aggregate([
+        {
+            "$match": { "name": { "$in": req.body.hashtag } }
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+            }
+        }
+    ],function (err, tags) {
+            if (err) return res.status(400).json(err);
+            res.status(200).json(tags);
+        }
+    )
 })
 
 app.put('/api/tags/unfollow', auth, (req, res) => {

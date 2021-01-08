@@ -125,3 +125,15 @@ export function unfollowTag(tagId, previousState = []){
     }
 
 }
+
+
+export function getTagId(hashtag) {
+    console.log(hashtag)
+    const data = {hashtag}
+    const request = axios.post(`${TAG_SERVER}/getTagId`, data)
+        .then(response => {
+            console.log(response.data);
+            return response.data
+        })
+    return request;
+}

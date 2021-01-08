@@ -3,6 +3,7 @@ import './card.scss';
 import ImageLightBox from './ImageLightBox'
 import {connect} from 'react-redux';
 import { likePost, unlikePost, makeComment, hidePost, deletePost} from '../../actions/product_actions';
+import { getTagId } from '../../actions/tag_actions';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import NativeClickListener from '../ultils/NativeClickListener';
@@ -43,8 +44,11 @@ class  Card extends Component {
 
         reportData: {},
 
+        tags: [],
+
         DialogShowing: false,
         dialogType: "",
+
         showEditor: false,
 
         reportData: {},
@@ -58,11 +62,14 @@ class  Card extends Component {
             this.props.images.forEach(item => {
                 lightboxImages.push(item.url)
             })
-           
             this.setState({
                 lightboxImages
             })
         }
+        let hashtag = this.findHashtags(this.props.description)
+        getTagId(hashtag).then((response)=>{
+            this.setState({tags : [...response]});
+        })
         this.props.dispatch(getPolicy());
     }
 
@@ -102,7 +109,9 @@ class  Card extends Component {
         return commentsToShow.map((item, i) => 
             item ?   
             <div className="comment">
-                <h6>{item.postedBy[0].userName}</h6> {item.content}
+                <h6 onClick={() => {
+                        this.props.history.push(`/user/${item.postedBy[0]._id}`)
+                }}>{item.postedBy[0].userName}</h6> {item.content}
             </div>
             : null
         )
@@ -124,6 +133,7 @@ class  Card extends Component {
     closeEditor = () => {
         this.setState({ showEditor: !this.state.showEditor })
     }
+    
 
     defaultLink = (item, i) => {
         switch(item.name){
@@ -132,21 +142,25 @@ class  Card extends Component {
                 return (
                 <div>
                     { 
-                    liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props._id))}
-                        src={require('../../asset/newfeed_page/active_like_icon2x.png')} /> 
-                    : 
-                    <img onClick={() => this.props.dispatch(likePost(this.props._id))} 
-                        src={require('../../asset/newfeed_page/like_icon2x.png')} />  
+                        liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props._id))}
+                            src={require('../../asset/newfeed_page/active_like_icon2x.png')} /> 
+                        : 
+                        <img onClick={() => this.props.dispatch(likePost(this.props._id))} 
+                            src={require('../../asset/newfeed_page/like_icon2x.png')} />  
                     }                      
                 </div>)
             case 'Comment':
                 return (
-                <div>
-                        <img src={require('../../asset/newfeed_page/comment_icon2x.png')} />
+                <div onClick={()=>{
+                        this.props.history.push(`/postDetail/${this.props._id}`)
+                    }}>
+                        <img src={require('../../asset/newfeed_page/comment_icon2x.png')}/>
                 </div>)
             case 'Pin':
                 return (
-                <div>
+                <div onClick={() => {
+                        this.props.history.push(`/postDetail/${this.props._id}`)
+                    }}>
                         <img src={require('../../asset/newfeed_page/store_icon2x.png')} />
                 </div>
             )
@@ -188,22 +202,33 @@ class  Card extends Component {
         var regexp = /\B\#\w\w+\b/g
         let result = Text.match(regexp);
         if (result) {
-            return (result);
+            let tags = [];
+            result.forEach((item) => {
+                tags.push(item.slice(1));
+            })
+            return (tags);
         } else {
             return false;
         }
     }
 
+
+    findTagId = (tag) => {
+        alert("tag");
+    }
+
     handleDescription(description, userTag){
-        let hashtag = this.findHashtags(description)
-        hashtag.forEach((item) =>
-            description = description.replace(item, `<a href="http://localhost:3000/users/dashboard">${item}</a>`)
+        console.log(this.state.tags)
+        let hashtag =[];
+        
+        this.state.tags.forEach((item) =>
+            description = description.replace('#'+item.name, `<a href="tag/${item._id}">${"#"+item.name}</a>`)
         )
         if(userTag.length > 0){
              description = description + "<b>- cùng với </b>"
         }
         userTag.forEach((item) =>{
-            description += `<a href="http://localhost:3000/users/dashboard">@${item.userName}</a> `
+            description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
         })
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }
@@ -267,7 +292,7 @@ class  Card extends Component {
                                         <img src={props.postedBy[0].avt} />
                                     </div>
                                     <div className="userName">
-                                        {props.postedBy[0].userName}
+                                        <Link to={`/user/${props.postedBy[0]._id}`}>{props.postedBy[0].userName}</Link>
                                         <p>{this.postedDate(props.dateDifference)}</p>
                                     </div>
                                 </div>
@@ -354,7 +379,9 @@ class  Card extends Component {
                             <div className="comment_list">
                                 {
                                     props.comments.length > 2 ?
-                                        <h6 className="view_more_cmt">{`Xem thêm bình luận`}</h6>
+                                    <h6 onClick={() => {
+                                        this.props.history.push(`/postDetail/${this.props._id}`)
+                                    }} className="view_more_cmt">{`Xem thêm bình luận`}</h6>
                                         : null
                                 }
                                 {
@@ -401,4 +428,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(Card);
+export default connect(mapStateToProps)(withRouter(Card));

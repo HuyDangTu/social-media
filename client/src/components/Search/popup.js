@@ -1,9 +1,21 @@
 import React from "react";
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export default class Popup extends React.Component {
+class Popup extends React.Component {
+    
     constructor(props) {
         super(props);
     }
+    
+    LinkTo = (type,id) =>{
+        if(type == "user"){
+            this.props.history.push(`/user/${id}`)
+        }else{
+            this.props.history.push(`/tag/${id}`)
+        }
+    }
+
     render() {
         const { items, isOpen, tags } = this.props;
         //Do not show popup
@@ -17,7 +29,7 @@ export default class Popup extends React.Component {
                             items.map((item, idx) => {
                                 return (
                                     <div className="item" key={idx}>
-                                        <div className="user_infor_wrapper">
+                                        <div onClick={() => {this.LinkTo("user",item._id)}} className="user_infor_wrapper">
                                             <img src={item.avt} />
                                             <p>{item.userName}</p>
                                         </div>
@@ -30,7 +42,7 @@ export default class Popup extends React.Component {
                             tags.map((tag, idx) => {
                                 return (
                                     <div className="item" key={idx}>
-                                        <div className="tag_infor_wrapper">
+                                        <div onClick={() => { this.LinkTo("tag", tag._id)}} className="tag_infor_wrapper">
                                             <h6>#{tag.name}</h6>
                                             <p>{tag.posts.length} Bài viết</p>
                                         </div>
@@ -45,3 +57,5 @@ export default class Popup extends React.Component {
         );
     }
 }
+
+export default connect()(withRouter(Popup));

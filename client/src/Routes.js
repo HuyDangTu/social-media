@@ -56,8 +56,6 @@ const Routes = () =>{
         <Route path="/profile" exact component={Auth(UserProfile, true)}></Route>
         <Route path="/profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
-        
-
     </Switch>
   )
 }
