@@ -276,6 +276,7 @@ class Header extends Component {
         this.props.dispatch(getConversation())
         console.log(this.props.messages ? this.props.messages.conlist : '')
         this.props.dispatch(getNotification())
+        console.log(this.props.notification?  this.props.notification.notifylist:'')
         const pusher = new Pusher('c0e96b0fff8d0edac17d', {
             cluster: 'mt1'
         });
