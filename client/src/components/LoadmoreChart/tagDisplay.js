@@ -8,7 +8,7 @@ const TagDisplay = (props) => {
         props.list.map((item,i)=>{
             if(i<props.isShow){
                 return <li>
-                    <a>#{props.list[i].name}</a>
+                    <a href={`tag/${props.list[i]._id}`}>#{props.list[i].name}</a>
                     <p>{props.list[i].length}</p>
                 </li>
             }

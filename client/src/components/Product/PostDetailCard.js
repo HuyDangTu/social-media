@@ -23,6 +23,9 @@ import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
 import Report from '../Report/Report';
 import { getPolicy } from '../../actions/policy_actions';
+import PostEdit from '../PostEdit/index';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -63,6 +66,10 @@ class PostDetailCard extends Component {
         dialogType : "",
 
         commentSelected: "",
+
+        showEditor: false,
+        setSnack: false,
+        SnackMess: ""
     }
 
     componentDidMount() {
@@ -95,7 +102,7 @@ class PostDetailCard extends Component {
 
     handlelightBoxClose = () => {
         this.setState({
-            lightbox: false,
+            lightbox: false
         })
     }
 
@@ -336,6 +343,7 @@ class PostDetailCard extends Component {
         return <Report 
             isReportFormShow={this.state.isReportFormShow}
             reportData = {this.state.reportData}
+            handleSnackBar={(mess) => { this.handleSnackBar(mess) }}
             list={this.props.policies.policyList}
             closeReportForm = {()=>this.closeReportForm()}
         />
@@ -343,6 +351,14 @@ class PostDetailCard extends Component {
     
     deletePost(){
         
+    }
+
+    closeEditor = () => {
+        this.setState({ showEditor: !this.state.showEditor })
+    }
+
+    handleSnackBar = (mess) => {
+        this.setState({ setSnack: true, SnackMess: mess})
     }
 
     render() {
@@ -388,6 +404,12 @@ class PostDetailCard extends Component {
                                                                 DialogShowing: true,
                                                                 dialogType: "deleteConfirm",
                                                             })}} >Xóa</p>
+                                                            <p className="delete_button" onClick={() => {
+                                                                this.setState({
+                                                                    showEditor: true,
+                                                                    dropdown: false
+                                                                })
+                                                            }} >Sửa</p>
                                                             </div>
                                                             : <div>
                                                                 <p className="report_button" 
@@ -404,13 +426,22 @@ class PostDetailCard extends Component {
                                                     }
 
                                                 </div>
-                                            </NativeClickListener>
-                                            : null
+                                        </NativeClickListener>
+                                        : null
                                     }
                                 </div>
                             </div>
                             <div className="description">
-                                {this.handleDescription(props.post.description)}
+                                {
+                                    this.state.showEditor?
+                                    <PostEdit description={props.post.description} 
+                                            close={this.closeEditor} 
+                                            handleSnackBar={(mess) => { this.handleSnackBar(mess) }} 
+                                            ActionType="detail" 
+                                            userTag={props.post.userTag} 
+                                            postId={props.post._id}/>
+                                    :this.handleDescription(props.post.description)
+                                }
                             </div>
                         
                             <div className="comment_list">
@@ -462,6 +493,16 @@ class PostDetailCard extends Component {
                 {
                     this.showReportForm()
                 }
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.setSnack}
+                    onClose={() => this.setState({ setSnack: false })}
+                    autoHideDuration={3000}>
+                    <MuiAlert elevation={6} variant="filled" severity="success" message={this.state.SnackMess}>{this.state.SnackMess}</MuiAlert>
+                </Snackbar>
             </div>
         );
     }

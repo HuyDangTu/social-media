@@ -107,7 +107,6 @@ class PostEdit extends Component {
             .then(response => {
                 const newFormData = populateOptionFields(formData, this.props.tags.allTags, 'description')
                 this.updateFields(newFormData)
-               
             })
         this.props.dispatch(getUserTag())
             .then(response => {
@@ -173,7 +172,7 @@ class PostEdit extends Component {
                 console.log(this.props.products);
                 if (this.props.products.updatePost) {
                     this.props.close();
-                    //this.props.history.push('/newfeed')
+                    this.props.handleSnackBar("Đã chỉnh sửa bài viết")
                 } else {
                     this.setState({ formError: true })
                 }
