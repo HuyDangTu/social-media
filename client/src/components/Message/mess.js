@@ -12,7 +12,7 @@ import { Button,LinearProgress} from '@material-ui/core';
 
 class Mess extends Component {
 render(){
-    return(this.props.mess.sentBy == this.props.yourProfile._id ?
+    return(this.props.mess? this.props.mess.sentBy == this.props.yourProfile._id ?
         <div className="row no-gutters sent">
             <div className="col-xl-6">
             </div>
@@ -53,7 +53,7 @@ render(){
             </div>
             <div className="col-xl-6">
             </div>
-        </div>)
+        </div>:"")
 }
 }
 export default Mess

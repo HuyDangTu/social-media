@@ -16,6 +16,7 @@
     margin: auto;
     margin-top: 32px;
     border: solid 0.5px rgba(0, 0, 0, 0.1);
+  
     .left_contain{   
         .chat_info{
             height: 15vh;
@@ -195,13 +196,11 @@
             .sticker_mess{
                 width: 40px;
                 margin:0px;
-              
                 border: solid 0.5px none;
                 height: 40px;
                 border-radius: 21px;
                 align-items: center;
                 margin-bottom: 8px;
-  
                object-fit: none;    
             }
         
@@ -217,7 +216,7 @@
                 }
             }
             .sent_mess{
-               
+                margin-bottom:8px;
                 p{
                     float: right;
                     width: max-content;
@@ -252,7 +251,7 @@
                
                     height: 40px;          
                     align-items: center;
-                    margin-bottom: 8px;
+                   
                    object-fit: none;    
                 }
             

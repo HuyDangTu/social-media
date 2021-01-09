@@ -108,7 +108,7 @@ class Profile extends Component {
                                                     </div>
                                                     :
                                                     <div>
-                                                    <Button className="follow_options">Nhắn tin</Button>
+                                                    <Button className="follow_options"> <Link to={`/message/inbox/${this.props.match.params.id}`}>Nhắn tin</Link></Button>
                                                     {
                                                         yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
                                                             <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}> Đang Theo dõi</Button>
@@ -216,7 +216,7 @@ class Profile extends Component {
                                     {
                                         typelist ? typelist.map(posts => {
                                             return (
-                                                    <div className="col-xl-4 image_contain">
+                                                    <div className="col-xl-4 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
                                                         <div className="img_overlay">
                                                             <div className="overlay_info">
                                                                 <div className="hearts">  <Heart size={24} strokeWidth={1} color="white" fill="white"></Heart><h2>{posts.likes.length}</h2> </div>

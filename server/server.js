@@ -898,6 +898,14 @@ app.put('/api/posts/like', auth, (req, res) => {
         if (err) res.status(400).json(err);
         findPost(req.body.postId, req.user.hiddenPost).then((post)=>{
             console.log(post);
+            const notification = new Notification({
+                sentFrom: req.user._id,
+                sentTo: post[0].postedBy[0]._id,
+                type: "likepost",
+                link: req.body.postId,
+                "seenStatus": false
+            });
+            SaveNotification(notification);
             res.status(200).json(post);
         })          
     })
@@ -1061,7 +1069,7 @@ app.get('/api/messages/get/:id', auth, (req, res) => {
                         user1: req.params.id,
                         user2: req.user._id,
                         seenBy: [(req.user._id)]
-
+                        
                     })
                     Conversation.create(conversation, (err, conver) => {
                         if (err) {
@@ -1227,7 +1235,16 @@ app.post('/api/posts/comment',auth, (req, res) => {
             new: true
         }).exec((err, post) => {
             if (err) res.status(400).json(err);
+        
             findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+                const notification = new Notification({
+                    sentFrom: req.user._id,
+                    sentTo: post[0].postedBy[0]._id,
+                    type: "comment",
+                    link: req.body.postId,
+                    "seenStatus": false
+                });
+                SaveNotification(notification)
                 console.log(post);
                 res.status(200).json(post);
             })
@@ -1279,7 +1296,16 @@ app.put('/api/posts/likeComment',auth,(req,res)=>{
     }).exec((err, comment) => {
         if (err) res.status(400).json(err);
         findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+            const notification = new Notification({
+                sentFrom: req.user._id,
+                sentTo: comment.postedBy._id,
+                type: "likecomment",
+                link: req.body.postId,
+                "seenStatus": false
+            });
+            SaveNotification(notification);
             console.log(post);
+           
             res.status(200).json(post);
         })
     })

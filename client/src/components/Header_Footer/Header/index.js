@@ -168,7 +168,10 @@ class Header extends Component {
                                                             <p>
                                                                 <h6>{data.sentFrom.userName}</h6>
                                                                 {
-                                                                    data.type == "follow" ? ' đã theo dõi bạn' : data.type == "likepost" ? ' đã thích bài viết của bạn' : ''
+                                                                    data.type == "follow" ? ' đã theo dõi bạn' : 
+                                                                    data.type == "likepost" ? ' đã thích bài viết của bạn' :
+                                                                      data.type=='comment'? ' đã bình luận về bài viết của bạn' :
+                                                                      data.type=='likecomment'? ' đã thích bình luận của bạn' :''
                                                                 }
                                                             </p>
                                                             <h6>
@@ -187,7 +190,10 @@ class Header extends Component {
                                                             <p>
                                                                 <h6>{data.sentFrom.userName}</h6>
                                                                 {
-                                                                    data.type == "follow" ? ' đã theo dõi bạn' : data.type == "likepost" ? ' đã thích bài viết của bạn' : ''
+                                                                    data.type == "follow" ? ' đã theo dõi bạn' : 
+                                                                    data.type == "likepost" ? ' đã thích bài viết của bạn' :
+                                                                      data.type=='comment'? ' đã bình luận về bài viết của bạn' :
+                                                                      data.type=='likecomment'? ' đã thích bình luận của bạn' :''
                                                                 }
                                                             </p>
                                                             <h6>
@@ -228,7 +234,10 @@ class Header extends Component {
                                             <p>
                                                 <h6>{this.props.notification.notifylist[0].sentFrom.userName}</h6>
                                                 {
-                                                    this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' : this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' : ''
+                                                    this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' : 
+                                                    this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' : 
+                                                    this.props.notification.notifylist[0].type == "comment" ? 'đã bình luận về bài viết của bạn' : 
+                                                    this.props.notification.notifylist[0].type == "likecomment" ? 'đã thích bình luận của bạn':''
                                                 }
                                             </p>
                                             <h6>
@@ -319,6 +328,15 @@ class Header extends Component {
         console.log('Đã xem thông báo', id)
         if (type == 'follow') {
             this.props.history.push(`/user/${link}`)
+        }
+        if(type='likepost'){
+            this.props.history.push(`/postDetail/${link}`)
+        }
+        if(type='comment'){
+            this.props.history.push(`/postDetail/${link}`)
+        }
+        if(type='likecomment'){
+            this.props.history.push(`/postDetail/${link}`)
         }
         this.props.dispatch(getNotification())
     }
