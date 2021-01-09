@@ -187,7 +187,9 @@ class  Card extends Component {
         console.log(day);
         day = parseInt(day);
         console.log(typeof day)
-        if(day < 30){
+        if(day==0){
+            return "Hôm nay";
+        }else if(day < 30){
             return day + " ngày";
         }else if (day > 30 ){
             console.log(day);

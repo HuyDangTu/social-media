@@ -4,6 +4,7 @@ import './Tag.scss'
 import Layout from '../../hoc/layout';
 import { getTag, followTag, unfollowTag} from '../../actions/tag_actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link, withRouter } from 'react-router-dom';
 
 class Tag extends Component {
 
@@ -59,14 +60,6 @@ class Tag extends Component {
         }
     }
 
-    // images = [
-    //     "https://news.itu.int/wp-content/uploads/2018/07/citymobility-min-e1530886118305.jpg",
-    //     "https://znews-photo.zadn.vn/w660/Uploaded/qhj_pwqvdvicbu/2019_04_08/Chung_Cu_Cu__Nguyen_Trai4.JPG",
-    //     "https://thecupandtheroad.files.wordpress.com/2016/08/201608-yahiko-65011-e1471437180172.jpg",
-    //     "https://media.healthplus.vn/Images/Uploaded/Share/2017/08/25/Trien_lam_Film__Ha_Noi_14.jpg",
-    //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQo4t4R2llzHmFS0ERghGdd636VYZxvp1V-WmGhklgZ2yeXJPyYpqlZBMKFaxVDoStveQ_Wo0eoT0sycr4Zc01Ylw69yVeaEcI&usqp=CAU&ec=45732300",
-    // ]
-
     render() {
         const tag = this.props.tags.tag;
         return (
@@ -103,7 +96,9 @@ class Tag extends Component {
                         tag.posts.map((item)=>{
                             return (
                             <div className="col-xl-4 pb-3 pt-3 ">
-                                <div className="image-wrapper" style={{backgroundImage: `url(${item.images[0].url})`}}>
+                                <div className="image-wrapper" onClick={()=>{
+                                        this.props.history.push(`/postDetail/${item._id}`)
+                                }} style={{backgroundImage: `url(${item.images[0].url})`}}>
                                     
                                 </div>
                             </div>)
@@ -135,4 +130,4 @@ function mapStateToProps(state) {
         tags: state.tags,
     };
 }
-export default connect(mapStateToProps)(Tag);
+export default connect(mapStateToProps)(withRouter(Tag));
