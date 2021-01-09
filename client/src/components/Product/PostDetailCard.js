@@ -16,7 +16,6 @@ import { likePost,
         clearPostDetail } 
         from '../../actions/product_actions';
 import Avatar from '@material-ui/core/Avatar';
-import { getTagId } from '../../actions/tag_actions';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import NativeClickListener from '../ultils/NativeClickListener';
 import { Link, withRouter } from 'react-router-dom';
@@ -70,9 +69,7 @@ class PostDetailCard extends Component {
 
         showEditor: false,
         setSnack: false,
-        SnackMess: "",
-
-        tags: [],
+        SnackMess: ""
     }
 
     componentDidMount() {
@@ -87,12 +84,6 @@ class PostDetailCard extends Component {
                 lightboxImages
             })
         }
-
-        let hashtag = this.findHashtags(this.props.post.description)
-        getTagId(hashtag).then((response) => {
-            this.setState({ tags: [...response] });
-        })
-
         this.props.dispatch(getPolicy());
     }
 
@@ -106,6 +97,7 @@ class PostDetailCard extends Component {
                 lightbox: true,
             })
         }
+
     }
 
     handlelightBoxClose = () => {
@@ -150,9 +142,7 @@ class PostDetailCard extends Component {
                         <img src={item.postedBy[0].avt} />
                     </div>
                     <div className="content">
-                        <b onClick={() => {
-                            this.props.history.push(`/user/${item.postedBy[0]._id}`)
-                        }}>{item.postedBy[0].userName}</b> {item.content}
+                        <b>{item.postedBy[0].userName}</b> {item.content}
                         <p>
                             {item.likes.length} lượt thích
                         </p>
@@ -251,28 +241,17 @@ class PostDetailCard extends Component {
         var regexp = /\B\#\w\w+\b/g
         let result = Text.match(regexp);
         if (result) {
-            let tags = [];
-            result.forEach((item) => {
-                tags.push(item.slice(1));
-            })
-            return (tags);
+            return (result);
         } else {
             return false;
         }
     }
 
-    handleDescription(description, userTag) {
-        //let hashtag = this.findHashtags(description)
-        
-        this.state.tags.forEach((item) =>
-            description = description.replace('#' + item.name, `<a href="/tag/${item._id}">${"#" + item.name}</a>`)
+    handleDescription(description) {
+        let hashtag = this.findHashtags(description)
+        hashtag.forEach((item) =>
+            description = description = description.replace(item, `<a href="http://localhost:3000/users/dashboard">${item}</a>`)
         )
-        if (userTag.length > 0) {
-            description = description + "<b>- cùng với </b>"
-        }
-        userTag.forEach((item) => {
-            description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
-        })
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }
     
@@ -399,7 +378,7 @@ class PostDetailCard extends Component {
                                         <img src={props.post.postedBy[0].avt} />
                                     </div>
                                     <div className="userName">
-                                        <Link to={`/user/${props.post.postedBy[0]._id}`}>{props.post.postedBy[0].userName}</Link>
+                                        {props.post.postedBy[0].userName}
                                         <p>{this.postedDate(props.post.dateDifference)}</p>
                                     </div>
                                 </div>
@@ -461,7 +440,7 @@ class PostDetailCard extends Component {
                                             ActionType="detail" 
                                             userTag={props.post.userTag} 
                                             postId={props.post._id}/>
-                                    :this.handleDescription(props.post.description,props.post.userTag)
+                                    :this.handleDescription(props.post.description)
                                 }
                             </div>
                         
