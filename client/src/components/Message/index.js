@@ -9,10 +9,14 @@ import { Link, withRouter } from 'react-router-dom';
 import { GridDots, LayoutList, Edit, Settings, LayoutGrid, Tag, Dots, CircleX, Heart, Message2, Bookmark, Pencil, Search, Point, Photo, Sticker, Send } from 'tabler-icons-react'
 import Pusher from 'pusher-js'
 import { Button,LinearProgress} from '@material-ui/core';
+import Mess from './mess';
+import ReactDOM from 'react-dom'
+import { Picker } from 'emoji-mart'
 
 class Message extends Component {
     state = {
-
+        emojiToggle:false,
+        heart:'http://res.cloudinary.com/dlikyyfd1/image/upload/v1610161677/1610161676299.png',
         userName: null,
         sending:false,
         _id: null,
@@ -25,6 +29,7 @@ class Message extends Component {
             type:'',
         }
     }
+    
     componentDidMount(){
         this.props.dispatch(getMessage(this.props.match.params.id)).then(
             this.props.dispatch(getConversation())
@@ -54,6 +59,7 @@ class Message extends Component {
                 this.props.dispatch(this.props.dispatch(getMessage(this.props.match.params.id)))
             }
         })
+        this.scrollToBottom();
     }
        componentDidUpdate (prevProps) {
               if (prevProps.location.key !== this.props.location.key) {
@@ -71,6 +77,14 @@ class Message extends Component {
             })
        
         }
+        this.scrollToBottom();
+    }
+    scrollToBottom = () => {
+        const messagesContainer = ReactDOM.findDOMNode(this.messagesContainer);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    };
+    emojiClick=()=>{
+        this.setState({emojiToggle:!this.state.emojiToggle})
     }
     handleChange=(event) => {
        this.setState({content:event.target.value});   
@@ -93,6 +107,37 @@ class Message extends Component {
         this.props.dispatch(sendMessage(dataToSubmit));
         this.setState({content:'',sending:true});
     }
+    sendHeartIcon = ()=>{
+        this.setState({ sending: true });
+
+       this.state.mess.content = this.state.heart;
+        this.state.mess.type='sticker';
+        let dataToSubmit = this.state.mess
+        this.props.dispatch(sendMessage(dataToSubmit));
+        this.setState({content:'',sending:true});
+       
+    }
+    addEmoji = e => {
+        const input = document.getElementById('description_textarea');
+        var starPros = document.getElementById('description_textarea').selectionStart;
+        var endPros = document.getElementById('description_textarea').selectionEnd;
+        let event = e.native;
+        var value = JSON.stringify(event);
+        var emote = value.replace(/['"]+/g, '')
+        // var unquoted = emote.replace(/(\{|,)\s*(.+?)\s*:/g, '$1 "$2":')
+        this.setState({content:this.state.content.substr(0,starPros)+emote+this.state.content.substr(endPros,this.state.content.length)});
+        document.execCommand("copy");
+      
+        // this.setState({content:this.state.content+ JSON.stringify(event)})
+        // insertMyText = e => {
+        //     let textToInsert = " this is the inserted text "
+        //     let cursorPosition = e.target.selectionStart
+        //     let textBeforeCursorPosition = e.target.value.substring(0, cursorPosition)
+        //     let textAfterCursorPosition = e.target.value.substring(cursorPosition, e.target.value.length)
+        //     this.setState({content:this.state.content+ JSON.stringify(event)})
+        //     e.target.value = textBeforeCursorPosition + textToInsert + textAfterCursorPosition
+        //   }
+    };
     // handleSeen = (id)=> {
     //     alert('Đã click',id);
     // }
@@ -236,47 +281,53 @@ class Message extends Component {
                                         this.state.sending == true ?  <LinearProgress/>
                                         :''
                                     }
-                                <div className="message">
-
+                                <div className="message"  ref={(el) => { this.messagesContainer = el; }} >
+                                
                                     {
                                        this.props.messages.messlist ? this.props.messages.messlist.messagelist ? this.props.messages.messlist.messagelist.map(mess => {
                                             return (
-                                                mess.sentBy == yourProfile._id ?
-                                                    <div className="row no-gutters sent">
-                                                        <div className="col-xl-6">
-                                                        </div>
-                                                        <div className="col-xl-6 sent_mess">
-                                                        {
-                                                                    mess.type=='text'?
+                                                <Mess
+                                                mess = {mess} 
+                                                yourProfile = {yourProfile}
+                                                
+                                                />
+                                                
+                                                // mess.sentBy == yourProfile._id ?
+                                                //     <div className="row no-gutters sent">
+                                                //         <div className="col-xl-6">
+                                                //         </div>
+                                                //         <div className="col-xl-6 sent_mess">
+                                                //         {
+                                                //                     mess.type=='text'?
                                                                 
-                                                            <p>
+                                                //             <p>
                                                                 
-                                                                {mess.content}
-                                                            </p>
-                                                            :                                                 
-                                                                <img src={mess.content}></img>
-                                                       }    
-                                                        </div>
+                                                //                 {mess.content}
+                                                //             </p>
+                                                //             :                                                 
+                                                //                 <img src={mess.content}></img>
+                                                //        }    
+                                                //         </div>
                                                         
-                                                    </div> :
-                                                    <div className="row no-gutters receive">
+                                                //     </div> :
+                                                //     <div className="row no-gutters receive">
                                                         
-                                                        <div className="col-xl-6 receive_mess">
+                                                //         <div className="col-xl-6 receive_mess">
 
-                                                        {
-                                                                    mess.type=='text'?
+                                                //         {
+                                                //                     mess.type=='text'?
                                                                 
-                                                            <p>
+                                                //             <p>
                                                                 
-                                                                {mess.content}
-                                                            </p>
-                                                            :                                                 
-                                                                <img src={mess.content}></img>
-                                                       }    
-                                                        </div>
-                                                        <div className="col-xl-6">
-                                                        </div>
-                                                    </div>
+                                                //                 {mess.content}
+                                                //             </p>
+                                                //             :                                                 
+                                                //                 <img src={mess.content}></img>
+                                                //        }    
+                                                //         </div>
+                                                //         <div className="col-xl-6">
+                                                //         </div>
+                                                //     </div>
                                             )
                                         }
                                         ) : '' : ''
@@ -312,8 +363,8 @@ class Message extends Component {
                                     <div className="chat_area">
                                          {/* <input value={this.state.mess.sentTo} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input>
                                           <input value={this.state.mess.sentBy} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input> */}
-                                          <input type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
-                                            <div className="action_icon">
+                                          <input  id="description_textarea" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
+                                            <div className="action_icon"  onClick={this.sendHeartIcon}>
                                             
                                             <Heart size={32} strokeWidth={1} color="black"></Heart>
                                         </div>
@@ -322,10 +373,16 @@ class Message extends Component {
                                     <label className="custom-file-upload">
                                                     <input type="file" onChange={this.onFileChange} />
                                                     <Photo size={32} strokeWidth={1} color="black"></Photo>
+                                 
                                     </label>
                                     </div>
                                     <div className="emoji_icon">
-                                        <Sticker size={32} strokeWidth={1} color="black"></Sticker>
+                                        <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
+                                {
+                            this.state.emojiToggle ?
+                                <Picker style={{position: "absolute", right: 0,top: "20%",}} onSelect={this.addEmoji} />
+                            :null
+                            }
                                     </div>
                                     <div className="send_icon" onClick={(event) => { this.submitForm(event) }}>
                                         <Send size={32} strokeWidth={1} color="white"></Send>
@@ -333,7 +390,6 @@ class Message extends Component {
                                 </div>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>

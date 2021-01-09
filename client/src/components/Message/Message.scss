@@ -192,6 +192,18 @@
                 margin-bottom: 8px;
                object-fit: cover;    
             }
+            .sticker_mess{
+                width: 40px;
+                margin:0px;
+              
+                border: solid 0.5px none;
+                height: 40px;
+                border-radius: 21px;
+                align-items: center;
+                margin-bottom: 8px;
+  
+               object-fit: none;    
+            }
         
         }}
         .sent{
@@ -234,6 +246,16 @@
                     font-size: 10px;
                     padding: 8px 16px;
                 }
+                .sticker_mess{
+                    width: 40px;
+                    margin:0px;  
+               
+                    height: 40px;          
+                    align-items: center;
+                    margin-bottom: 8px;
+                   object-fit: none;    
+                }
+            
             }
         }
        
@@ -249,6 +271,7 @@
             align-items: center;
             margin-right:8px;
             input{
+                width: 100%;
                 border: none;
                 margin-left: 10px;
                 background: none;

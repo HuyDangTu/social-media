@@ -16,7 +16,11 @@ export default function(state={},action){
             return {...state, conlist: action.payload}
         }
         case SEND_MESS:{
-            return {...state, status: action.payload}
+            let newmesslist= {...state.messlist}
+            newmesslist.lastMess = action.payload.lastMess
+            newmesslist.seenBy =[...action.payload.seenBy]
+            newmesslist.messagelist = [...newmesslist.messagelist,action.payload.messagelist[action.payload.messagelist.length-1]]
+            return {...state, messlist: newmesslist}
         }
         case SEEN_MESS:{
             return {...state, seenstatus: action.payload}
