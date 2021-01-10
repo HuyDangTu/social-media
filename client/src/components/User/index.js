@@ -224,7 +224,7 @@ class UserDashboard extends Component {
                 <div className="create_post">
                     <form class="create_post_form">
                         <div className="row no-gutters">
-                            <div className='col-xl-12 no-gutters'>
+                            <div className='col-xl-12 col-sm-12 col-12 no-gutters'>
                                 <div className="user_info">
                                     <img className="avatar" src={props.user.userData.avt}/>
                                     <h5 className="userName">{props.user.userData.userName}</h5>

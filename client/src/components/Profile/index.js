@@ -80,14 +80,14 @@ class Profile extends Component {
         return (
             <Layout>
                 <div className="Profile">
-                <div className="shop_container">
-                    <div className="shop_wrapper">
+                <div className="profile_container">
+                    <div className="profile_wrapper">
                         <div className="row">
                             <div className="col-xl-2"></div>
                             <div className="col-xl-8">
                                 <div className="row pro_header">
                                     <div className="col-xl-1"></div>
-                                    <div className="col-xl-3 img_contain">
+                                    <div className="col-xl-3 col-sm-3 col-3 img_contain">
                                         <div className="profile-img">
                                             {
                                                     userProfile ?
@@ -97,14 +97,14 @@ class Profile extends Component {
                                             
                                         </div>
                                     </div>
-                                    <div className="col-xl-7 action_contain">
+                                    <div className="col-xl-7 col-sm-7 col-9 action_contain">
                                         <div className="prolile_header">
                                             <div className="name">{userProfile ? userProfile.userName : <Skeleton variant="rect" width={100} height={36} /> }</div>
                                             {
                                                  yourProfile ? (yourProfile._id == this.props.match.params.id ?
                                                     <div>
                                                     <Button className="follow_options"><Link to={`/profilesettings`}>Chỉnh sửa thông tin cá nhân</Link></Button>
-                                                    <Settings size={30} strokeWidth={1} color="grey" />
+  
                                                     </div>
                                                     :
                                                     <div>
@@ -161,7 +161,7 @@ class Profile extends Component {
                                             {userProfile ? userProfile.bio : <Skeleton variant="text" />}
                                         </div>
                                     </div>
-                                    <div className="col-xl-1"></div>
+                                    <div className="col-xl-1 col-sm-1 col-1"></div>
                                 </div>
                                 <div className="row no-gutters divide_type">
                                     <ul>
@@ -216,7 +216,7 @@ class Profile extends Component {
                                     {
                                         typelist ? typelist.map(posts => {
                                             return (
-                                                    <div className="col-xl-4 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
+                                                    <div className="col-xl-4 col-sm-6 col-12 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
                                                         <div className="img_overlay">
                                                             <div className="overlay_info">
                                                                 <div className="hearts">  <Heart size={24} strokeWidth={1} color="white" fill="white"></Heart><h2>{posts.likes.length}</h2> </div>

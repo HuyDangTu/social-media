@@ -13,6 +13,14 @@ import Mess from './mess';
 import ReactDOM from 'react-dom'
 import { Picker } from 'emoji-mart'
 import Picker2 from 'react-giphy-component'
+import styled from 'styled-components'
+const GifPicker = styled(Picker2)`
+`;
+const StyleLink = styled(Link)`
+color:black;
+`;
+
+
 class Message extends Component {
     state = {
         emojiToggle: false,
@@ -95,11 +103,13 @@ class Message extends Component {
     }
     submitForm = (event) => {
         event.preventDefault();
-        this.state.mess.content = this.state.content;
-        this.state.mess.type = 'text';
-        let dataToSubmit = this.state.mess
-        this.props.dispatch(sendMessage(dataToSubmit));
-        this.setState({ content: '', sending: true });
+        if(this.state.content.trim()){
+            this.state.mess.content = this.state.content;
+            this.state.mess.type = 'text';
+            let dataToSubmit = this.state.mess
+            this.props.dispatch(sendMessage(dataToSubmit));
+            this.setState({ content: '', sending: true }); 
+        }   
     }
     onFileChange = async (event) => {
         this.setState({ sending: true });
@@ -202,14 +212,14 @@ class Message extends Component {
                                                                     con.user1._id != yourProfile._id ?
                                                                         <Link className="link" to={`/message/inbox/${con.user1._id}`}>
                                                                             <div className="row no-gutters message_contain">
-                                                                                <div className="col-xl-2 avt">
+                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 message">
+                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
                                                                                     <h2>{con.user1.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}   {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-2 info">
+                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                     <h6>6 mins</h6>
                                                                                 </div>
@@ -218,16 +228,16 @@ class Message extends Component {
                                                                         :
                                                                         <Link className="link" to={`/message/inbox/${con.user2._id}`}>
                                                                             <div className="row no-gutters message_contain">
-                                                                                <div className="col-xl-2 avt">
+                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 message">
+                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
                                                                                     <h2 >{con.user2.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}
                                                                                         {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
 
                                                                                 </div>
-                                                                                <div className="col-xl-2 info">
+                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                     <h6>6 mins</h6>
                                                                                 </div>
@@ -238,14 +248,14 @@ class Message extends Component {
                                                                     con.user1._id != yourProfile._id ?
                                                                         <Link className="link" to={`/message/inbox/${con.user1._id}`} onClick={() => this.props.dispatch(seenMessage(con.user1._id))}>
                                                                             <div className="row no-gutters message_contain unseen">
-                                                                                <div className="col-xl-2 avt">
+                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 message">
+                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
                                                                                     <h2>{con.user1.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}  {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-2 info">
+                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                     <h6>6 mins</h6>
                                                                                 </div>
@@ -254,14 +264,14 @@ class Message extends Component {
                                                                         :
                                                                         <Link className="link" to={`/message/inbox/${con.user2._id}`} onClick={() => this.props.dispatch(seenMessage(con.user2._id))}>
                                                                             <div className="row no-gutters message_contain unseen">
-                                                                                <div className="col-xl-2 avt">
+                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 message">
+                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
                                                                                     <h2 >{con.user2.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}  {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-2 info">
+                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                     <h6>6 mins</h6>
                                                                                 </div>
@@ -284,7 +294,7 @@ class Message extends Component {
                                     <div className="user_info">
 
                                         <img src={this.state.avt}></img>
-                                        <h2><Link to={`/user/${this.state._id}`}>{this.state.userName}</Link></h2>
+                                        <h2><StyleLink to={`/user/${this.state._id}`}>{this.state.userName}</StyleLink></h2>
                                     </div>
                                     <Dots size={24} strokeWidth={0} fill="black"></Dots>
 
@@ -369,10 +379,20 @@ class Message extends Component {
                                                 </div> : '') : '' : '' : ''
 
                                     }
+                                        {
+                                                this.state.gifToggle ?
+                                        <div className="gif_picker" style={{position:'fixed', zIndex:100, top:"32%",left:"50%"}}> <GifPicker apiKey={"xRQzMksF1tPmqAvVPYlIGeJHZ2EBVXyh"} onSelected={(gif) => this.sendGif(gif.downsized.url)}></GifPicker></div>                          
+                                                    : null
+                                            }
                                 </div>
-                                <form onSubmit={(event) => this.submitForm(event)}>
+                                {
+                                        
+                                        this.props.messages.messlist ? this.props.messages.messlist.messagelist ? 
+                                        <form onSubmit={(event) => this.submitForm(event)}>
+                                   
                                     <div className="chat_box">
                                         <div className="chat_area">
+                                    
                                             {/* <input value={this.state.mess.sentTo} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input>
                                           <input value={this.state.mess.sentBy} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input> */}
                                             <input id="description_textarea" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
@@ -403,19 +423,16 @@ class Message extends Component {
                                                     <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
                                                     : null
                                             }
-                                            {
-                                                this.state.gifToggle ?
-                                                    <Picker2 apiKey={"xRQzMksF1tPmqAvVPYlIGeJHZ2EBVXyh"} modal={true} style={{ position: "absolute", right: 0, top: "20%" }} onSelected={(gif) => this.sendGif(gif.downsized.url)}></Picker2>
-                                                    : null
-                                            }
+                                         
 
                                         </div>
-                                        <div className="send_icon" onClick={(event) => { this.submitForm(event) }}>
+                                        <div  id="sent_btn" className="send_icon" onClick={(event) => { this.submitForm(event) }}>
                                             <Send size={32} strokeWidth={1} color="white"></Send>
                                         </div>
-
                                     </div>
-                                </form>
+                                </form>:'':''
+                                }
+                                
                             </div>
                         </div>
                     </div>

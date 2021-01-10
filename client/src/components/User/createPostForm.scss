@@ -1,8 +1,24 @@
 @import '../ultils/initial.scss';
 
-.create_post{
+@media only screen and (max-width : 992px){
+    .create_post{
+        width: 100%;
+    .create_post_form{
+        width: 80%;
+        margin:auto;
+        align-self: center;
+     
+    }}
+}
+@media only screen and (min-width : 992px){
+    .create_post{
     .create_post_form{
         width: 60%;
+    }}
+}
+.create_post{
+    .create_post_form{
+       
         margin: auto;
         box-shadow: 1px 1px 6px #d4d4d4;
         padding: 20px;

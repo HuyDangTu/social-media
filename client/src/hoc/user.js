@@ -95,7 +95,7 @@ const UserLayout = (props) => {
                             </div>
                         </div> */}
                         </div>
-                    <div className="col-xl-12">
+                    <div className="col-xl-12 col-sm-12 col-12">
                         <div className="userLayout_right">
                             {props.children}
                         </div>

@@ -4,7 +4,11 @@
 $hover-input-color: rgba(88, 159, 207, 0.835);
 $solid-color: rgba(15, 15, 15, 0.2);
 $result-text-color: #424444;
-
+@media only screen and (max-width : 768px){
+    .search{
+     visibility: hidden;
+    }
+}
 .search {
   .search-container{
   display: flex;

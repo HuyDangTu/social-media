@@ -7,10 +7,10 @@ import NativeClickListener from '../../ultils/NativeClickListener';
 import { getConversation } from '../../../actions/message_action'
 import { getNotification, seenNotification, seenAllNotification } from '../../../actions/notification_action'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Send, Notification, BrandSafari, User, Settings, Point } from 'tabler-icons-react'
+import { Send, Notification, BrandSafari, User, Settings, Point} from 'tabler-icons-react'
 import faUser from '@fortawesome/fontawesome-free-solid/faUser';
 import faCog from '@fortawesome/fontawesome-free-solid/faCog';
-import Search from '../../Search';
+import SearchBar from '../../Search';
 import Skeleton from '@material-ui/lab/Skeleton'
 import Pusher from 'pusher-js';
 import Badge from '@material-ui/core/Badge';
@@ -89,11 +89,11 @@ class Header extends Component {
                     <div className="dropdown" onClick={this.handleBodyClick}>
                         <div className="user_navigation">
                             <div>
-                                <FontAwesomeIcon icon={faUser}/>
+                            <User size={22} strokeWidth={1.5} color="grey"></User>
                                 <Link to={`/user/${this.props.user.userData._id}`}>Profile</Link>
                             </div>
                             <div>
-                                <FontAwesomeIcon icon={faCog}/>
+                            <Settings size={22} strokeWidth={1.5} color="grey"></Settings>
                                 <Link to={`/user/setting/${this.props.user.userData._id}`}>Setting</Link>
                             </div>
                         </div>
@@ -368,18 +368,18 @@ class Header extends Component {
             <header className="header">    
                 <div className="header__container container-fluid"> 
                     <div className="row no-gutters">
-                        <div className="col-xl-4 no-gutters">
+                        <div className="col-xl-4 col-sm-4 col-4 no-gutters">
                             <div className="header__logo" onClick={()=>{this.props.history.push('/newfeed')}}>
                                 <img src={require('../../../asset/logo/logo2x.png')} />
                                 <img class="Logo_stunn" src={require('../../../asset/logo/stunn2x.png')} />
                             </div>
                         </div>
-                        <div className="col-xl-4 no-gutters">
+                        <div className="col-xl-4 col-sm-4 col-1  no-gutters">
                             <div className="header__nav-page">
-                                <Search />
+                                <SearchBar />
                             </div>
                         </div>
-                        <div className="col-xl-4 no-gutters">
+                        <div className="col-xl-4 col-sm-4 col-7  no-gutters">
                             <div className="header__nav-user">
                                 {this.showLinks(this.state.user)}
                             </div>
