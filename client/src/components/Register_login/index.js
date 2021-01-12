@@ -8,7 +8,7 @@ const RegisterLogin = () => {
         <div className="login">
             <div className="login__container">
                 <div className="row no-gutters">
-                    <div className="col-xl-6 no-gutters">
+                    <div className="col-xl-6 col-lg-6 col-md-6 no-gutters">
                         <div className="left">
                             <div className="login_slogan">
                                 <img className="logo" src='./images/landingPage/logoIcon2x.png' />
@@ -18,7 +18,7 @@ const RegisterLogin = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-6 no-gutters">
+                    <div className="col-xl-6 col-lg-6 col-md-6 no-gutters">
                         <div className="right">
                             <Login />
                         </div>  

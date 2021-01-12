@@ -1,28 +1,14 @@
 @import '../ultils/initial.scss';
 
-@media only screen and (max-width : 992px){
-    .create_post{
-        width: 100%;
-    .create_post_form{
-        width: 80%;
-        margin:auto;
-        align-self: center;
-     
-    }}
-}
-@media only screen and (min-width : 992px){
-    .create_post{
+.create_post{
+    width: 100%;
     .create_post_form{
         width: 60%;
-    }}
-}
-.create_post{
-    .create_post_form{
-       
         margin: auto;
         box-shadow: 1px 1px 6px #d4d4d4;
         padding: 20px;
         border-radius: 5px;
+        margin-top: 20px;
         .user_info,textarea,.dropzone_container{
             margin-bottom: 20px;
         }
@@ -38,7 +24,6 @@
                 margin-right: 10px;
             }
         }
-       
         .field_container{  
             width: 100%;
             display: flex;
@@ -148,6 +133,29 @@
             background-color: $primaryColor;
             color: white;
             border: none;
+        }
+    }
+}
+
+
+@media screen and (max-width : 1024px){
+    .create_post{
+        .create_post_form{
+            width: 70%;
+            .create_button{
+                height: 6vh;
+            }
+        }
+    }
+}
+
+@media screen and (max-width : 768px){
+    .create_post{
+        .create_post_form{
+            width: 80%;
+            .create_button{
+                height: 6vh;
+            }
         }
     }
 }

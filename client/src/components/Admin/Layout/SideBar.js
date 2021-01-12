@@ -5,6 +5,7 @@ import './SideBar.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 import { logoutUser } from '../../../actions/user_action'
+import { AlertOctagon , User } from 'tabler-icons-react'
 
 class SideBar extends Component {
 
@@ -27,9 +28,16 @@ class SideBar extends Component {
                 <div className="tools">
                     <h5>Công cụ quản lý</h5>
                     <ul>
-                        <li className={this.props.page=="report"?"active":""} onClick={()=>this.props.history.push("/Admin/Dashboard")}>Quản lý báo cáo</li>
-                        <li className={this.props.page == "account"? "active" : ""} onClick={() => this.props.history.push("/Admin/Account")}>Quản lý admin</li>
-                        <li className={this.props.page == "policy"? "active" : ""} onClick={() => this.props.history.push("/Admin/policy")}>Quản lý chính sách</li>
+                        <li className={this.props.page == "report" ? "active" : ""} onClick={() => this.props.history.push("/Admin/Dashboard")}>
+                            <AlertOctagon size={20} strokeWidth={3} color="black" /> 
+                            <p>Quản lý báo cáo </p>
+                        </li>
+                        <li className={this.props.page == "account"? "active" : ""} onClick={() => this.props.history.push("/Admin/Account")}>
+                            <User size={20} strokeWidth={3} color="#8a8a8a" />
+                            <p>Quản lý admin</p>
+                        </li>
+                        {/* <li className={this.props.page == "policy"? "active" : ""} onClick={() => this.props.history.push("/Admin/policy")}>
+                        <p>Quản lý chính sách</p></li> */}
                     </ul>
                 </div>
                 <div className="info">

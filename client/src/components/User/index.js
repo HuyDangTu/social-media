@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import UserLayout from '../../hoc/user';
+import Layout from '../../hoc/layout';
 import { Link, withRouter } from 'react-router-dom';
 import FormField from '../ultils/Form/FormField';
 import { populateOptionFields, update, ifFormValid, generateData, resetFields} from '../ultils/Form/FormActions';
@@ -220,7 +220,7 @@ class UserDashboard extends Component {
     render(){
         const props = this.props;
         return (
-            <UserLayout>
+            <Layout>
                 <div className="create_post">
                     <form class="create_post_form">
                         <div className="row no-gutters">
@@ -258,7 +258,7 @@ class UserDashboard extends Component {
                         <SearchLocationInput onChange={() => {}}/>
                     </div> */}
                 </div>
-            </UserLayout>
+            </Layout>
         );
     }
 }

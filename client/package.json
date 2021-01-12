@@ -23,6 +23,7 @@
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.3",
     "react-facebook-login": "^4.1.1",
+    "react-giphy-component": "^1.1.0",
     "react-images": "^1.1.7",
     "react-insta-stories": "^2.1.2",
     "react-ios-switch": "^0.1.19",
@@ -35,6 +36,7 @@
     "redux": "^4.0.5",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
+    "styled-components": "^5.2.1",
     "tabler-icons-react": "^1.32.0"
   },
   "scripts": {

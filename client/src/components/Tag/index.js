@@ -75,27 +75,29 @@ class Tag extends Component {
                             <img className="img" src="https://kazcm.com/wp-content/uploads/2018/02/Hashtag.jpg" /> 
                         }
                     </div>
-                    <div className="tag_name">
-                        <h3>#{tag.tag.name}</h3>
-                        <h6>{tag.posts.length} Bài viết</h6>
-                    </div>
-                    {
-                        tag.tag.followers.includes(this.props.user.userData._id)
-                        ?
+                  
+                        <div className="tag_name">
+                            <h3>#{tag.tag.name}</h3>
+                            <h6>{tag.posts.length} Bài viết</h6>
+                        </div>
+                        {
+                            tag.tag.followers.includes(this.props.user.userData._id)
+                            ?
                             <div className="button_wrapper">
-                                <button type="button" onClick={() => this.unfollowTag(tag.tag._id,this.props.tags.tag)}>Unfollow</button>
-                            </div>
-                        :  <div className="button_wrapper"> 
-                                <button type="button" onClick={() => this.followTag(tag.tag._id, this.props.tags.tag)}>Follow</button>
-                            </div>
-                    }
+                                    <button type="button" onClick={() => this.unfollowTag(tag.tag._id,this.props.tags.tag)}>Unfollow</button>
+                                </div>
+                            :  <div className="button_wrapper"> 
+                                    <button type="button" onClick={() => this.followTag(tag.tag._id, this.props.tags.tag)}>Follow</button>
+                                </div>
+                        }
+                   
                 </div>
                 <div className="posts">
                     <div className="row">
                         {
                         tag.posts.map((item)=>{
                             return (
-                            <div className="col-xl-4 pb-3 pt-3 ">
+                                <div className="col-xl-4 col-md-4  pb-3 pt-3 ">
                                 <div className="image-wrapper" onClick={()=>{
                                         this.props.history.push(`/postDetail/${item._id}`)
                                 }} style={{backgroundImage: `url(${item.images[0].url})`}}>

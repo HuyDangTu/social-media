@@ -153,26 +153,24 @@ class ProfileSettings extends Component {
         this.setState({ settingState: type })
     }
     render() {
-
         return (
             <Layout>
                 <div className="setting_container">
                     <div className="setting_wrapper">
                         <div className="row">
-                            <div className="col-xl-2"></div>
-                            <div className="col-xl-2 setting_options">
+                            <div className="col-xl-2 col-md-2 col-sm-2 col-2 "></div>
+                            <div className="col-xl-2 col-md-2 col-sm-2 col-2 setting_options">
                                 {
                                     this.state.settingState == 'profile' ?
-                                        <Button className="options" onClick={() => this.handleSetting('profile')}><User size={20} strokeWidth={1} color="black" />Chỉnh sửa trang cá nhân</Button>
+                                        <Button className="options" onClick={() => this.handleSetting('profile')}><User size={20} strokeWidth={1} color="black" /><p>Thông tin</p></Button>
                                         :
-                                        <Button className="options disable" onClick={() => this.handleSetting('profile')}><User size={20} strokeWidth={1} color="black" />Chỉnh sửa trang cá nhân</Button>
-
+                                        <Button className="options disable" onClick={() => this.handleSetting('profile')}><User size={20} strokeWidth={1} color="black" /><p>Thông tin</p></Button>
                                 }
                                 {
                                     this.state.settingState == 'password' ?
-                                        <Button className="options" onClick={() => this.handleSetting('password')} ><Lock size={20} strokeWidth={1} color="black" />Đổi mật khẩu</Button>
+                                        <Button className="options" onClick={() => this.handleSetting('password')} ><Lock size={20} strokeWidth={1} color="black" /><p>Đổi mật khẩu</p></Button>
                                         :
-                                        <Button className="options disable" onClick={() => this.handleSetting('password')} ><Lock size={20} strokeWidth={1} color="black" />Đổi mật khẩu</Button>
+                                        <Button className="options disable" onClick={() => this.handleSetting('password')} ><Lock size={20} strokeWidth={1} color="black" /><p>Đổi mật khẩu</p></Button>
                                 }
                                 <Snackbar
                                     anchorOrigin={{
@@ -182,20 +180,16 @@ class ProfileSettings extends Component {
                                     open={this.state.setSnack}
                                     onClose={() => this.setState({ setSnack: false })}
                                     autoHideDuration={1000}
-                                // message=
-
                                 >
-                                    <MuiAlert elevation={6} variant="filled" severity={this.state.severity} >Đã cập nhật ảnh đại diện</MuiAlert>
+                                <MuiAlert elevation={6} variant="filled" severity={this.state.severity} >Đã cập nhật ảnh đại diện</MuiAlert>
                                 </Snackbar>
-
                             </div>
-
                             {
                                 this.state.settingState == 'profile' ?
-                                    <form className="col-xl-6 setting_detail" onSubmit={(event) => this.submitForm(event)}>
+                                    <form className="col-xl-6 col-md-6 col-sm-6 col-6 setting_detail" onSubmit={(event) => this.submitForm(event)}>
 
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
+                                            <div className="col-xl-4 col-md-4 col-sm-4 col-4 label">
                                                 {
                                                     this.state.loading ?
                                                         <div class="overlay"><CircularProgress style={{ color: '#5477D5' }} thickness={7} />
@@ -204,23 +198,22 @@ class ProfileSettings extends Component {
                                                         :
                                                         ''
                                                 }
-
                                                 <img src={this.props.user.userData.avt}></img>
                                             </div>
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8 col-sm-8 col-8 field">
                                                 <h2>{this.props.user.userData.userName}</h2>
                                                 <label className="custom-file-upload">
                                                     <input type="file" onChange={this.onFileChange} />
-                                                    <h6>Chỉnh sửa ảnh đại diện</h6>
+                                                    <h6>Sửa ảnh đại diện</h6>
                                                 </label>
                                             </div>
                                         </div>
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
-                                                <h3>Tài khoản riêng tư</h3>
+                                            <div className="col-xl-4 col-md-4 label">
+                                                <h3>Riêng tư</h3>
 
                                             </div>
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8  field">
 
                                                 <Switch checked={this.state.privateMode} onColor="#7166F9" onChange={() => this.setState({ privateMode: !this.state.privateMode })}>
 
@@ -229,10 +222,10 @@ class ProfileSettings extends Component {
                                             </div>
                                         </div>
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
-                                                <h3>Tên</h3>
+                                            <div className="col-xl-4 col-md-4 label">
+                                                <h3>Họ Tên</h3>
                                             </div>
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8 field">
                                                 <FormField
                                                     //Có thể để trống phần description nên k cần xử lý event onChange,..
                                                     id={'name'}
@@ -242,10 +235,10 @@ class ProfileSettings extends Component {
                                             </div>
                                         </div>
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
-                                                <h3>Tên tài khoản</h3>
+                                            <div className="col-xl-4 col-md-4  label">
+                                                <h3>User name</h3>
                                             </div>
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8  field">
                                                 <FormField
                                                     //Có thể để trống phần description nên k cần xử lý event onChange,..
                                                     id={'userName'}
@@ -256,10 +249,10 @@ class ProfileSettings extends Component {
                                             </div>
                                         </div>
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
+                                            <div className="col-xl-4 col-md-4  label">
                                                 <h3>Email</h3>
                                             </div>
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8 field">
                                                 <FormField
                                                     //Có thể để trống phần description nên k cần xử lý event onChange,..
                                                     id={'email'}
@@ -269,10 +262,10 @@ class ProfileSettings extends Component {
                                             </div>
                                         </div>
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
+                                            <div className="col-xl-4 col-md-4 label">
                                                 <h3>Mô tả</h3>
                                             </div>
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8 field">
                                                 <FormField
                                                     //Có thể để trống phần description nên k cần xử lý event onChange,..
                                                     id={'bio'}
@@ -282,17 +275,17 @@ class ProfileSettings extends Component {
                                             </div>
                                         </div>
                                         <div className="row setting_type">
-                                            <div className="col-xl-4 label">
+                                            <div className="col-xl-4 col-md-4 label">
                                             </div>
                                             {
                                             this.state.edited?
-                                            <div className="col-xl-8 field">
+                                                <div className="col-xl-8 col-md-8 field">
                                                 <Button className="send_btn" onClick={(event) => { this.submitForm(event) }}>
                                                     Gửi
                                                  </Button>
                                             </div>
                                             :
-                                            <div className="col-xl-8 field">
+                                            <div className="col-xl-8 col-md-8  field">
                                                 <Button className="send_btn disable" disabled="true" onClick={(event) => { this.submitForm(event) }}>
                                                     Gửi
                                                  </Button>
@@ -305,7 +298,7 @@ class ProfileSettings extends Component {
                             }
 
                         </div>
-                        <div className="col-xl-2 setting_options">
+                        <div className="col-xl-2 col-md-2 col-sm-2 col-2 setting_options">
 
                         </div>
                     </div>

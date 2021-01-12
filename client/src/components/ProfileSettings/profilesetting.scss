@@ -131,6 +131,47 @@
             }
         } 
         
+    }   
+}
+}
+
+@media screen and (max-width : 1024px){
+     .setting_options{
+        .options{
+            span{
+                display: flex;
+                flex-direction: column;
+                p{
+                    margin-top: 10px;
+                }
+            }
+        }
     }
 }
+
+@media screen and (max-width : 768px){
+    .setting_options{
+        .options{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            p{
+                display: none;
+            }
+          
+        }
+    }
+    .setting_wrapper{
+        .setting_detail{
+            .setting_type{
+                .label{
+                   justify-content: flex-start;
+                }
+                .field{
+                  
+                }
+            }
+        }
+    }
 }
+

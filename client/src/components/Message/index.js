@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom'
 import { Picker } from 'emoji-mart'
 import Picker2 from 'react-giphy-component'
 import styled from 'styled-components'
+
 const GifPicker = styled(Picker2)`
 `;
 const StyleLink = styled(Link)`

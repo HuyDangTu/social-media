@@ -49,7 +49,6 @@
 .signin__container{
     @include default();
     padding: 0px calc_width(219) 0px calc_width(219);
-
     .signin__form{
         display: flex;
         flex-direction: column;
@@ -180,4 +179,141 @@
     }
 }
 
+@media screen and (max-width: 992px){
+    .login__container{
+        .right{
+            .signin__container{
+                padding: 0px calc_width(120) 0px calc_width(120);
+                .signin__form{
+                    .signin__logo{
+                        .logo{
+                            padding: 5px;
+                            width: calc_width(120);
+                            height: calc_width(120);
+                            }
+                        .stunning_text{
+                            padding: 5px;
+                            width: calc_width(130);              
+                        }
+                    }
+                    .gmail_signin_button,
+                    .facebook_signin_button{
+                        width: 100%;
+                        height:  calc_width(80);
+                        font-size: calc_width(25);
+                        img{
+                            width: calc_width(50);
+                            padding-right: 5px;
+                        }
+                    }
+                    .formField_container{
+                        width: 100%;
+                        .formBlock{
+                            input{
+                                height: calc_width(80) !important;
+                                @include general;
+                                color: black;
+                                //box-shadow: 1px 1px 5px #CBCBCB;
+                                border: 1px solid #CBCBCB;
+                            }
+                            .label_input{
+                                color: $linkColor;
+                                margin-bottom: 2.5px;
+                            }
+                        }
 
+                    }
+                    .label,.label_input,.link_default{
+                        font-size: calc_width(25);
+                    }
+                    .signin__button
+                    {
+                        height: calc_width(80);
+                        margin-bottom: 20px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: 768px){
+    .login__container{
+        .left{
+            display: none;
+        }
+        .right{
+            background-image: url('../../asset/login-page/login_bg.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: bottom; 
+            height: 100vh;
+            position: relative;
+            .signin{
+                position: absolute;
+                width: 70%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                .signin__container{
+                    padding: 0px;
+                    width: 100%;
+                    .signin__form{
+                        justify-content: flex-start;
+                        border-radius: 7px;
+                        background-color:white;
+                        padding: calc_width(80);
+                        height: fit-content;
+                        .signin__logo{
+                            .logo{
+                                    padding: 5px;
+                                    width: calc_width(130);
+                                    height: calc_width(130);
+                                }
+                            .stunning_text{
+                                padding: 5px;
+                                width: calc_width(150);              
+                            }
+                        }
+                        .gmail_signin_button,
+                        .facebook_signin_button{
+                            width: 100%;
+                            height: calc_width(150);
+                            font-size: calc_width(40);
+                            img{
+                                width: calc_width(60);
+                                padding-right: 5px;
+                            }
+                        }
+                        .formField_container{
+                            width: 100%;
+                            .formBlock{
+                                input{
+                                    height: calc_width(150) !important;
+                                    @include general;
+                                    color: black;
+                                    //box-shadow: 1px 1px 5px #CBCBCB;
+                                    border: 1px solid #CBCBCB;
+                                }
+                                .label_input{
+                                    color: $linkColor;
+                                    margin-bottom: 2.5px;
+                                }
+                            }
+
+                        }
+                        .label,.label_input,.link_default{
+                            font-size: calc_width(40);
+                        }
+                        .signin__button
+                        {
+                            height: calc_width(150);
+                            margin-bottom: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
