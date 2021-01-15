@@ -94,7 +94,7 @@ class Header extends Component {
                             </div>
                             <div>
                             <Settings size={22} strokeWidth={1.5} color="grey"></Settings>
-                                <Link to={`/user/setting/${this.props.user.userData._id}`}>Setting</Link>
+                            <Link to={`/profilesettings`}>Setting</Link>
                             </div>
                         </div>
                         <div className="logout">
@@ -176,7 +176,7 @@ class Header extends Component {
                                                             </p>
                                                             <h6>
                                                                 6 giờ trước
-                                            </h6>
+                                                            </h6>
                                                         </div>
                                                         <div className="status">
                                                             <Point visibility="hidden" size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
@@ -198,7 +198,7 @@ class Header extends Component {
                                                             </p>
                                                             <h6>
                                                                 6 giờ trước
-                                             </h6>
+                                                            </h6>
 
                                                         </div>
 
@@ -253,7 +253,6 @@ class Header extends Component {
                         }
                     </Snackbar>
                 </div>
-
             )
         } else if (item.name === 'Direct') {
             var messnumber = 0;
@@ -262,7 +261,7 @@ class Header extends Component {
                     {
                         this.props.messages ? this.props.messages.conlist ? this.props.messages.conlist.forEach(
                             (con) => {
-                                console.log(con.seenBy)
+                                //console.log(con.seenBy)
                                 if (con.seenBy.includes(this.props.user.userData._id) == false) {
                                     messnumber = messnumber + 1;
                                 }

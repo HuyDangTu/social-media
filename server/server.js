@@ -1869,7 +1869,7 @@ app.put('/api/reports/updateReport', auth, admin, (req, res) => {
         new: true
     }).exec((err, report) => {
         if (err) res.status(400).json(err);
-        res.status(200).json(report);
+        res.status(200).json({report});
     })
 })
 
@@ -1884,7 +1884,7 @@ app.post('/api/reports/delete_post', auth, (req, res) => {
             new: true
         }).exec((err, report) => {
             if (err) res.status(400).json(err);
-            res.status(200).json(report);
+            res.status(200).json({report});
         })
     })
 })
@@ -1942,6 +1942,51 @@ app.post('/api/accounts/getAll', auth, admin, (req, res) => {
     }
     )
 })
+
+
+app.post('/api/users/login', jsonParser, (req, res) => {
+    // find the email
+    User.findOne({ 'email': req.body.email }, (err, user) => {
+        if (!user) return res.json({ loginSuccess: false, message: 'Auth failes,email not found' });
+        //check password
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if (!isMatch) return res.json({ loginSuccess: false, message: 'wrongPassword' })
+            user.gennerateToken((err, user) => {
+                if (err) return res.status(400).send(err);
+                //gennerate Token
+                res.cookie('u_auth', user.token).status(200).json({
+                    loginSuccess: true
+                });
+            });
+        });
+    });
+})
+
+app.post('/api/users/changePassword',auth,(req, res) => {
+    User.findOne({
+        _id: req.user._id,
+    }, (err, user) => {
+        if (err) console.log(err)
+        if (!user) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
+        user.comparePassword(req.body.currentPassword, (err, isMatch) => {
+            if (!isMatch) return res.json({ success: false, message: 'Mật khẩu hiện tại không đúng!' })
+            user.password = req.body.password;
+            user.save((err, doc) => {
+                if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
+                return res.status(200).json({
+                    success: true,
+                    message: 'Thay đổi mật khẩu thành công' 
+                })
+            }) 
+        });
+    })
+})
+
+
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+
+
 
 app.use(function (req, res, next) {
     res.status(404).send('Unable to find the requested resource!');

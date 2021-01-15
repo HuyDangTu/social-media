@@ -13,6 +13,8 @@ import { Link, withRouter, useParams } from 'react-router-dom';
 import { Button, withTheme, Snackbar, SnackbarMessage, Dialog } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton'
 import MuiAlert from '@material-ui/lab/Alert';
+
+
 class Profile extends Component {
     state = {
         setfollowerDiaglog: false,
@@ -238,7 +240,7 @@ class Profile extends Component {
                 </div>
                 </div>
                 <Dialog className="dialog_cont"  onClose={() => {this.setState({ setfollowerDiaglog: false }); this.props.dispatch(findProfile(this.props.match.params.id))}} open={this.state.setfollowerDiaglog} >
-                    <div className="header">
+                    <div className="dialog_header">
                         <h5>Danh sách theo dõi</h5>
                         <CircleX size={24} strokeWidth={0.5} color="black"></CircleX>
                     </div>
@@ -268,7 +270,7 @@ class Profile extends Component {
                     }
                 </Dialog>
                 <Dialog className="dialog_cont"  onClose={() => {this.setState({ setfollowingDiaglog: false }); this.props.dispatch(findProfile(this.props.match.params.id))}} open={this.state.setfollowingDiaglog} >
-                    <div className="header">
+                    <div className="dialog_header">
                         <h5>Danh sách đang theo dõi</h5>
                         <CircleX size={24} strokeWidth={0.5} color="black"></CircleX>
                     </div>

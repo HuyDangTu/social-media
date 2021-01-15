@@ -116,6 +116,9 @@ export const GET_TYPE = 'GET_TYPE';
 export const UPDATE_IMG = 'UPDATE_IMG';
 export const PROFILE_IMG = 'PROFILE_IMG';
 export const UPDATE_PRO = 'UPDATE_PRO';
+export const FOLLOW_USER = 'FOLLOW_USER';
+// export const UNFOLLOW_USER = 'FOLLOW_USER';
+
 export const CHANGE_USER = 'CHANGE_USER';
 export const GET_CONVERSATION = 'GET_CONVERSATION';
 export const GET_MESS = 'GET_MESS';

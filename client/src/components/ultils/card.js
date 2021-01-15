@@ -3,6 +3,7 @@ import './card.scss';
 import ImageLightBox from './ImageLightBox'
 import {connect} from 'react-redux';
 import { likePost, unlikePost, makeComment, hidePost, deletePost} from '../../actions/product_actions';
+import { unfollow, follow } from '../../actions/user_action';
 import { getTagId } from '../../actions/tag_actions';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
@@ -13,8 +14,8 @@ import { getPolicy } from '../../actions/policy_actions';
 import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
 import PostEdit from '../PostEdit/index';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import { Button} from '@material-ui/core';
+import {CircleX } from 'tabler-icons-react'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -53,6 +54,8 @@ class  Card extends Component {
 
         reportData: {},
         setSnack: false,
+
+        setfollowerDiaglog: false,
     }
 
     componentDidMount() {
@@ -134,7 +137,14 @@ class  Card extends Component {
         this.setState({ showEditor: !this.state.showEditor })
     }
     
-
+    handleClickunfollow = async (id) => {
+        await this.props.dispatch(unfollow(id))
+        this.props.handleSnackBar("Đã bỏ theo dõi");
+    }
+    handleClickfollow = async (id) => {
+        await this.props.dispatch(follow(id))
+        this.props.handleSnackBar("Đã theo dõi");
+    }
     defaultLink = (item, i) => {
         switch(item.name){
             case 'Like':
@@ -284,6 +294,8 @@ class  Card extends Component {
 
     render() {
         const props = this.props;
+        const userProfile = this.props.likes;
+        const yourProfile = this.props.user.userData;
         return (
                 <div className = {`${props.grid}`}>
                     <div className="card_item_wrapper">
@@ -368,7 +380,7 @@ class  Card extends Component {
                             <div className ="button_wrapper">
                                 {this.showLinks()}
                             </div>
-                            <div className="likes">
+                            <div className="likes" onClick={() => { this.setState({ setfollowerDiaglog: true }) }}>
                                 <AvatarGroup max={3}>
                                     {this.showUser(props.likes)}
                                 </AvatarGroup>  
@@ -405,6 +417,33 @@ class  Card extends Component {
                             </form>
                     </div>
                 </div>
+                <Dialog className="dialog_cont" onClose={() => { this.setState({ setfollowerDiaglog: false })} } open={this.state.setfollowerDiaglog}>
+                    <div className="dialog_header">
+                        <h5>Danh sách đang theo dõi</h5>
+                        <CircleX size={24} strokeWidth={0.5} color="black" onClick={() => { this.setState({ setfollowerDiaglog: false })}} ></CircleX>
+                    </div>
+                    {
+                        userProfile ? userProfile.map(item => {
+                            return (
+                                <div className="follow_list">
+                                    <div className="list_info">
+                                        <img src={item.avt}></img>
+                                        <Link to={`/user/${item._id}`}> <h2>{item.userName}</h2></Link>
+                                    </div>
+                                    {
+                                        yourProfile ? (yourProfile.followings.includes(item._id) ?
+                                            <Button className="minibtn" onClick={() => this.handleClickunfollow(item._id)} > Đang theo dõi</Button>
+                                            :
+                                            <Button className="minibtn" onClick={() => this.handleClickfollow(item._id)}>Theo dõi</Button>
+                                            )
+                                        : null
+                                    }
+                                </div>
+                            )
+                        }) 
+                        : ''
+                    }
+                </Dialog>
                 {
                     this.state.lightbox ?
                         <ImageLightBox

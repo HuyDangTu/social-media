@@ -26,24 +26,29 @@
     border: solid 0.5px rgba(0,0,0,0.2);
     padding: 0px;
     .options{
-        color: black;
         justify-content: left;
         align-items: center;
-       display: flex; 
-       width: 100%;
-       font-size: 12px;
-       
-    //    border-left: solid 1px #7166F9;
-       padding:16px;
-    //    padding-left: 24px;
-       font-weight: bold;
-       border-radius: 0px;
-       border-left: solid 1px black;
+        display: flex;
+
+        width: 100%;
+        padding:16px;
+
+        color: black;
+        font-size: 12px;
+        font-weight: bold;
+
+        border-radius: 0px;
+        border-left: solid 1px black;
+        p{
+            margin: 0px 0px 0px 10px;
+        }
     }
    
 }
 
 .setting_wrapper{
+    width: 70%;
+    margin: 0 auto;
 .setting_detail{
     border: solid 0.5px rgba(0,0,0,0.2);
     border-left:none;

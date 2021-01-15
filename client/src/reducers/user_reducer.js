@@ -9,6 +9,7 @@ import {
     GET_TYPE,
     UPDATE_IMG,
     UPDATE_PRO,
+    FOLLOW_USER,
 } from '../actions/types';
 
 export default function(state={},action){
@@ -66,6 +67,16 @@ export default function(state={},action){
                 return {
                     ...state,
                     userData: action.payload
+                }
+            } 
+        case FOLLOW_USER:
+            {
+                return {
+                    ...state,
+                    userData: {
+                        ...state.userData,
+                        followings: action.payload
+                    }
                 }
             } 
         default: return state;

@@ -223,9 +223,9 @@
     }
     .diselected{
         border-top: none !important;
- opacity: 0.6 !important;
+        opacity: 0.6 !important;
+        }
     }
-}
 }
 .pro_header{
     padding-bottom: 24px;
@@ -233,96 +233,91 @@
 }
 .Profile
 {
-
-
-.bio
-{
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.image_contain
-{
-   height: 314.26px;
-   margin-bottom: 30px;
-position: relative;
-    img{
-        display: block;
-        width:100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+    .bio
+    {
+        font-size: 16px;
+        font-weight: bold;
     }
-    .img_overlay{
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 15px;
-        right: 0;
-        height: 100%;
-        width: calc(100% - 30px);
-        opacity: 0;
-        transition: .5s ease;
-        background-color: rgba(0,0,0,0.6);
-        z-index: 12;
-        color: white;
-        justify-content: center;
-        align-items: center;
-        .overlay_info{
+    .image_contain
+    {
+    height: 314.26px;
+    margin-bottom: 30px;
+        position: relative;
+        img{
+            display: block;
+            width:100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .img_overlay{
             position: absolute;
-            display: flex;
-            top: 50%;
-            left: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-            
+            top: 0;
+            bottom: 0;
+            left: 15px;
+            right: 0;
+            height: 100%;
+            width: calc(100% - 30px);
+            opacity: 0;
+            transition: .5s ease;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 12;
+            color: white;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
-            .hearts
-            {
-                h2{
-                    font-size: 20px;
-                    padding:0px;
-                    margin:0px;
-                    margin-left:8px;
-                    font-weight: 500;
-                }
-                padding:0px;
+            .overlay_info{
+                position: absolute;
                 display: flex;
-                align-items: center;
-            justify-content: center;
-                margin-right:32px;
-          
-            }
-            .comments
-            {
-                h2{
-                    font-size: 20px;
-                    padding:0px;
-                    margin:0px;
-                    margin-left:8px;
-                    font-weight: 500;
-                }
-                padding:0px;
-                display: flex;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                
                 align-items: center;
                 justify-content: center;
-              
+                .hearts
+                {
+                    h2{
+                        font-size: 20px;
+                        padding:0px;
+                        margin:0px;
+                        margin-left:8px;
+                        font-weight: 500;
+                    }
+                    padding:0px;
+                    display: flex;
+                    align-items: center;
+                justify-content: center;
+                    margin-right:32px;
+            
+                }
+                .comments
+                {
+                    h2{
+                        font-size: 20px;
+                        padding:0px;
+                        margin:0px;
+                        margin-left:8px;
+                        font-weight: 500;
+                    }
+                    padding:0px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                
+                }
             }
+
         }
-
-    }
-
-
 }
 .image_contain:hover .img_overlay {
     opacity: 1;
-  }
-  
+}
+}
 .dialog_cont
 {
-    .header{
+    .dialog_header{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -358,6 +353,5 @@ position: relative;
         .minibtn{
             border: solid 0.5px grey;
         }
-    }
-}  
+    }  
 }

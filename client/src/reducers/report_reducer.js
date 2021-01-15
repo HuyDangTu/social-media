@@ -22,7 +22,7 @@ export default function (state = {}, action) {
         }
         case UPDATE_REPORT: {
             const newDetail = {...state.reportDetail,
-                            status: action.payload.status
+                            status: action.payload.report.status
                         }
             return {
                 reportDetail: newDetail

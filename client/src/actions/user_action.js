@@ -11,6 +11,7 @@ import {
     UPDATE_IMG,
     UPDATE_PRO,
     GET_TYPE,
+    FOLLOW_USER
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -118,17 +119,17 @@ export function findPosted(id) {
 }
 export function follow(followId) {
     const request = axios.put(`${USER_SERVER}/follow/${followId}`)
-        .then(response => response.data);
+        .then(response => response.data.followings);
     return {
-        type: UPDATE_PRO,
+        type: FOLLOW_USER,
         payload: request
     }
 }
 export function unfollow(unfollowId) {
     const request = axios.put(`${USER_SERVER}/unfollow/${unfollowId}`)
-        .then(response => response.data);
+        .then(response => response.data.followings);
     return {
-        type: UPDATE_PRO,
+        type: FOLLOW_USER,
         payload: request
     }
 }
@@ -169,6 +170,15 @@ export function updateprofileimg(url) {
 }
 export function updateprofile(id) {
     const request = axios.get(`${USER_SERVER}/profile/${id}`)
+        .then(response => response.data)
+    return {
+        type: UPDATE_PRO,
+        payload: request
+    }
+}
+
+export function changePassword(dataToSubmit){
+    const request = axios.post(`${USER_SERVER}/changePassword`, dataToSubmit)
         .then(response => response.data)
     return {
         type: UPDATE_PRO,

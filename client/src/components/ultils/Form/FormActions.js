@@ -19,12 +19,14 @@ export const ifFormValid = (formdata,formName) =>{
         console.log(formdata[key].valid)
         formValid = formdata[key].valid && formValid;
     }
+
     console.log("ress", formValid)
     return formValid;
 }
 
 //Nhận vào element và formdata(từ State của login truyền thông qua hàm update)
 export const validate = (element,formdata=[]) =>{
+    
     let error = [true,''];
 
     if (element.validation.confirm) {
@@ -32,7 +34,6 @@ export const validate = (element,formdata=[]) =>{
         const message = `${ valid ?'':'Password do not match'}`;
         error = !valid ? [valid, message] : error;
     }
-
 
     // Nếu giá trị email trong Validation = true thì kiểm tra value vs regex     
     if (element.validation.email){
@@ -132,7 +133,6 @@ export const populateOptionFields= (formData,arrayData = [], field) => {
 
 export const resetFields = (formData,formName) => {
     const newFormData = {...formData};
-
     for(let key in newFormData){
         if(key==='images'){
             newFormData[key].value = [];

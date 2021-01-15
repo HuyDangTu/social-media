@@ -7,6 +7,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import './ReportDetail.scss';
 import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -19,6 +21,9 @@ class ReportDetail extends Component {
         limit: 5,
         DialogShowing: false,
         dialogType: "",
+        setSnack: false,
+        severity: "",
+        message: ""
     }
 
     componentDidMount(){
@@ -139,7 +144,6 @@ class ReportDetail extends Component {
     }
 
 
-    
     confirmDialog(type) {
         let template = "";
         switch (type) {
@@ -150,8 +154,13 @@ class ReportDetail extends Component {
                         <div className="btn_wrapper">
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
                             <p className="confirm_btn" onClick={() => this.props.dispatch(updateReport(this.state.id))
-                                .then(() => {
-                                    this.setState({ DialogShowing: false })
+                                .then((response) => {
+                                    console.log(response)
+                                    if(response.payload.report){
+                                        this.setState({ DialogShowing: false, setSnack: true, severity:"success", message: "Thành công" })
+                                    }else{
+                                        this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
+                                    }
                                 })}>Xác nhận</p>
                         </div>
                     </div>)
@@ -163,8 +172,13 @@ class ReportDetail extends Component {
                         <div className="btn_wrapper">
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
                             <p className="confirm_btn" onClick={() => this.props.dispatch(deletePost(this.props.reports.reportDetail.post[0]._id,this.state.id))
-                                .then(() => {
-                                    this.setState({ DialogShowing: false })
+                                .then((response) => {
+                                    console.log(response)
+                                    if(response.payload.report){
+                                        this.setState({ DialogShowing: false, setSnack: true, severity:"success", message: "Thành công" })
+                                    }else{
+                                        this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
+                                    }
                                 })}>Xóa</p>
                         </div>
                     </div>)
@@ -242,6 +256,19 @@ class ReportDetail extends Component {
                 </div>
                 {
                     this.confirmDialog(this.state.dialogType)
+                }
+                {
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center'
+                        }}
+                        open={this.state.setSnack}
+                        onClose={() => this.setState({ setSnack: false })}
+                        autoHideDuration={1000}
+                    >
+                        <MuiAlert elevation={6} variant="filled" severity={this.state.severity} >{this.state.message}</MuiAlert>
+                    </Snackbar>
                 }
             </Layout>
         );

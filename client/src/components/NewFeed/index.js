@@ -197,15 +197,6 @@ class Newfeed extends Component {
                     </div>
                 </div>
             </Layout>
-            {
-                this.state.isStoryPageShow? 
-                <StoryPage 
-                    currentDisplay={this.state.currentDisplay} 
-                    list = { products.storyList}
-                    closeStory={this.closeStory}
-                />
-                :""
-            }
             </div>
         );
     }
