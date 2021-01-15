@@ -159,53 +159,31 @@ class Header extends Component {
                                     {
                                         this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
                                             return (
-                                                data.seenStatus ?
-                                                    <div className="noti_wrapper seen" onClick={() => this.handleNotiClick(data._id, data.type, data.link)}>
-                                                        <div className="user_avt">
-                                                            <img src={data.sentFrom.avt}></img>
-                                                        </div>
-                                                        <div className="content">
-                                                            <p>
-                                                                <h6>{data.sentFrom.userName}</h6>
-                                                                {
-                                                                    data.type == "follow" ? ' đã theo dõi bạn' : 
-                                                                    data.type == "likepost" ? ' đã thích bài viết của bạn' :
-                                                                      data.type=='comment'? ' đã bình luận về bài viết của bạn' :
-                                                                      data.type=='likecomment'? ' đã thích bình luận của bạn' :''
-                                                                }
-                                                            </p>
-                                                            <h6>
-                                                                6 giờ trước
-                                                            </h6>
-                                                        </div>
-                                                        <div className="status">
-                                                            <Point visibility="hidden" size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
-                                                        </div>
-                                                    </div> :
-                                                    <div className="noti_wrapper" onClick={() => this.handleNotiClick(data._id, data.type, data.link)}>
-                                                        <div className="user_avt">
-                                                            <img src={data.sentFrom.avt}></img>
-                                                        </div>
-                                                        <div className="content">
-                                                            <p>
-                                                                <h6>{data.sentFrom.userName}</h6>
-                                                                {
-                                                                    data.type == "follow" ? ' đã theo dõi bạn' : 
-                                                                    data.type == "likepost" ? ' đã thích bài viết của bạn' :
-                                                                      data.type=='comment'? ' đã bình luận về bài viết của bạn' :
-                                                                      data.type=='likecomment'? ' đã thích bình luận của bạn' :''
-                                                                }
-                                                            </p>
-                                                            <h6>
-                                                                6 giờ trước
-                                                            </h6>
-
-                                                        </div>
-
-                                                        <div className="status">
-                                                            <Point size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
-                                                        </div>
-                                                    </div>
+                                               
+                                                <div className={data.seenStatus ? "noti_wrapper seen" : "noti_wrapper"} onClick={() => this.handleNotiClick(data._id, data.type, data.link)}>
+                                                <div className="user_avt">
+                                                    <img src={data.sentFrom.avt}></img>
+                                                </div>
+                                                <div className="content">
+                                                    <p>
+                                                        <h6>{data.sentFrom.userName}</h6>
+                                                        {
+                                                            data.type == "follow" ? ' đã theo dõi bạn' : 
+                                                            data.type == "likepost" ? ' đã thích bài viết của bạn' :
+                                                            data.type=='comment'? ' đã bình luận về bài viết của bạn' :
+                                                            data.type=='likecomment'? ' đã thích bình luận của bạn':
+                                                            data.type=='report'? 'đã gỡ bài viết của bạn, vì vi phạm chính sách' :''
+                                                        }
+                                                    </p>
+                                                    <h6>
+                                                        6 giờ trước
+                                                    </h6>
+                                                </div>
+                                                <div className="status">
+                                                    <Point visibility={data.seenStatus?"hidden":""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
+                                                </div>
+                                            </div>
+                                                  
                                             )
                                         }) : '' : ''
                                     }
@@ -328,13 +306,13 @@ class Header extends Component {
         if (type == 'follow') {
             this.props.history.push(`/user/${link}`)
         }
-        if(type='likepost'){
+        if(type=='likepost'){
             this.props.history.push(`/postDetail/${link}`)
         }
-        if(type='comment'){
+        if(type=='comment'){
             this.props.history.push(`/postDetail/${link}`)
         }
-        if(type='likecomment'){
+        if(type=='likecomment'){
             this.props.history.push(`/postDetail/${link}`)
         }
         this.props.dispatch(getNotification())

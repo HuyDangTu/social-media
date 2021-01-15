@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../Layout/index';
 import { withRouter } from 'react-router-dom';
-import { getReportDetail, updateReport, deletePost, clearDetail } from '../../../actions/report_actions';
+import { getReportDetail, updateReport, deletePost, clearDetail, deleteComment } from '../../../actions/report_actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './ReportDetail.scss';
 import Slide from '@material-ui/core/Slide';
@@ -143,6 +143,29 @@ class ReportDetail extends Component {
         })
     }
 
+    deleteContent = () => {
+        if (this.props.reports.reportDetail == "post"){
+            this.props.dispatch(deletePost(this.props.reports.reportDetail.post[0]._id, this.state.id))
+            .then((response) => {
+                console.log(response)
+                if (response.payload.report) {
+                    this.setState({ DialogShowing: false, setSnack: true, severity: "success", message: "Thành công" })
+                } else {
+                    this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
+                }
+            })
+        }else{
+            this.props.dispatch(deleteComment(this.props.reports.reportDetail.comment[0]._id, this.state.id))
+            .then((response) => {
+                console.log(response)
+                if (response.payload.report) {
+                    this.setState({ DialogShowing: false, setSnack: true, severity: "success", message: "Thành công" })
+                } else {
+                    this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
+                }
+            })
+        }
+    }
 
     confirmDialog(type) {
         let template = "";
@@ -168,18 +191,10 @@ class ReportDetail extends Component {
             case "deleteConfirm":
                 template = (
                     <div className="deleteConfirm">
-                        <h5> Bạn chắc chắn muốn xóa bài viết này?</h5>
+                        <h5> Bạn chắc chắn muốn xóa nội dung này?</h5>
                         <div className="btn_wrapper">
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
-                            <p className="confirm_btn" onClick={() => this.props.dispatch(deletePost(this.props.reports.reportDetail.post[0]._id,this.state.id))
-                                .then((response) => {
-                                    console.log(response)
-                                    if(response.payload.report){
-                                        this.setState({ DialogShowing: false, setSnack: true, severity:"success", message: "Thành công" })
-                                    }else{
-                                        this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
-                                    }
-                                })}>Xóa</p>
+                            <p className="confirm_btn" onClick={() => {this.deleteContent()}} >Xóa</p>
                         </div>
                     </div>)
                 break;
@@ -238,13 +253,13 @@ class ReportDetail extends Component {
                                                         DialogShowing: true,
                                                         dialogType: "invalidReport",
                                                     })
-                                                }}>Báo cáo không hợp lệ</button>
+                                                }}>Không đồng ý</button>
                                                 <button className="btn_delete" onClick={() => {
                                                     this.setState({
                                                         DialogShowing: true,
                                                         dialogType: "deleteConfirm",
                                                     })
-                                                }}>Xóa bài viết</button>
+                                                }}>Đồng ý</button>
                                         </div>
                                         : <p>Đã xử lý ngày: <b>{detail.updatedAt}</b></p>
                                     }

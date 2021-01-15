@@ -898,14 +898,16 @@ app.put('/api/posts/like', auth, (req, res) => {
         if (err) res.status(400).json(err);
         findPost(req.body.postId, req.user.hiddenPost).then((post)=>{
             console.log(post);
-            const notification = new Notification({
-                sentFrom: req.user._id,
-                sentTo: post[0].postedBy[0]._id,
-                type: "likepost",
-                link: req.body.postId,
-                "seenStatus": false
-            });
-            SaveNotification(notification);
+            if (req.user._id != post[0].postedBy[0]._id){
+                const notification = new Notification({
+                    sentFrom: req.user._id,
+                    sentTo: post[0].postedBy[0]._id,
+                    type: "likepost",
+                    link: req.body.postId,
+                    "seenStatus": false
+                });
+                SaveNotification(notification);
+            }
             res.status(200).json(post);
         })          
     })
@@ -1154,14 +1156,18 @@ app.post('/api/notify/seenall', auth, (req, res) => {
         })
 })
 function SaveNotification(notification) {
-    Notification.create(notification, (err, data) => {
-        if (err) {
-            console.log(err)
-        }
-        else {
-            console.log(data)
-        }
-    })
+    if(notification.sentFrom != notification.sentTo) {
+        Notification.create(notification, (err, data) => {
+            if (err) {
+                console.log(err)
+            }
+            else {
+                console.log(data)
+            }
+        })
+    }{
+        console.log("Sai")
+    }
 }
 app.post('/api/messages/save', jsonParser, (req, res) => {
     const dbMess = req.body
@@ -1902,7 +1908,7 @@ app.post('/api/reports/delete_comment', auth, (req, res) => {
             new: true
         }).exec((err, report) => {
             if (err) res.status(400).json(err);
-            res.status(200).json(report);
+            res.status(200).json({report});
         })
     })
 })

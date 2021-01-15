@@ -25,14 +25,13 @@ class AccountPage extends Component {
         this.props.dispatch(getAll(
             this.state.limit,
             skip,
-            this.state.filter,
-            this.props.reports.list,
+            this.props.accounts.list,
         )).then(() => {
-            sort(this.state.sortBy, this.props.reports.list)
+            sort(this.state.sortBy, this.props.accounts.list)
             this.setState({
                 skip: skip,
                 isloading: false
-            }, () => { console.log("here", this.props.reports.list) })
+            }, () => { console.log("here", this.props.accounts.list) })
         })
     }
     order = (type) => {
@@ -129,9 +128,9 @@ class AccountPage extends Component {
                             this.state.isloading ?
                                 <LinearProgress />
                                 :
-                                accounts.size >= this.state.limit ?
-                                    <button className="loadmore" onClick={() => { this.loadmore() }}>Load more</button>
-                                    : ""
+                            accounts.size >= this.state.limit ?
+                                <button className="loadmore" onClick={() => { this.loadmore() }}>Load more</button>
+                                : ""
                         }
                     </div>
                 </Layout> 

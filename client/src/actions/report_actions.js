@@ -115,3 +115,16 @@ export function deletePost(postId,reportId){
         payload: request
     }
 }
+
+export function deleteComment(commentId, reportId) {
+    const data = { commentId, reportId }
+    const request = axios.post(`${REPORT_SERVER}/delete_comment`, data)
+        .then(response => {
+            console.log(response.data);
+            return response.data
+        })
+    return {
+        type: UPDATE_REPORT,
+        payload: request
+    }
+}

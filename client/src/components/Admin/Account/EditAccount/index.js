@@ -21,6 +21,8 @@ class EditAccount extends Component {
         formSuccess: false,
         loading: false,
         setSnack: false,
+        severity: "",
+        message: "",
         formData: {
             email: {
                 element: 'input',
@@ -109,7 +111,7 @@ class EditAccount extends Component {
             .then(response => {
                 console.log(response)
                 this.props.dispatch(auth());
-                this.setState({ loading: false })
+                this.setState({ loading: false, setSnack: true, severity: "success", message: "Thành công" })
             })
     }
 
@@ -127,8 +129,7 @@ class EditAccount extends Component {
         await this.props.dispatch(updateprofileimg(this.props.user.img ? this.props.user.img.url : 0));
         await this.props.dispatch(auth());
         // await Headers.props.dispatch(updateprofileimg(this.props.user.img ? this.props.user.img.url : 0));
-        await this.setState({ loading: false });
-        await this.setState({ setSnack: true });
+        await this.setState({ loading: false, setSnack: true, severity: "success", message: "Thành công"  });
         return (
             <Layout>
             </Layout>
@@ -163,7 +164,7 @@ class EditAccount extends Component {
                     <div className="row  no-gutters ">
                         {
                             this.state.settingState == 'profile' ?
-                                <form className="col-xl-9 no-gutters setting_detail" onSubmit={(event) => this.submitForm(event)}>
+                                <form className="col-xl-12 no-gutters setting_detail" onSubmit={(event) => this.submitForm(event)}>
 
                                     <div className="row  no-gutters  setting_type">
                                         <div className="col-xl-2  no-gutters  label">
@@ -186,6 +187,7 @@ class EditAccount extends Component {
                                             </label>
                                         </div>
                                     </div>
+
                                     <div className="row  no-gutters  setting_type">
                                         <div className="col-xl-2  no-gutters  label">
                                             <h3>Tên tài khoản</h3>
@@ -200,6 +202,7 @@ class EditAccount extends Component {
                                             />
                                         </div>
                                     </div>
+
                                     <div className="row  no-gutters  setting_type">
                                         <div className="col-xl-2  no-gutters  label">
                                             <h3>Tên</h3>
@@ -250,22 +253,21 @@ class EditAccount extends Component {
                                 :
                                 ''
                         }
-                        <div className="col-xl-3">
-                            <Snackbar
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'center'
-                                }}
-                                open={this.state.setSnack}
-                                onClose={() => this.setState({ setSnack: false })}
-                                autoHideDuration={1000}
-                            >
-                                <MuiAlert elevation={6} variant="filled" severity={this.state.severity} >Đã cập nhật ảnh đại diện</MuiAlert>
-                            </Snackbar>
-                        </div>
+                        
                     </div>
+                    
                 </div>
-
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center'
+                    }}
+                    open={this.state.setSnack}
+                    onClose={() => this.setState({ setSnack: false })}
+                    autoHideDuration={1000}
+                >
+                    <MuiAlert elevation={6} variant="filled" severity={this.state.severity} >{this.state.message}</MuiAlert>
+                </Snackbar>
             </Layout>
         )
     }

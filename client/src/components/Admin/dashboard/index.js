@@ -6,14 +6,16 @@ import { getAll, sort} from '../../../actions/report_actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withRouter } from 'react-router-dom';
 
+
 class Dashboard extends Component {
     state={
         limit: 4,
         skip: 0,
         filter: ["all"],
         sortBy: {type: "date", order: 1},
-        isloading: false
+        isloading: false,
     }
+
 
     componentDidMount(){
         this.props.dispatch(getAll(

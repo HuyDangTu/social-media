@@ -10,6 +10,8 @@ import MyButton from '../../../ultils/button'
 import GoogleLoginButton from '../../../GoggleLoginButton/GoogleLoginButton';
 import FacebookLoginButton from '../../../FacebookLoginButton/FacebookLoginButton';
 import Layout from '../../Layout/index';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert'
 
 class AddAccount extends Component {
     state = {
@@ -17,6 +19,9 @@ class AddAccount extends Component {
         ErrorMessage: "",
         formSuccess: false,
         RegisterWith: false,
+        setSnack: false,
+        severity: "",
+        message: "",
         formData: {
             name: {
                 element: 'input',
@@ -164,13 +169,8 @@ class AddAccount extends Component {
     Register = (event) => {
         event.preventDefault();
 
-        let dataToSubmit = generateData(this.state.formData, 'register');
-      
+        let dataToSubmit = generateData(this.state.formData, 'register');      
         let formIsValid = ifFormValid(this.state.formData, 'register');
-
-        // dataToSubmit.name = this.props.user.RegisterInfo.name;
-        // dataToSubmit.email = this.props.user.RegisterInfo.email;
-        // dataToSubmit.avt = this.props.user.RegisterInfo.picture;
 
         if (formIsValid) {
             console.log(dataToSubmit);
@@ -180,10 +180,12 @@ class AddAccount extends Component {
                     if (response.payload.success) {
                         this.setState({
                             formError: false,
-                            formSuccess: true
+                            formSuccess: true,
+                            severity: "success",
+                            message: "Thành công",
                         });
                         setTimeout(() => {
-                            this.props.history.push('/register_login')
+                            this.props.history.push('/Admin/Account')
                         }, 3000);
                     } else {
                         this.setState({
@@ -208,7 +210,6 @@ class AddAccount extends Component {
         return (
             <Layout page="account">
                 <div className="create_account">
-                <h4>Chào!</h4>
                 <h2>Thêm Admin </h2>
                 <div className="row no-gutters">
                         <div className="col-xl-5 no-gutters">
@@ -216,15 +217,6 @@ class AddAccount extends Component {
                                 <div className="register">
                                     <div className='register__container'>
                                         <form className='register__form' onSubmit={(event) => this.submitForm(event)}>
-                                            <div className='register__logo'>
-                                                <img className="logo" src={require('../../../../asset/login-page/logo2x.png')} />
-                                                <img className="stunning_text" src={require('../../../../asset/login-page/stun2x.png')} />
-                                            </div>
-                                            {/* <GoogleLoginButton />
-                                            <FacebookLoginButton />
-                                            <div className="or_label">
-                                                HOẶC
-                                            </div> */}
                                             <div className="register__row2">
                                                 <FormField
                                                     id={'name'}
@@ -257,7 +249,7 @@ class AddAccount extends Component {
                                             {
                                                 this.state.formError ?
                                                 <div className="errorLabel">
-                                                    PLease check yoour data!
+                                                    {this.state.ErrorMessage}
                                                 </div>
                                                 : ''}
                                             <button className='register__button' onClick={(event) => { this.submitForm(event) }}>Thêm</button>
@@ -269,6 +261,19 @@ class AddAccount extends Component {
                         <div className="col-xl-7 no-gutters"></div>
                     </div>
             </div>
+            {
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center'
+                    }}
+                    open={this.state.setSnack}
+                    onClose={() => this.setState({ setSnack: false })}
+                    autoHideDuration={1000}
+                >
+                    <MuiAlert elevation={6} variant="filled" severity={this.state.severity} >{this.state.message}</MuiAlert>
+                </Snackbar>
+            }
             </Layout>
         );
     }

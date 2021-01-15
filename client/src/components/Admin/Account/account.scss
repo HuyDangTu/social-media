@@ -55,4 +55,13 @@
         background: $primaryColor;   
         float: right; 
     }
+    .loadmore{
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        background: $primaryColor;  
+        color: white; 
+        float: right; 
+        margin: 20px;
+    }
 }
