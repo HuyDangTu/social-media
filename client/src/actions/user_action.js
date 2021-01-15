@@ -11,7 +11,9 @@ import {
     UPDATE_IMG,
     UPDATE_PRO,
     GET_TYPE,
-    FOLLOW_USER
+    FOLLOW_USER,
+    CHANGE_PRO,
+    CHANGE_IMG
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -151,7 +153,7 @@ export function changeProfile(id, dataToSubmit) {
         .then(response => response.data);
     console.log(request);
     return {
-        type: UPDATE_PRO,
+        type: CHANGE_PRO,
         payload: request
     }
 }
@@ -164,7 +166,7 @@ export function updateprofileimg(url) {
     const request = axios.put('/api/users/updatepic', config)
         .then(response => response.data)
     return {
-        type: UPDATE_PRO,
+        type: CHANGE_IMG,
         payload: request
     }
 }

@@ -15,6 +15,7 @@ import ReactDOM from 'react-dom'
 import { Picker } from 'emoji-mart'
 import Picker2 from 'react-giphy-component'
 import styled from 'styled-components'
+import moment from 'moment';
 
 const GifPicker = styled(Picker2)`
 `;
@@ -216,13 +217,14 @@ class Message extends Component {
                                                                                 <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
+                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
                                                                                     <h2>{con.user1.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}   {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
+                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
-                                                                                    <h6>6 mins</h6>
+                                                                               
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
                                                                                 </div>
                                                                             </div>
                                                                         </Link>
@@ -232,15 +234,17 @@ class Message extends Component {
                                                                                 <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
+                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
                                                                                     <h2 >{con.user2.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}
                                                                                         {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
 
                                                                                 </div>
-                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
+                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
-                                                                                    <h6>6 mins</h6>
+                                                                                
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)} </h6>
+                                                                                   
                                                                                 </div>
                                                                             </div>
                                                                         </Link>
@@ -252,13 +256,14 @@ class Message extends Component {
                                                                                 <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
+                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
                                                                                     <h2>{con.user1.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}  {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
+                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
-                                                                                    <h6>6 mins</h6>
+                                                                                   
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
                                                                                 </div>
                                                                             </div>
                                                                         </Link>
@@ -268,13 +273,14 @@ class Message extends Component {
                                                                                 <div className="col-xl-2 col-sm-2 col-2 avt">
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-8 col-sm-8 col-8  message">
+                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
                                                                                     <h2 >{con.user2.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}  {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-2 col-sm-2 col-2  info">
+                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
-                                                                                    <h6>6 mins</h6>
+                                                                                 
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
                                                                                 </div>
                                                                             </div>
                                                                         </Link>

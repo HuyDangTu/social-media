@@ -15,6 +15,7 @@ import Skeleton from '@material-ui/lab/Skeleton'
 import Pusher from 'pusher-js';
 import Badge from '@material-ui/core/Badge';
 import Snackbar from '@material-ui/core/Snackbar';
+import moment from 'moment'
 class Header extends Component {
     
     state = {
@@ -176,7 +177,7 @@ class Header extends Component {
                                                         }
                                                     </p>
                                                     <h6>
-                                                        6 giờ trước
+                                                    <h6>{moment(data.createdAt).fromNow()} </h6>
                                                     </h6>
                                                 </div>
                                                 <div className="status">

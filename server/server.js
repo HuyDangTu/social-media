@@ -22,8 +22,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DATABASE, { 
-    useNewUrlParser: true, 
+mongoose.connect(process.env.DATABASE, {
+    useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
 })
@@ -61,19 +61,19 @@ mongoose.connection.once('connected', async () => {
 })
 
 
-mongoose.connection.on('connected', () =>{
+mongoose.connection.on('connected', () => {
     console.log("mongoose is ready");
 })
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
-    api_key:process.env.CLOUD_API_KEY,
+    api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_API_SECRET,
 })
 
 
 // ============== MODEL ===============
-const {User} = require("./models/user");
+const { User } = require("./models/user");
 const { Comment } = require('./models/comment');
 const { Post } = require('./models/post');
 const { Tag } = require('./models/tag');
@@ -84,7 +84,7 @@ const { Message } = require('./models/message');
 const { Conversation } = require('./models/conversations');
 const { Notification } = require('./models/notification');
 //=============== MIDDLEWARE ===========
-const {auth} = require('./middleware/auth');
+const { auth } = require('./middleware/auth');
 const { admin } = require('./middleware/admin');
 const { response } = require("express");
 const post = require("./models/post");
@@ -98,7 +98,7 @@ const user = require("./models/user");
 // ============== API ===============
 
 //TEST
-app.post('/api/posts/add_new',(req,res)=>{
+app.post('/api/posts/add_new', (req, res) => {
     res.status(200).json({
         success: true
     })
@@ -128,8 +128,8 @@ app.get('/api/users/auth', auth, (req, res) => {
 // =========================
 
 //REGISTER 
-app.post('/api/users/register', jsonParser,(req,res)=>{
-   
+app.post('/api/users/register', jsonParser, (req, res) => {
+
     let message = "", isValidUserName = false;
     User.findOne({ userName: req.body.userName }, (err, user) => {
         console.log(user)
@@ -139,36 +139,36 @@ app.post('/api/users/register', jsonParser,(req,res)=>{
         } else {
             isValidUserName = true;
         }
-    }).then(()=>{
+    }).then(() => {
         if (isValidUserName) {
             const newUser = new User(req.body);
             newUser.save((err, user) => {
                 if (err) return res.json({ success: false, err: "Thêm không thành công" });
-                sendEmail(user.email,user.userName,null,"welcome")
+                sendEmail(user.email, user.userName, null, "welcome")
                 return res.status(200).json({
                     success: true,
                     message: "Thành công"
                 });
             });
         } else {
-          
+
             return res.json({ success: false, message: message });
         }
     })
 });
 
 //LOGIN
-app.post('/api/users/login', jsonParser,(req,res)=>{
+app.post('/api/users/login', jsonParser, (req, res) => {
     // find the email
-    User.findOne({'email':req.body.email},(err,user)=>{
-        if(!user) return res.json({loginSuccess: false,message: 'Auth failes,email not found'});
+    User.findOne({ 'email': req.body.email }, (err, user) => {
+        if (!user) return res.json({ loginSuccess: false, message: 'Auth failes,email not found' });
         //check password
-        user.comparePassword(req.body.password,(err,isMatch)=>{
-            if(!isMatch) return res.json({loginSuccess: false,message: 'wrongPassword'})
-            user.gennerateToken((err,user)=>{
-                if(err) return res.status(400).send(err);
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if (!isMatch) return res.json({ loginSuccess: false, message: 'wrongPassword' })
+            user.gennerateToken((err, user) => {
+                if (err) return res.status(400).send(err);
                 //gennerate Token
-                res.cookie('u_auth',user.token).status(200).json({
+                res.cookie('u_auth', user.token).status(200).json({
                     loginSuccess: true
                 });
             });
@@ -180,24 +180,24 @@ app.post('/api/users/loginByFaceGoogle', jsonParser, (req, res) => {
     // find the email
     User.findOne({ 'email': req.body.email }, (err, user) => {
         if (!user) return res.json({ loginSuccess: false, message: 'Auth fail, No account found' });
-            user.gennerateToken((err, user) => {
-                if (err) return res.status(400).send(err);
-                //gennerate Token
-                res.cookie('u_auth', user.token).status(200).json({
-                    loginSuccess: true
+        user.gennerateToken((err, user) => {
+            if (err) return res.status(400).send(err);
+            //gennerate Token
+            res.cookie('u_auth', user.token).status(200).json({
+                loginSuccess: true
             });
-         });
+        });
     });
 })
 
 //LOGOUT
-app.get('/api/users/logout',auth,(req,res)=>{
+app.get('/api/users/logout', auth, (req, res) => {
     User.findOneAndUpdate(
-        {_id:req.user._id},//tìm theo id
-        {token:''},//update token của user tìm đc bằng rổng
+        { _id: req.user._id },//tìm theo id
+        { token: '' },//update token của user tìm đc bằng rổng
         //callback function 
-        (err,doc)=>{
-            if(err) return res.json({success: false,err});
+        (err, doc) => {
+            if (err) return res.json({ success: false, err });
             res.clearCookie('u_auth').status(200).send({
                 success: true
             })
@@ -221,12 +221,12 @@ app.post('/api/users/addToCart', auth, (req, res) => {
                     _id: req.user._id,
                     "cart.id": mongoose.Types.ObjectId(req.query.productId)
                 }
-                ,{ $inc: {"cart.$.quantity": 1}},
-                {new: true}
-                ,() => {
+                , { $inc: { "cart.$.quantity": 1 } },
+                { new: true }
+                , () => {
                     console.log(doc.cart)
-                    if(err) return res.json({success: false,err})
-                    
+                    if (err) return res.json({ success: false, err })
+
                     res.status(200).json(doc.cart)
                 }
             )
@@ -255,23 +255,23 @@ app.post('/api/users/addToCart', auth, (req, res) => {
 })
 
 // IMAGE UPLOAD AND REMOVE
-app.post('/api/users/uploadimage',auth,formidable(),(req,res)=>{
-    cloudinary.uploader.upload(req.files.file.path,(result)=>{
+app.post('/api/users/uploadimage', auth, formidable(), (req, res) => {
+    cloudinary.uploader.upload(req.files.file.path, (result) => {
         console.log(result);
         res.status(200).send({
             public_id: result.public_id,
             url: result.url,
         })
-    },{
+    }, {
         public_id: `${Date.now()}`,
         resource_type: `auto`
     })
 })
 
-app.get('/api/users/removeimage',auth,(req,res)=>{
+app.get('/api/users/removeimage', auth, (req, res) => {
     let image_id = req.query.public_id;
-    cloudinary.uploader.destroy(image_id,(error,result)=>{
-        if (error) return res.json({ success: false, error});
+    cloudinary.uploader.destroy(image_id, (error, result) => {
+        if (error) return res.json({ success: false, error });
         res.status(200).send('ok');
     })
 })
@@ -282,71 +282,70 @@ app.get('/api/users/removeimage',auth,(req,res)=>{
 
 //------- ADD NEW -----------//
 app.post('/api/posts/create_post', auth, (req, res) => {
-    
-    User.find({ userName: { $in: req.body.userTag }})
-    .select("_id")
-    .exec((err,users)=>{
-        if (err) return res.status(400).json(err); 
-        let userTag = [];
-        users.forEach((item) => {
-            userTag.push(item._id);
-        })
-        console.log(userTag)
-        const post = new Post({
-            images: req.body.images,
-            description: req.body.description,
-            userTag: userTag,
-            postedBy: req.user._id,
-        })
-        post.save((err, post) => {
-            if (err) return res.json({ success: false, err });
+
+    User.find({ userName: { $in: req.body.userTag } })
+        .select("_id")
+        .exec((err, users) => {
+            if (err) return res.status(400).json(err);
+            let userTag = [];
+            users.forEach((item) => {
+                userTag.push(item._id);
+            })
+            console.log(userTag)
+            const post = new Post({
+                images: req.body.images,
+                description: req.body.description,
+                userTag: userTag,
+                postedBy: req.user._id,
+            })
+            post.save((err, post) => {
+                if (err) return res.json({ success: false, err });
                 req.body.tags.forEach((item) => {
                     var query = { name: item }
                     update = { $push: { posts: post._id } },
-                    options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                        options = { upsert: true, new: true, setDefaultsOnInsert: true };
                     Tag.findOneAndUpdate(query, update, options, function (error, result) {
                         if (error) return;
                         console.log(result);
                     });
-            });
-            console.log(post)
-            res.status(200).json({ success: true });
+                });
+                console.log(post)
+                res.status(200).json({ success: true });
+            })
         })
-    })
 })
 
 app.post('/api/posts/update_post', auth, (req, res) => {
 
-    Tag.find({ posts: { $elemMatch: { $eq: req.body.postId }}})
-    .exec((err,tags)=>{
-        const oldTag = [];
-        tags.forEach((item) => {
-            //Xóa id bài viết khỏi trường posts của tag
-            if(!req.body.tags.includes(item.name)){
-                var query = { name: item.name },
-                update = { $pull: { posts: req.body.postId } };
-                Tag.findOneAndUpdate(query, update, function (error, result) {
-                    if (error) return;
-                    console.log(result);
-                });
-            }else{
-                oldTag.push(item.name)
-            }
-        });
+    Tag.find({ posts: { $elemMatch: { $eq: req.body.postId } } })
+        .exec((err, tags) => {
+            const oldTag = [];
+            tags.forEach((item) => {
+                //Xóa id bài viết khỏi trường posts của tag
+                if (!req.body.tags.includes(item.name)) {
+                    var query = { name: item.name },
+                        update = { $pull: { posts: req.body.postId } };
+                    Tag.findOneAndUpdate(query, update, function (error, result) {
+                        if (error) return;
+                        console.log(result);
+                    });
+                } else {
+                    oldTag.push(item.name)
+                }
+            });
 
-        req.body.tags.forEach((item) => {
-            if (!oldTag.includes(item))
-            {
-                var query = { name: item }
-                update = { $push: { posts: req.body.postId}},
-                options = { upsert: true, new: true, setDefaultsOnInsert: true };
-                Tag.findOneAndUpdate(query, update, options, function (error, result) {
-                    if (error) return;
-                    console.log(result);
-                }); 
-            }
+            req.body.tags.forEach((item) => {
+                if (!oldTag.includes(item)) {
+                    var query = { name: item }
+                    update = { $push: { posts: req.body.postId } },
+                        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                    Tag.findOneAndUpdate(query, update, options, function (error, result) {
+                        if (error) return;
+                        console.log(result);
+                    });
+                }
+            })
         })
-    })
 
     User.find({ userName: { $in: req.body.userTag } })
         .select("_id")
@@ -364,12 +363,12 @@ app.post('/api/posts/update_post', auth, (req, res) => {
                         userTag: userTag
                     }
                 },
-                {new: true }, (err, post) => {
+                { new: true }, (err, post) => {
                     if (err) res.send(err)
                     findPost(post._id, req.user.hiddenPost).then((post) => {
                         console.log(post);
-                        res.status(200).json({ success: true,post});
-                    })      
+                        res.status(200).json({ success: true, post });
+                    })
                 })
         })
 })
@@ -410,11 +409,11 @@ app.post('/api/posts/delete_post', auth, (req, res) => {
 // Get lastest post for new feed 
 // newfeed?sortBy=createdAt&order=desc&limit=6
 
-function findPost(postId,userHiddenPost){
+function findPost(postId, userHiddenPost) {
     console.log(userHiddenPost);
     const post = Post.aggregate([
-        { 
-            "$match": { "_id": ObjectId(postId) } 
+        {
+            "$match": { "_id": ObjectId(postId) }
         },
         {
             "$match": { "_id": { "$nin": userHiddenPost } }
@@ -477,8 +476,8 @@ function findPost(postId,userHiddenPost){
                 "createdAt": 1,
                 "updatedAt": 1,
             }
-        },{
-            "$sort": { "comments.createdAt": -1 } 
+        }, {
+            "$sort": { "comments.createdAt": -1 }
         },
         {
             "$group": {
@@ -496,7 +495,7 @@ function findPost(postId,userHiddenPost){
                     $push: '$comments'
                 }
             }
-        }],function (err, post) {
+        }], function (err, post) {
             if (err) return {}
             return post[0];
         }
@@ -504,7 +503,7 @@ function findPost(postId,userHiddenPost){
     return post;
 }
 
-app.post('/api/posts/getpostFormtag',auth,(req,res)=>{
+app.post('/api/posts/getpostFormtag', auth, (req, res) => {
     let postId = []
     Tag.aggregate([
         {
@@ -512,20 +511,20 @@ app.post('/api/posts/getpostFormtag',auth,(req,res)=>{
         },
         {
             "$project": {
-                "_id":-1,
+                "_id": -1,
                 "posts": 1,
             }
         },
     ], function (err, tags) {
-        if(err) res.status(400).json(err)
-        tags.forEach(item=>{
-            postId = [...postId,...item.posts]
+        if (err) res.status(400).json(err)
+        tags.forEach(item => {
+            postId = [...postId, ...item.posts]
         })
         res.status(200).json(postId);
     })
 });
 
-app.get('/api/posts/postDetail',auth,(req,res)=>{
+app.get('/api/posts/postDetail', auth, (req, res) => {
 
     let type = req.query.type;
     let items = req.query.id;
@@ -539,10 +538,10 @@ app.get('/api/posts/postDetail',auth,(req,res)=>{
         })
     }
 
-    findPost(items,req.user.hiddenPost).then((post) => {
+    findPost(items, req.user.hiddenPost).then((post) => {
         console.log(post);
         res.status(200).json(post[0]);
-    })    
+    })
 })
 
 app.post('/api/users/postsIncludedTags', auth, (req, res) => {
@@ -667,7 +666,7 @@ app.post('/api/users/postsIncludedTags', auth, (req, res) => {
 
 })
 
-app.post('/api/users/newfeed',auth,(req,res)=>{
+app.post('/api/users/newfeed', auth, (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 6;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
@@ -771,7 +770,7 @@ app.post('/api/users/newfeed',auth,(req,res)=>{
         });
     }
     )
-   
+
 })
 
 // Get user's posts 
@@ -784,101 +783,102 @@ app.get('/api/userPost', auth, (req, res) => {
     let limit = req.query.limit ? parseInt(req.query.limit) : 6;
 
     Post.find({ "postedBy": id })
-    .populate("postedBy", "_id userName")
-    .sort([[sortBy, order]])
-    .limit(limit)
-    .exec((err, posts) => {
-        if (err) return res.status(400).send(err)
-        console.log(posts);
-        res.send(posts)
-    })
+        .populate("postedBy", "_id userName")
+        .sort([[sortBy, order]])
+        .limit(limit)
+        .exec((err, posts) => {
+            if (err) return res.status(400).send(err)
+            console.log(posts);
+            res.send(posts)
+        })
 })
 
 // getUser?id=5f90e95460842c39900e3ffb
 app.get('/api/getUser', auth, (req, res) => {
     let id = req.query.id ? req.query.id : '';
     User.find({ "_id": id }).select('-password')
-    .populate("followings")
-    .populate("followers")
-    .exec((err, user) => {
-        if (err) return res.status(400).send(err)
-        console.log(user);
-        res.send(user)
-    })
+        .populate("followings")
+        .populate("followers")
+        .exec((err, user) => {
+            if (err) return res.status(400).send(err)
+            console.log(user);
+            res.send(user)
+        })
 })
 
 // =========================
 //           TAGS
 // =========================
 
-app.post('/api/tags/newTag',auth,(req, res) => {
+app.post('/api/tags/newTag', auth, (req, res) => {
     const tag = new Tag({
         ...req.body,
     });
-    tag.save((err,tag) => {
-        if(err) return res.status(400).send(err);
+    tag.save((err, tag) => {
+        if (err) return res.status(400).send(err);
         res.send(tag);
     })
 })
 
-app.get('/api/tags/getAllTags',(req,res)=>{
-    Tag.find().exec((err,tags)=>{
-        if(err) return res.status(400).send(err);
+app.get('/api/tags/getAllTags', (req, res) => {
+    Tag.find().exec((err, tags) => {
+        if (err) return res.status(400).send(err);
         res.send(tags);
     })
 });
 
 //tag?id=5f90e95460842c39900e3ffb&sortBy=createdAt&order=desc&limit=6
-app.post('/api/tags/getTag', auth ,(req, res) => {
-    
+app.post('/api/tags/getTag', auth, (req, res) => {
+
     let id = req.body.id ? req.body.id : '';
     let order = 'desc';
     let sortBy = 'createdAt';
     let limit = req.body.limit ? parseInt(req.body.limit) : 6;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
-    
-    Tag.findOne({_id: id})
-    .exec((err, tag) => {
-        if (err) return res.status(400).send(err);
-        Post.find({ "_id": { "$in": [...tag.posts]}})
-            .populate("postedBy", "_id userName")
-            .sort([[sortBy, order]])
-            .skip(skip)
-            .limit(limit)
-            .exec((err, posts) => {
-            if (err) return res.status(400).send(err)
-            console.log(posts);
-            res.status(200).json({
-                tag: tag,
-                posts: posts
-            })
+
+    Tag.findOne({ _id: id })
+        .exec((err, tag) => {
+            if (err) return res.status(400).send(err);
+            Post.find({ "_id": { "$in": [...tag.posts] } })
+                .populate("postedBy", "_id userName")
+                .sort([[sortBy, order]])
+                .skip(skip)
+                .limit(limit)
+                .exec((err, posts) => {
+                    if (err) return res.status(400).send(err)
+                    console.log(posts);
+                    res.status(200).json({
+                        tag: tag,
+                        posts: posts
+                    })
+                })
         })
-    })
 });
 
-app.get('/api/tags/getFollowers',auth,(req, res) => {
-    User.find({ "_id": { $in: req.user.followings}})
-    .select('userName -_id')
-    .limit(5)
+app.get('/api/tags/getFollowers', auth, (req, res) => {
+    User.find({ "_id": { $in: req.user.followings } })
+        .select('userName -_id')
+        .limit(5)
         .exec((err, followings) => {
-        if (err) return res.status(400).send(err);
+            if (err) return res.status(400).send(err);
             res.send(followings);
-    })
+        })
 });
 
-app.post('/api/tags/getTop10Tags',auth, (req, res) => {
+app.post('/api/tags/getTop10Tags', auth, (req, res) => {
 
     Tag.aggregate([
-            {
+        {
             "$project": {
                 "name": 1,
-                "length": {"$size": "$posts"},
-            }},
-            { "$sort": { "length": -1 } },
-            { "$skip": 0 },
-            { "$limit": 10 }
-        ],
-        function(err, tags){
+                "length": { "$size": "$posts" },
+            }
+        },
+        { "$sort": { "length": -1 } },
+        { "$skip": 0 },
+        { "$limit": 10 }
+    ],
+        function (err, tags) {
             //console.log(tags);
             if (err) return res.status(400).send(err);
             res.status(200).json({
@@ -894,22 +894,20 @@ app.put('/api/posts/like', auth, (req, res) => {
         $push: { likes: req.user._id }
     }, {
         new: true
-    }).exec((err,post) => {
+    }).exec((err, post) => {
         if (err) res.status(400).json(err);
-        findPost(req.body.postId, req.user.hiddenPost).then((post)=>{
+        findPost(req.body.postId, req.user.hiddenPost).then((post) => {
             console.log(post);
-            if (req.user._id != post[0].postedBy[0]._id){
-                const notification = new Notification({
-                    sentFrom: req.user._id,
-                    sentTo: post[0].postedBy[0]._id,
-                    type: "likepost",
-                    link: req.body.postId,
-                    "seenStatus": false
-                });
-                SaveNotification(notification);
-            }
+            const notification = new Notification({
+                sentFrom: req.user._id,
+                sentTo: post[0].postedBy[0]._id,
+                type: "likepost",
+                link: req.body.postId,
+                "seenStatus": false
+            });
+            SaveNotification(notification);
             res.status(200).json(post);
-        })          
+        })
     })
 })
 
@@ -980,32 +978,56 @@ app.put('/api/users/updatepic', auth, (req, res) => {
     User.findByIdAndUpdate(req.user._id, { $set: { avt: req.body.url } }, { new: true },
         (err, result) => {
             if (err) {
-
-                return res.status(422).json({ error: "pic canot post" })
+                return res.json({ success: false, message: "Đã xảy ra lỗi" })
             }
-            res.json(result)
+            else{
+                return res.json({ success: true, message: "Đã đổi thành công ảnh đại diện" })
+            }
+           
         })
 
 })
 app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
-    User.findByIdAndUpdate(req.params.id,
-        {
-            $set: {
-                userName: req.body.userName,
-                bio: req.body.bio,
-                name: req.body.name,
-                email: req.body.email,
-                privateMode: req.body.privateMode,
+    let message = "", isValidUserName = false;
+    User.findOne({ userName: req.body.userName.trim() }, (err, user) => {
+        console.log(user)
+        if (user) {
+            if( JSON.stringify(user._id) == JSON.stringify(req.user._id))
+            {
+              isValidUserName = true;
             }
-        }, {
-        new: false
-    }, function (err, doc) {
-        if (err) {
-            res.send(err)
+          else{
+            message += "Username đã được sử dụng";
+            isValidUserName = false;
+          }
+        } else {
+            isValidUserName = true;
         }
-    }).then(result =>
-        res.json(result)
-    )
+    }).then(() => {
+        if (isValidUserName) {
+            User.findByIdAndUpdate(req.params.id,
+                {
+                    $set: {
+                        userName: req.body.userName.trim(),
+                        bio: req.body.bio,
+                        name: req.body.name,
+                        email: req.body.email.trim(),
+                        privateMode: req.body.privateMode,
+                    }
+                }, {
+                new: false
+            }, function (err, doc) {
+                if (err) {
+                    res.send(err)
+                }
+            }).then(result =>
+                res.json({ success: true, message: "Thành công" })
+            )
+        }
+        else {
+            return res.json({ success: false, message: message });
+        }
+    })
 })
 app.put('/api/users/follow/:followId', auth, (req, res) => {
     User.findByIdAndUpdate(req.params.followId, {
@@ -1061,6 +1083,7 @@ app.get('/api/messages/get/:id', auth, (req, res) => {
         .populate("user1", "_id userName avt")
         .populate("user2", "_id userName avt")
         .populate("lastMess")
+
         .exec((err, data) => {
             if (err) {
                 res.status(500).send(err)
@@ -1071,7 +1094,7 @@ app.get('/api/messages/get/:id', auth, (req, res) => {
                         user1: req.params.id,
                         user2: req.user._id,
                         seenBy: [(req.user._id)]
-                        
+
                     })
                     Conversation.create(conversation, (err, conver) => {
                         if (err) {
@@ -1107,7 +1130,8 @@ app.get('/api/messages/conversations', auth, (req, res) => {
     ).populate("user1", "_id userName avt")
         .populate("user2", "_id userName avt")
         .populate("lastMess")
-        .sort('-conversations.lastMess.updatedAt')
+        .sort([['updatedAt', -1]])
+       
         .exec((err, data) => {
             if (err) {
                 res.status(500).send(err)
@@ -1156,7 +1180,7 @@ app.post('/api/notify/seenall', auth, (req, res) => {
         })
 })
 function SaveNotification(notification) {
-    if(notification.sentFrom != notification.sentTo) {
+    if (JSON.stringify(notification.sentTo) != JSON.stringify(notification.sentFrom)) {
         Notification.create(notification, (err, data) => {
             if (err) {
                 console.log(err)
@@ -1165,9 +1189,8 @@ function SaveNotification(notification) {
                 console.log(data)
             }
         })
-    }{
-        console.log("Sai")
     }
+
 }
 app.post('/api/messages/save', jsonParser, (req, res) => {
     const dbMess = req.body
@@ -1227,7 +1250,7 @@ app.post('/api/messages/save', jsonParser, (req, res) => {
 //            COMMENT
 // ==============================
 
-app.post('/api/posts/comment',auth, (req, res) => {   
+app.post('/api/posts/comment', auth, (req, res) => {
     const comment = Comment({
         content: req.body.content,
         responds: [],
@@ -1241,7 +1264,7 @@ app.post('/api/posts/comment',auth, (req, res) => {
             new: true
         }).exec((err, post) => {
             if (err) res.status(400).json(err);
-        
+
             findPost(req.body.postId, req.user.hiddenPost).then((post) => {
                 const notification = new Notification({
                     sentFrom: req.user._id,
@@ -1271,7 +1294,7 @@ app.put('/api/posts/respond', auth, (req, res) => {
         $push: { responds: respond }
     }, {
         new: true
-    }).then((err,cmt) => {
+    }).then((err, cmt) => {
         if (err) return res.json(err);
         res.status(200).json({
             cmt: cmt
@@ -1280,21 +1303,20 @@ app.put('/api/posts/respond', auth, (req, res) => {
 })
 
 app.put('/api/posts/hidePost', auth, (req, res) => {
-    if (req.body.postId )
-    {
+    if (req.body.postId) {
         User.findByIdAndUpdate(req.user._id, {
             $push: { hiddenPost: req.body.postId }
-        },{new: true}).exec((err)=>{
+        }, { new: true }).exec((err) => {
             if (err) return res.json(err);
-            res.status(200).json({ postId: req.body.postId})
+            res.status(200).json({ postId: req.body.postId })
         })
     }
-    else{
+    else {
         res.status(400).send("error");
     }
 })
 
-app.put('/api/posts/likeComment',auth,(req,res)=>{
+app.put('/api/posts/likeComment', auth, (req, res) => {
     Comment.findByIdAndUpdate(req.body.commentId, {
         $push: { likes: req.user._id }
     }, {
@@ -1311,7 +1333,7 @@ app.put('/api/posts/likeComment',auth,(req,res)=>{
             });
             SaveNotification(notification);
             console.log(post);
-           
+
             res.status(200).json(post);
         })
     })
@@ -1346,7 +1368,7 @@ app.put('/api/posts/deleteComment', auth, (req, res) => {
         // Comment.remove({ "_id": ObjectId(req.body.commentId) })
         // .exec((err) => {
         // })
-    }); 
+    });
 })
 
 app.post('/api/posts/report', auth, (req, res) => {
@@ -1370,24 +1392,24 @@ app.post('/api/policies/create', auth, (req, res) => {
         content: req.body.content
     })
 
-    policy.save((err,policy)=>{
-        if(err) return res.status(400).json({err})
+    policy.save((err, policy) => {
+        if (err) return res.status(400).json({ err })
         res.status(200).json(policy)
     })
 })
 
 app.get('/api/policies/getAll', auth, (req, res) => {
     Policy.find()
-    .exec((err, policies) => {
-        if (err) return res.status(400).json({ err })
-        res.status(200).json(policies)
-    })
+        .exec((err, policies) => {
+            if (err) return res.status(400).json({ err })
+            res.status(200).json(policies)
+        })
 })
 
 
 
 app.post('/api/story/create', auth, (req, res) => {
-    
+
     let story = new Story({
         image: req.body.image,
         header: req.body.header,
@@ -1443,7 +1465,7 @@ app.put('/api/tags/follow', auth, (req, res) => {
         new: true
     }).exec((err, tag) => {
         if (err) res.status(400).json(err);
-            res.status(200).json({tag});
+        res.status(200).json({ tag });
     })
 })
 
@@ -1458,44 +1480,44 @@ app.post('/api/tags/getTagId', (req, res) => {
                 name: 1,
             }
         }
-    ],function (err, tags) {
-            if (err) return res.status(400).json(err);
-            res.status(200).json(tags);
-        }
+    ], function (err, tags) {
+        if (err) return res.status(400).json(err);
+        res.status(200).json(tags);
+    }
     )
 })
 
 app.put('/api/tags/unfollow', auth, (req, res) => {
     Tag.findByIdAndUpdate(req.body.tagId, {
         $pull: { followers: req.user._id }
-    },{new: true })
-    .exec((err, tag) => {
-        if (err) res.status(400).json(err);
-        res.status(200).json({ tag });
-    })
+    }, { new: true })
+        .exec((err, tag) => {
+            if (err) res.status(400).json(err);
+            res.status(200).json({ tag });
+        })
 })
 
-app.post('/api/users/search',auth,(req,res)=>{
+app.post('/api/users/search', auth, (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 3;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
     const matchRegex = new RegExp(req.body.keyword);
     console.log(matchRegex)
-    User.find({ userName: { $regex: matchRegex }})
-    .skip(skip)
-    .limit(limit)
-    .select("_id avt userName")
-    .exec((err,users)=>{
-        Tag.find({ name: { $regex: matchRegex } })
+    User.find({ userName: { $regex: matchRegex } })
         .skip(skip)
         .limit(limit)
-        .select("_id name posts")
-        .exec((err, tags) => {
-            if (err) res.status(400).json(err);
-            res.status(200).json({ users, tags});
+        .select("_id avt userName")
+        .exec((err, users) => {
+            Tag.find({ name: { $regex: matchRegex } })
+                .skip(skip)
+                .limit(limit)
+                .select("_id name posts")
+                .exec((err, tags) => {
+                    if (err) res.status(400).json(err);
+                    res.status(200).json({ users, tags });
+                })
         })
-    })
 })
 
 app.post('/api/users/searchUser', auth, (req, res) => {
@@ -1569,7 +1591,7 @@ app.get('/api/story/getAll', auth, (req, res) => {
                     "header": 1,
                     "image": 1,
                     "viewedBy": 1,
-                     "createdAt": 1,
+                    "createdAt": 1,
                     "dateDifference": 1,
                 },
             }
@@ -1580,8 +1602,8 @@ app.get('/api/story/getAll', auth, (req, res) => {
     )
 })
 
-app.post('/api/users/reset_pass',(req,res)=>{
-    
+app.post('/api/users/reset_pass', (req, res) => {
+
     var today = moment().startOf('day').valueOf();
 
     User.findOne({
@@ -1589,16 +1611,16 @@ app.post('/api/users/reset_pass',(req,res)=>{
         resetTokenExp: {
             $gte: today
         }
-    },(err,user)=>{
-        if( err)console.log(err)
-        if(!user) return res.json({success:false,message:"Sorry, your token is invalid, please gennerate new one!"})
+    }, (err, user) => {
+        if (err) console.log(err)
+        if (!user) return res.json({ success: false, message: "Sorry, your token is invalid, please gennerate new one!" })
 
         user.password = req.body.password;
-        user.resetToken = '' ;
-        user.resetTokenExp = 0 ;
+        user.resetToken = '';
+        user.resetTokenExp = 0;
 
-        user.save((err,doc)=>{
-            if(err) return res.json({success: false, err})
+        user.save((err, doc) => {
+            if (err) return res.json({ success: false, err })
             return res.status(200).json({
                 success: true
             })
@@ -1606,16 +1628,16 @@ app.post('/api/users/reset_pass',(req,res)=>{
     })
 })
 
-app.post('/api/users/reset_user',(req,res)=>{
+app.post('/api/users/reset_user', (req, res) => {
     User.findOne(
-        {'email': req.body.email},
-        (err,user) => {
-            user.gennerateResetToken((err,user)=>{
-                if(err) return res.json({success: false,err});
-                sendEmail(user.email,user.name,null,"reset_password",user);
-                return res.json({success:true})
+        { 'email': req.body.email },
+        (err, user) => {
+            user.gennerateResetToken((err, user) => {
+                if (err) return res.json({ success: false, err });
+                sendEmail(user.email, user.name, null, "reset_password", user);
+                return res.json({ success: true })
+            })
         })
-    })
 })
 
 //=======================
@@ -1698,11 +1720,11 @@ function getReport(postId, userHiddenPost) {
         },
         { "$sort": { createdAt: -1 } },
         { "$skip": skip },
-        { "$limit": limit }, 
-        ], function (err, post) {
-            if (err) return {}
-            return post[0];
-        }
+        { "$limit": limit },
+    ], function (err, post) {
+        if (err) return {}
+        return post[0];
+    }
     )
     return post;
 }
@@ -1711,11 +1733,11 @@ app.post('/api/reports/getAll', auth, admin, (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 6;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
-    let filter = req.body.filter[0] == "all" ? ["post", "comment"] : req.body.filter ;
+    let filter = req.body.filter[0] == "all" ? ["post", "comment"] : req.body.filter;
 
     Report.aggregate([
         {
-            $match: { "reportType": { "$in": filter }}
+            $match: { "reportType": { "$in": filter } }
         },
         {
             $lookup: { from: 'posts', localField: 'post', foreignField: '_id', as: 'post' }
@@ -1758,29 +1780,29 @@ app.post('/api/reports/getAll', auth, admin, (req, res) => {
                     "_id": 1,
                     "avt": 1,
                     "userName": 1,
-                 },
+                },
                 "createdAt": 1,
                 "updatedAt": 1,
             }
         },
-        { "$sort": {createdAt: -1}},
+        { "$sort": { createdAt: -1 } },
         { "$skip": skip },
         { "$limit": limit },
-        ], function (err, reports) {
-            console.log(reports);
-            if (err) return res.status(400).send(err);
-            res.status(200).json({
-                reports: reports,
-                size: reports.length
-            });
-        }
+    ], function (err, reports) {
+        console.log(reports);
+        if (err) return res.status(400).send(err);
+        res.status(200).json({
+            reports: reports,
+            size: reports.length
+        });
+    }
     )
 })
 
-findComment = (id) =>{
+findComment = (id) => {
     const comment = Comment.aggregate([
         {
-            $match: { "_id": ObjectId(id) } 
+            $match: { "_id": ObjectId(id) }
         },
         {
             $lookup: { from: 'users', localField: 'postedBy', foreignField: '_id', as: 'postedBy' }
@@ -1810,14 +1832,14 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
 
     Report.aggregate([
         {
-            $match: { "_id": ObjectId(req.body.id) } 
+            $match: { "_id": ObjectId(req.body.id) }
         },
         {
             $lookup: { from: 'policies', localField: 'reportAbout', foreignField: '_id', as: 'reportAbout' }
         },
         {
             $lookup: { from: 'users', localField: 'sentBy', foreignField: '_id', as: 'sentBy' }
-        }, 
+        },
         {
             "$project": {
                 "_id": 1,
@@ -1826,7 +1848,7 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
                 "status": 1,
                 "post": 1,
                 "comment": 1,
-                "reportAbout":{
+                "reportAbout": {
                     "content": 1,
                 },
                 "sentBy": {
@@ -1850,15 +1872,15 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
                             post: post
                         }
                     });
-                })    
-            }else{
+                })
+            } else {
                 findComment(report.comment).then((comment) => {
                     findPost(report.post, []).then((post) => {
                         res.status(200).json({
                             reportDetail: {
                                 ...report,
                                 comment: comment,
-                                post:post
+                                post: post
                             }
                         })
                     });
@@ -1875,13 +1897,14 @@ app.put('/api/reports/updateReport', auth, admin, (req, res) => {
         new: true
     }).exec((err, report) => {
         if (err) res.status(400).json(err);
-        res.status(200).json({report});
+        res.status(200).json({ report });
     })
 })
 
 app.post('/api/reports/delete_post', auth, (req, res) => {
     Post.findByIdAndUpdate(req.body.postId, {
         $set: { hidden: true }
+
     }).exec((err) => {
         if (err) res.status(400).send(err);
         Report.findByIdAndUpdate(req.body.reportId, {
@@ -1890,7 +1913,7 @@ app.post('/api/reports/delete_post', auth, (req, res) => {
             new: true
         }).exec((err, report) => {
             if (err) res.status(400).json(err);
-            res.status(200).json({report});
+            res.status(200).json({ report });
         })
     })
 })
@@ -1908,7 +1931,7 @@ app.post('/api/reports/delete_comment', auth, (req, res) => {
             new: true
         }).exec((err, report) => {
             if (err) res.status(400).json(err);
-            res.status(200).json({report});
+            res.status(200).json(report);
         })
     })
 })
@@ -1920,26 +1943,26 @@ app.post('/api/accounts/getAll', auth, admin, (req, res) => {
     // let filter = req.body.filter[0] == "all" ? ["post", "comment"] : req.body.filter;
 
     User.aggregate([
-    {
-        $match: { "role": 1 }
-    },
-    {
-        "$project": {
-            "_id": 1,
-            "avt": 1,
-            "role": 1,
-            "email": 1,
-            "password": 1,
-            "userName": 1,
-            "name": 1,
-            "lastname": 1,
-        }
-    },
-    { "$sort": { createdAt: -1 } },
-    { "$skip": skip },
-    { "$limit": limit }
+        {
+            $match: { "role": 1 }
+        },
+        {
+            "$project": {
+                "_id": 1,
+                "avt": 1,
+                "role": 1,
+                "email": 1,
+                "password": 1,
+                "userName": 1,
+                "name": 1,
+                "lastname": 1,
+            }
+        },
+        { "$sort": { createdAt: -1 } },
+        { "$skip": skip },
+        { "$limit": limit }
     ], function (err, accounts) {
-            console.log(accounts);
+        console.log(accounts);
         if (err) return res.status(400).send(err);
         res.status(200).json({
             accounts: accounts,
@@ -1968,7 +1991,7 @@ app.post('/api/users/login', jsonParser, (req, res) => {
     });
 })
 
-app.post('/api/users/changePassword',auth,(req, res) => {
+app.post('/api/users/changePassword', auth, (req, res) => {
     User.findOne({
         _id: req.user._id,
     }, (err, user) => {
@@ -1981,9 +2004,9 @@ app.post('/api/users/changePassword',auth,(req, res) => {
                 if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
                 return res.status(200).json({
                     success: true,
-                    message: 'Thay đổi mật khẩu thành công' 
+                    message: 'Thay đổi mật khẩu thành công'
                 })
-            }) 
+            })
         });
     })
 })
@@ -1998,10 +2021,12 @@ app.use(function (req, res, next) {
     res.status(404).send('Unable to find the requested resource!');
 });
 
-const port =  process.env.PORT || 3002;
-app.listen(port,()=>{{
-    console.log(`Server is running at ${port}`);
-}})
+const port = process.env.PORT || 3002;
+app.listen(port, () => {
+    {
+        console.log(`Server is running at ${port}`);
+    }
+})
 
 
 

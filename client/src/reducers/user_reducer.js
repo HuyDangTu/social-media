@@ -10,6 +10,8 @@ import {
     UPDATE_IMG,
     UPDATE_PRO,
     FOLLOW_USER,
+    CHANGE_PRO,
+    CHANGE_IMG,
 } from '../actions/types';
 
 export default function(state={},action){
@@ -79,6 +81,20 @@ export default function(state={},action){
                     }
                 }
             } 
+        case CHANGE_PRO:
+            {
+                return {
+                    ...state,
+                    updateInfo: action.payload
+                }
+            }
         default: return state;
+        case CHANGE_IMG:
+            {
+                return {
+                    ...state,
+                    updateimginfo: action.payload
+                }
+            }
     }
 }

@@ -13,7 +13,6 @@ import { Button, CircularProgress, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
 import Header from '../Header_Footer/Header';
 
-
 class ProfileSettings extends Component {
     state = {
         privateMode: false,
@@ -21,7 +20,7 @@ class ProfileSettings extends Component {
         settingState: 'profile',
         edited: false,
         loading: false,
-        
+        severity: '',
         setSnack: false,
 
         formError: false,
@@ -175,24 +174,41 @@ class ProfileSettings extends Component {
         let dataToSubmit = generateData(this.state.formData, 'update_pro')
         this.props.dispatch(changeProfile(this.props.user.userData._id, dataToSubmit))
             .then(response => {
-                console.log(response)
-                this.props.dispatch(auth());
-                this.setState({loading:false, setSnack: true, formMessage: "Thành công"})
+                console.log(response);
+                if(response.payload.success == false)
+                {
+                    this.setState({loading:false,severity:'error', setSnack: true, formMessage: response.payload.message})
+                    
+                }
+                else
+                {
+                    this.setState({loading:false,severity:'success',edited:false, setSnack: true, formMessage: response.payload.message})
+                    this.props.dispatch(auth());
+                }
+                
+              //  this.props.dispatch(auth());
+                
             })
     }
 
     onFileChange = async (event) => {
         this.setState({ loading: true })
         await this.props.dispatch(updateprofileimgfile(event.target.files[0]));
-        await this.props.dispatch(updateprofileimg(this.props.user.img ? this.props.user.img.url : 0));
-        await this.props.dispatch(auth());
-        // await Headers.props.dispatch(updateprofileimg(this.props.user.img ? this.props.user.img.url : 0));
-        await this.setState({ loading: false });
-        await this.setState({ setSnack: true, formMessage: "Thành công"});
-        return(
-            <Layout>
-            </Layout>
-        )
+        await this.props.dispatch(updateprofileimg(this.props.user.img ? this.props.user.img.url : 0))
+        .then(response=>
+            {
+                console.log(response)
+            if(response.payload.success == false)
+            {
+                this.setState({loading:false,severity:'error', setSnack: true, formMessage: response.payload.message})
+                
+            }
+            else
+            {
+                this.setState({loading:false,severity:'success',edited:false, setSnack: true, formMessage: response.payload.message})
+                this.props.dispatch(auth());
+            }
+        })
     }
 
     updateForm = (element) => {
@@ -201,7 +217,17 @@ class ProfileSettings extends Component {
             formError: false,
             formData: newFormdata
         });
-        this.setState({edited:true})
+             if( JSON.stringify(this.state.formData.bio.value.trim()) != JSON.stringify(this.props.user.userData.bio.trim()) ||
+             JSON.stringify(this.state.formData.userName.value.trim()) != JSON.stringify(this.props.user.userData.userName.trim()) ||
+             JSON.stringify(this.state.formData.name.value.trim()) != JSON.stringify(this.props.user.userData.name.trim()) ||
+             JSON.stringify(this.state.formData.email.value.trim()) != JSON.stringify(this.props.user.userData.email.trim()))
+            {
+                this.setState({edited:true});
+            }
+            else
+            {
+                this.setState({edited:false});
+            }
     }
 
     getUserForm() {
