@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
 import Skeleton from '@material-ui/lab/Skeleton'
+import Portal from '@material-ui/core/Portal';
 import { getMessage, getConversation, sendMessage, seenMessage, sendimg } from '../../../src/actions/message_action'
 import './Message.scss';
 import { update, generateData } from '../ultils/Form/FormActions';
@@ -200,7 +201,6 @@ class Message extends Component {
                                 <div className="message_box">
                                     {this.props.messages ? console.log(this.props.messages) : ""}
                                     {
-
                                         this.props.messages ?
                                             this.props.messages.conlist ?
                                                 this.props.messages.conlist.map(con => {
@@ -315,43 +315,7 @@ class Message extends Component {
                                                     yourProfile={yourProfile}
 
                                                 />
-
-                                                // mess.sentBy == yourProfile._id ?
-                                                //     <div className="row no-gutters sent">
-                                                //         <div className="col-xl-6">
-                                                //         </div>
-                                                //         <div className="col-xl-6 sent_mess">
-                                                //         {
-                                                //                     mess.type=='text'?
-
-                                                //             <p>
-
-                                                //                 {mess.content}
-                                                //             </p>
-                                                //             :                                                 
-                                                //                 <img src={mess.content}></img>
-                                                //        }    
-                                                //         </div>
-
-                                                //     </div> :
-                                                //     <div className="row no-gutters receive">
-
-                                                //         <div className="col-xl-6 receive_mess">
-
-                                                //         {
-                                                //                     mess.type=='text'?
-
-                                                //             <p>
-
-                                                //                 {mess.content}
-                                                //             </p>
-                                                //             :                                                 
-                                                //                 <img src={mess.content}></img>
-                                                //        }    
-                                                //         </div>
-                                                //         <div className="col-xl-6">
-                                                //         </div>
-                                                //     </div>
+                                               
                                             )
                                         }
                                         ) : '' : ''

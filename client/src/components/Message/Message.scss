@@ -217,6 +217,15 @@
             }
             .sent_mess{
                 margin-bottom:8px;
+                .dialog_mess{
+                    position: absolute;
+                    z-index: 100;
+                    background-color: black;
+           
+                    top: -10px;
+                    border-radius: 4px;
+
+                }
                 p{
                     float: right;
                     width: max-content;
