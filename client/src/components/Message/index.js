@@ -183,7 +183,6 @@ class Message extends Component {
                     <div className="message_wrapper">
                         <div className="row no-gutters">
                             <div className="col-xl-4 left_contain">
-
                                 <div className="chat_info">
                                     <div className="chat_settings">
                                         <h2> Trò chuyện</h2>

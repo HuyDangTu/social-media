@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
-import { findProfile, follow, unfollow, findTagged, findPosted, auth, updateprofile } from '../../../src/actions/user_action'
+import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth, updateprofile } from '../../../src/actions/user_action'
 import './profile.scss';
 import { GridDots, LayoutList, Edit, Settings, LayoutGrid, Tag, Dots, CircleX, Heart, Message2,Bookmark } from 'tabler-icons-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -40,8 +40,7 @@ class Profile extends Component {
         this.props.dispatch(findProfile(userID))
         this.props.dispatch(findPosted(userID))
         this.setState({setfollowerDiaglog:false,  setType: 'posted',setfollowingDiaglog:false});
-
-        }
+         }
     }
     handleClickunfollow = async (id) => {
         await this.props.dispatch(unfollow(id)).then(response=>
@@ -69,6 +68,7 @@ class Profile extends Component {
         }
         if(type=='saved'){
             this.setState({ setType: type })
+            this.props.dispatch(findSaved(this.props.user.userProfile ? this.props.user.userProfile._id : 0))
         }
     }
     showDialog = () => {

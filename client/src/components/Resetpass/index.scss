@@ -1,0 +1,69 @@
+@import '../ultils/initial.scss';
+
+.resetPass{
+    .banner{
+        background-image: url('../../asset/login-page/resetPass_bg.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center; 
+        height: 40vh; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .signin__logo{
+            .logo{
+                width: 30%;
+            }
+            .stunning_text{
+                margin-left: 20px;
+                width: 40%;
+            }
+        }
+    }
+    .content{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        height: 60vh; 
+        box-shadow: 0px 10px 5px rgb(204, 204, 204), 2px -5px 10px  rgb(230, 227, 227);
+        .wrapper{
+           
+            .title{
+                color: $primaryColor;
+                font-size: 20px;
+                font-weight: bold;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .formField_container{
+                .formBlock{
+                    input{
+                        width: 100%;
+                        border: none;
+                        border-radius: 5px;
+                        padding: 5px;
+                        border: 1px solid #cccccc;
+                        
+                    }
+                }
+            }
+            .signin__button{
+                width: 100%;
+                height: fit-content;
+                padding: 5px 10px 5px 10px;
+                border: none;
+                border-radius: 5px; 
+                color: white;
+                background: $primaryColor;
+            }
+            .message{
+                font-size: 16px;
+                font-weight: bold;
+                text-align: center;
+            }
+        }
+        
+    }
+}

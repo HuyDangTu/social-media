@@ -42,7 +42,7 @@ class ReportDetail extends Component {
         if(detail.reportType == "post"){
         return (
             <div className="content_wrapper">
-                <p>Nội dung: </p>
+                <p> <b>Nội dung:</b></p>
                 <div className="user_info">
                     <img src={detail.post[0].postedBy[0].avt}/>
                     <div className="name">
@@ -70,7 +70,7 @@ class ReportDetail extends Component {
             
             <div className="content_wrapper">
                 
-                    <p>Nội dung: </p>
+                    <p><b>Nội dung:</b></p>
 
                     <div className="comment_list">
                         <div className="comment">
@@ -144,7 +144,7 @@ class ReportDetail extends Component {
     }
 
     deleteContent = () => {
-        if (this.props.reports.reportDetail == "post"){
+        if (this.props.reports.reportDetail.reportType == "post"){
             this.props.dispatch(deletePost(this.props.reports.reportDetail.post[0]._id, this.state.id))
             .then((response) => {
                 console.log(response)
@@ -217,18 +217,18 @@ class ReportDetail extends Component {
         return (
             <Layout page="report">
                 <div className="report_detail" >
-                    <h1>Chi tiết báo cáo</h1>
+                    <h2 className="page_title">Chi tiết báo cáo</h2>
                     {
                         this.props.reports.reportDetail ?
-                        <div className="row">
-                            <div className="col-xl-6">
+                            <div className="row no-gutters">
+                            <div className="col-xl-6 no-gutters">
                                 {
                                     this.renderContent(this.props.reports.reportDetail)
                                 }
                             </div>
-                            <div className="col-xl-6">
-                                <div className="report_info">
-                                    <p>Người bán cáo: </p>
+                                <div className="col-xl-6 no-gutters">
+                                <div className="report_info ">
+                                    <p><b>Người báo cáo:</b></p>
                                         <div className="user_info">
                                             <img src={detail.sentBy[0].avt} />
                                             <div className="name">
@@ -243,11 +243,10 @@ class ReportDetail extends Component {
                                             this.renderPolicies(detail.reportAbout)
                                         }
                                     </div>
-                                   
                                     {
                                         !detail.status ? 
                                         <div className="button_wrapper">
-                                                <p>Xử lý</p>
+                                                <p><b>Xử lý</b></p>
                                                 <button className="btn_invalid" onClick={() => {
                                                     this.setState({
                                                         DialogShowing: true,

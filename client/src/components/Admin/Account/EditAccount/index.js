@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import Switch from 'react-ios-switch';
 import FormField from '../../../ultils/Form/FormField';
 import './profilesetting.scss';
-import { update, generateData } from '../../../ultils/Form/FormActions';
+import { update, generateData,ifFormValid, resetFields  } from '../../../ultils/Form/FormActions';
 import { User, Lock } from 'tabler-icons-react'
-import { updateprofileimgfile, updateprofileimg, changeProfile, updateprofile, auth } from '../../../../actions/user_action';
+import { updateprofileimgfile, updateprofileimg, changeProfile, updateprofile, auth, changePassword } from '../../../../actions/user_action';
 import { withRouter } from 'react-router-dom';
 import { Button, CircularProgress, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
@@ -94,7 +94,112 @@ class EditAccount extends Component {
                 showlabel: false
             },
         },
+        passwordData: {
+            currentPassword: {
+                element: 'password',
+                config: {
+                    label: 'Mật khẩu',
+                    name: 'password_input',
+                    type: 'password',
+                    placeholder: 'Mật khẩu hiện tại'
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false,
+            },
+            password: {
+                element: 'input',
+                config: {
+                    label: 'Mật khẩu mới',
+                    name: 'password_input',
+                    type: 'password',
+                    placeholder: 'Mật khẩu mới'
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false,
+            },
+            confirmPassword: {
+                element: 'input',
+                value: '',
+                config: {
+                    label: 'Nhập lại mật khẩu',
+                    name: 'confirm_password_input',
+                    type: 'password',
+                    placeholder: 'Nhập lại mật khẩu'
+                },
+                validation: {
+                    required: true,
+                    confirm: 'password'
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false,
+            }
+        }
+
     }
+
+    reset() {
+        this.setState({
+            edited: false,
+            loading: false,
+            setSnack: false,
+            formError: false,
+            formMessage: "",
+        })
+    }
+
+    changePassword = (event) => {
+        event.preventDefault();
+
+        let dataToSubmit = generateData(this.state.passwordData, 'change_password')
+        let formIsValid = ifFormValid(this.state.passwordData, 'change_password');
+
+        if (formIsValid) {
+            console.log(dataToSubmit)
+            this.props.dispatch(changePassword(dataToSubmit))
+                .then(response => {
+                    console.log(response);
+                    if (response.payload.success) {
+                        this.setState({
+                            setSnack: true, severity: "success", message: "Thành công",
+                            //formMessage: response.payload.message
+                        }, () => { resetFields(this.state.passwordData) })
+                    } else {
+                        this.setState({
+                            formError: true,
+                            formMessage: response.payload.message
+                        })
+                    }
+                    this.props.dispatch(auth());
+                })
+        } else {
+            this.setState({
+                formError: true,
+                formMessage: "Vui lòng kiểm tra lại thông tin!"
+            })
+        }
+
+    }
+
+    updatePasswordForm = (element) => {
+        const newFormdata = update(element, this.state.passwordData, 'update_password');
+        this.setState({
+            formError: false,
+            passwordData: newFormdata
+        });
+    }
+
 
     updateFields = (newFormData) => {
         this.setState({
@@ -114,7 +219,6 @@ class EditAccount extends Component {
                 this.setState({ loading: false, setSnack: true, severity: "success", message: "Thành công" })
             })
     }
-
     updateForm = (element) => {
         const newFormdata = update(element, this.state.formData, 'update_pro');
         this.setState({
@@ -144,11 +248,9 @@ class EditAccount extends Component {
         this.setState({ edited: false });
         this.updateFields(formData);
     }
-
     componentDidMount() {
         this.getUserForm();
     }
-
     handleSetting = (type) => {
         this.setState({ settingState: type })
     }
@@ -158,28 +260,22 @@ class EditAccount extends Component {
         return (
             <Layout page="account">
                 <div className="editAccount">
-                    <div className="tittle">
-                        <h3 >Chỉnh sửa tài khoản</h3>
+                    <div className="page_title">
+                        <h3>Cài đặt tài khoản</h3>
+                    </div>
+                    <div className="title">
+                        <h5>Thông tin</h5>
                     </div>
                     <div className="row  no-gutters ">
-                        {
-                            this.state.settingState == 'profile' ?
-                                <form className="col-xl-12 no-gutters setting_detail" onSubmit={(event) => this.submitForm(event)}>
-
-                                    <div className="row  no-gutters  setting_type">
-                                        <div className="col-xl-2  no-gutters  label">
-                                            {
-                                                this.state.loading ?
-                                                    <div class="overlay"><CircularProgress style={{ color: '#5477D5' }} thickness={7} />
-                                                    </div>
-
-                                                    :
-                                                    ''
-                                            }
-
-                                            <img src={this.props.user.userData.avt}></img>
-                                        </div>
-                                        <div className="col-xl-10 field">
+                        <form className="col-xl-12 no-gutters setting_detail" onSubmit={(event) => this.submitForm(event)}>
+                            <div className="row  no-gutters  setting_type">
+                                <div className="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 no-gutters label">
+                                {this.state.loading ?
+                                    <div class="overlay"><CircularProgress style={{ color: '#5477D5' }} thickness={7} />
+                                    </div>:''}
+                                    <img src={this.props.user.userData.avt}></img>
+                                </div>
+                                <div className="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-10 field">
                                             <h2>{this.props.user.userData.userName}</h2>
                                             <label className="custom-file-upload">
                                                 <input type="file" onChange={this.onFileChange} />
@@ -189,12 +285,11 @@ class EditAccount extends Component {
                                     </div>
 
                                     <div className="row  no-gutters  setting_type">
-                                        <div className="col-xl-2  no-gutters  label">
+                                <div className="col-xl-2 col-lg-2 col-md-2 no-gutters  label">
                                             <h3>Tên tài khoản</h3>
                                         </div>
-                                        <div className="col-xl-10  field">
+                                <div className="col-xl-10 col-lg-10 col-md-10 field">
                                             <FormField
-                                                //Có thể để trống phần description nên k cần xử lý event onChange,..
                                                 id={'userName'}
                                                 formData={this.state.formData.userName}
                                                 change={(element) => this.updateForm(element)}
@@ -204,12 +299,12 @@ class EditAccount extends Component {
                                     </div>
 
                                     <div className="row  no-gutters  setting_type">
-                                        <div className="col-xl-2  no-gutters  label">
+                                <div className="col-xl-2 col-lg-2 col-md-2 no-gutters label">
                                             <h3>Tên</h3>
                                         </div>
-                                        <div className="col-xl-10  field">
+                                <div className="col-xl-10 col-lg-10 col-md-10 field">
                                             <FormField
-                                                //Có thể để trống phần description nên k cần xử lý event onChange,..
+                                               
                                                 id={'name'}
                                                 formData={this.state.formData.name}
                                                 change={(element) => this.updateForm(element)}
@@ -218,12 +313,11 @@ class EditAccount extends Component {
                                     </div>
 
                                     <div className="row  no-gutters  setting_type">
-                                        <div className="col-xl-2  no-gutters  label">
+                                <div className="col-xl-2 col-lg-2 col-md-2 no-gutters label">
                                             <h3>Email</h3>
                                         </div>
-                                        <div className="col-xl-10   field">
+                                <div className="col-xl-10 col-lg-10 col-md-10 field">
                                             <FormField
-                                                //Có thể để trống phần description nên k cần xử lý event onChange,..
                                                 id={'email'}
                                                 formData={this.state.formData.email}
                                                 change={(element) => this.updateForm(element)}
@@ -232,17 +326,17 @@ class EditAccount extends Component {
                                     </div>
 
                                     <div className="row  no-gutters  setting_type">
-                                        <div className="col-xl-2  no-gutters  label">
+                                <div className="col-xl-2 col-lg-2 col-md-2  no-gutters  label">
                                         </div>
                                         {
                                             this.state.edited ?
-                                                <div className="col-xl-10  field">
+                                        <div className="col-xl-10 col-lg-10 col-md-10 field">
                                                 <Button className="send_btn" onClick={(event) => { this.submitForm(event) }}>
                                                         Gửi
                                                 </Button>
                                                 </div>
                                                 :
-                                                <div className="col-xl-10  field">
+                                        <div className="col-xl-10 col-lg-10 col-md-10 field">
                                                     <Button className="send_btn disable" disabled="true" onClick={(event) => { this.submitForm(event) }}>
                                                         Cập nhật
                                             </Button>
@@ -250,10 +344,75 @@ class EditAccount extends Component {
                                         }
                                     </div>
                                 </form>
-                                :
-                                ''
-                        }
-                        
+                    </div>
+                    <div className="title">
+                        <h5 >Mật khẩu</h5>
+                    </div>
+                    <div className="row  no-gutters ">
+                        <form className="col-xl-12 no-gutters setting_detail" onSubmit={(event) => this.changePassword(event)}>
+
+                            <div className="row  no-gutters  setting_type">
+                                <div className="col-xl-2 col-lg-2 col-md-2 no-gutters  label">
+                                    <h3>Mật khẩu</h3>
+                                </div>
+                                <div className="col-xl-10 col-lg-10 col-md-10 field">
+                                    <FormField
+                                        id={'currentPassword'}
+                                        formData={this.state.passwordData.currentPassword}
+                                        //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
+                                        change={(element) => this.updatePasswordForm(element)} />
+                                </div>
+                            </div>
+
+                            <div className="row  no-gutters  setting_type">
+                                <div className="col-xl-2 col-lg-2 col-md-2 no-gutters label">
+                                    <h3>Mật khẩu mới</h3>
+                                </div>
+                                <div className="col-xl-10 col-lg-10 col-md-10 field">
+                                    <FormField
+                                        id={'password'}
+                                        formData={this.state.passwordData.password}
+                                        //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
+                                        change={(element) => this.updatePasswordForm(element)} />
+                                </div>
+                            </div>
+
+                            <div className="row  no-gutters  setting_type">
+                                <div className="col-xl-2 col-lg-2 col-md-2 label">
+                                    <h3>Nhập lại</h3>
+                                </div>
+                                <div className="col-xl-10 col-lg-10 col-md-10 field">
+                                    <FormField
+                                        id={'confirmPassword'}
+                                        formData={this.state.passwordData.confirmPassword}
+                                        //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
+                                        change={(element) => this.updatePasswordForm(element)} />
+                                </div>
+                            </div>     
+
+                            {
+                                this.state.formError ?
+                                <div className="row setting_type">
+                                        <div className="col-xl-2 col-lg-2 col-md-2 label">
+                                    </div>
+                                        <div className="col-xl-10 col-lg-10 col-md-10 field">
+                                        {this.state.formMessage}
+                                    </div>
+                                </div>
+                                : ""
+                            }
+                            <div className="row  no-gutters  setting_type">
+                                <div className="col-xl-2 col-lg-2 col-md-2 no-gutters label">
+                                </div>
+                                {
+                                    <div className="col-xl-10 col-lg-10 col-md-10 field">
+                                        <Button className="send_btn" onClick={(event) => { this.changePassword(event) }}>
+                                            Cập nhật
+                                        </Button>
+                                    </div>
+                                }
+                            </div>
+                        </form>
                     </div>
                     
                 </div>

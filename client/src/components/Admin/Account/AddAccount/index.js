@@ -210,9 +210,9 @@ class AddAccount extends Component {
         return (
             <Layout page="account">
                 <div className="create_account">
-                <h2>Thêm Admin </h2>
+                <h3 className="page_title">Thêm Admin </h3>
                 <div className="row no-gutters">
-                        <div className="col-xl-5 no-gutters">
+                        <div className="col-xl-5 col-lg-7 col-md-8 no-gutters">
                             <div className="right">
                                 <div className="register">
                                     <div className='register__container'>
@@ -258,7 +258,7 @@ class AddAccount extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-7 no-gutters"></div>
+                        <div className="col-xl-7 col-lg-5 col-md-4 no-gutters"></div>
                     </div>
             </div>
             {

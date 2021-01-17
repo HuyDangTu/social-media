@@ -35,6 +35,18 @@ export function loginUser(dataToSubmit){
     };
 }
 
+export function loginAdmin(dataToSubmit) {
+    const request = axios.post(`${USER_SERVER}/loginAdmin`, dataToSubmit)
+        .then(response => response.data);
+    console.log(request);
+    return {
+        type: LOGIN_USER,
+        payload: request
+    };
+}
+
+
+
 export function loginByFaceGoogle(email) {
     let data = {email}
     const request = axios.post(`${USER_SERVER}/loginByFaceGoogle`, data)
@@ -111,6 +123,7 @@ export function findTagged(id) {
         payload: request
     }
 }
+
 export function findPosted(id) {
     const request = axios.get(`${USER_SERVER}/posted/${id}`)
         .then(response => response.data.posts)
@@ -184,6 +197,15 @@ export function changePassword(dataToSubmit){
         .then(response => response.data)
     return {
         type: UPDATE_PRO,
+        payload: request
+    }
+}
+
+export function findSaved(id) {
+    const request = axios.post(`${USER_SERVER}/getSavedPost`)
+        .then(response => { console.log(response.data.posts); return response.data.posts})
+    return {
+        type: GET_TYPE,
         payload: request
     }
 }

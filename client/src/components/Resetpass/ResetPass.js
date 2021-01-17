@@ -3,6 +3,7 @@ import axios from 'axios'
 import { USER_SERVER } from '../ultils/mise';
 import { update, ifFormValid, generateData } from '../ultils/Form/FormActions';
 import React, { Component } from 'react';
+import './index.scss';
 
 class ResetPass extends Component {
     state = {
@@ -56,7 +57,6 @@ class ResetPass extends Component {
             formError: false,
             formData: newFormdata
         });
-
     }
 
     componentDidMount(){
@@ -104,30 +104,47 @@ class ResetPass extends Component {
 
     render() {
         return (
-            <div className="container">
-                <form className='register__form' onSubmit={(event) => this.submitForm(event)}>
-                    <h3>Khôi phục mật khẩu</h3>
-                    <FormField
-                        id={'password'}
-                        formData={this.state.formData.password}
-                        change={(element) => this.updateForm(element)}
-                    />
-                    <FormField
-                        id={'confirmPassword'}
-                        formData={this.state.formData.confirmPassword}
-                        change={(element) => this.updateForm(element)}
-                    />
-                    {
-                        this.state.formError ?
-                            <div>
-                                {this.state.formErrorMessage}
+            <div className="resetPass">
+                <div className="banner">
+                    <div className='signin__logo'>
+                        <img className="logo" src={require('../../asset/login-page/logo2x.png')} />
+                        <img className="stunning_text" src={require('../../asset/login-page/stun2x.png')} />
+                    </div>
+                </div>
+                <div className="content">
+                    <div className="wrapper">
+                        <div className="title">Khôi phục mật khẩu</div>
+                    <form className='register__form' onSubmit={(event) => this.submitForm(event)}>
+                        <FormField
+                            id={'password'}
+                            formData={this.state.formData.password}
+                            change={(element) => this.updateForm(element)}
+                        />
+                        <FormField
+                            id={'confirmPassword'}
+                            formData={this.state.formData.confirmPassword}
+                            change={(element) => this.updateForm(element)}
+                        />
+                        <button className='signin__button' onClick={(event) => { this.submitForm(event) }}>
+                                Reset password
+                        </button>
+                        {
+                            this.state.formError ?
+                                <div className="message">
+                                    {this.state.formErrorMessage}
+                                </div>
+                                : null
+                        }
+                        {
+                        this.state.formSuccess ?
+                            <div className="message">
+                                Done, check your email
                             </div>
-                        : null
-                    }
-                    <button className='signin__button' onClick={(event) => { this.submitForm(event) }}>
-                       Reset password
-                    </button>
+                            : null
+                         }
                 </form>
+                </div>
+                </div>
             </div>
         );
     }

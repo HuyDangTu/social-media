@@ -156,8 +156,7 @@ class Dashboard extends Component {
             <div>
                 <Layout page="report">
                     <div className="dashboard">
-                        <h4>Chào Đăng Khoa!</h4>
-                        <h2>Danh sách báo cáo</h2>
+                        <h2 className="page_title">Danh sách báo cáo</h2>
                         <div className="button">
                             <div class="dropdown filter">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -230,7 +229,8 @@ class Dashboard extends Component {
 
 function mapStateToProps(state) {
     return {
-        reports: state.reports
+        reports: state.reports,
+        user: state.user
     };
 }
 

@@ -11,7 +11,9 @@ import {
     UPDATE_PRO,
     FOLLOW_USER,
     CHANGE_PRO,
-    CHANGE_IMG,
+    CHANGE_IMG, 
+    SAVE_DETAIL,
+    SAVE_POST
 } from '../actions/types';
 
 export default function(state={},action){
@@ -88,13 +90,22 @@ export default function(state={},action){
                     updateInfo: action.payload
                 }
             }
-        default: return state;
-        case CHANGE_IMG:
-            {
-                return {
-                    ...state,
-                    updateimginfo: action.payload
+        case SAVE_POST: {
+            return {
+                ...state,
+                userData: {
+                    ...state.userData,
+                    saved: action.payload.saved
                 }
             }
+        }
+        case CHANGE_IMG:
+        {
+            return {
+                ...state,
+                updateimginfo: action.payload
+            }
+        }
+        default: return state;
     }
 }

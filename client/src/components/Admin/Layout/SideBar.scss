@@ -18,15 +18,13 @@
        }
     }
     .tools{
-        padding: 20px;
+        padding: 5px;
         .active{
-            
             background: $blueColor;
             border-radius: 5px;
-            color: black;
         }
         ul{
-            color: #8a8a8a;
+            color: black;
             padding: 0;
             margin: 0;
             li{
@@ -39,7 +37,6 @@
                 align-items: center;
                 p{
                     margin: 0px 0px 0px 10px;
-                    
                 }
             }
         }
@@ -78,17 +75,122 @@
     }
 }
 
-
-@media screen and (max-width: 992px){
-    
+@media screen and (max-width: 922px){
     .sidebar{
         .logo{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+           
             .stunning_logo{
-            
+                
             }
             .stunning_text{
+              
+            }
+        }
+        .tools{
+            padding: 5px;
+            .title{
                 display: none;
+            }
+            ul{
+                li{
+                    flex-direction: column;
+                    p{
+                        width: fit-content;
+                        margin:0;
+                        margin-top: 5px;
+                        font-size: 0.8rem;   
+                    }
+                }
+            }
+         }
+        .info{
+            .wrapper{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .name{
+              
+                }
+                cursor: pointer;
+            }
+        
+        }
+    }
+}
+
+
+@media screen and (max-width: 768px){
+    .sidebar{
+        .logo{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            .stunning_text{
+              
+            }
+        }
+        .info{
+            .wrapper{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .name{
+                    font-size: 0.8rem; 
+                }
+                cursor: pointer;
+            }
+           .logout{
+                display: flex;
+                align-items: center;
             }
         }
     }
+}
+
+@media screen and (max-width: 576px){
+    .sidebar{
+        .logo{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            .stunning_text{
+              display: none;
+            }
+        }
+        .tools{
+            padding: 5px;
+            .title{
+                display: none;
+            }
+            ul{
+                li{
+                    flex-direction: column;
+                    p{
+                        display: none;
+                    }
+                }
+            }
+         }
+        .info{
+            .wrapper{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .name{
+                display: none;
+            }
+            .logout{
+                display: flex;
+                justify-content: space-around;
+            }
+        }
+    }
+}
+
 }

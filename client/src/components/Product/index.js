@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
 import { getPostDetail, clearPostDetail } from '../../actions/product_actions';
-
+import { Link, withRouter } from 'react-router-dom';
 import PostDetailCard from './PostDetailCard';
 import Layout from '../../hoc/layout';
 
@@ -12,6 +12,15 @@ class PostDetail extends Component {
         console.log(id);
         this.props.dispatch(getPostDetail(id));
     }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.location.key !== this.props.location.key) {
+            const id = this.props.match.params.id;
+            console.log(id);
+            this.props.dispatch(getPostDetail(id));
+        }
+    }
+
 
     message(){
         return "sorry! post not found"
@@ -41,4 +50,4 @@ const mapStateToProps = (state) => {
 
     }
 }
-export default connect(mapStateToProps)(PostDetail);
+export default connect(mapStateToProps)(withRouter(PostDetail));

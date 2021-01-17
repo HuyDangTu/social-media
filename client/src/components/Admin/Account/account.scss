@@ -1,7 +1,11 @@
 @import '../../ultils/initial.scss';
 
 .account{
-    padding: 10px;
+    .page_title{
+        padding: 10px;
+        border-bottom: 1px solid #dddddd;
+    }
+
     h4{
         color: #969696
     }
@@ -12,6 +16,7 @@
         object-fit: cover;
     }
     .button{
+        padding: 10px;
         display: flex;
         .filter,.sort{
            

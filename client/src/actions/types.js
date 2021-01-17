@@ -130,3 +130,6 @@ export const SEEN_MESS = 'SEEN_MESS';
 export const UPLOAD_IMG = 'UPLOAD_IMG';
 export const CHANGE_PRO = 'CHANGE_PRO';
 export const CHANGE_IMG = 'CHANGE_IMG';
+export const SAVE_DETAIL = 'SAVE_DETAIL';
+export const SAVE_POST = 'SAVE_POST';
+    

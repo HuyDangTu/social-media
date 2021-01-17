@@ -20,11 +20,15 @@
 }
 
 .editAccount{
-    .tittle{
-        margin: 20px;
+    .page_title{
         border-bottom: 1px solid #d4d4d4;
+        padding: 20px;
+    }
+    .title{
+        padding: 20px;
     }
     .setting_detail{
+        padding: 20px;
         .setting_type{
             margin-bottom: 16px;
             align-items: flex-start;
@@ -52,16 +56,9 @@
                     background: rgba(0,0,0,0.3);
                     border-radius: 30px;
                 }
-            
             }
-            // .flexbox
-            // {
-            //     display: flex !important;
-            //     align-items: flex-start !important;
-            // }
             .field{
-                justify-content: right;
-            
+                padding: 0px 0px 0px 10px;
                 h2{
                     font-size: 20px;
                 }
@@ -105,6 +102,19 @@
                 }
             } 
             
+        }
+    }
+}
+
+@media screen and (max-width: 922px){
+    .setting_detail{
+        display: flex;
+        flex-direction: column;
+        .label{
+            width: fit-content;
+        }
+        .field{
+
         }
     }
 }

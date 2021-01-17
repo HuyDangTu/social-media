@@ -21,7 +21,12 @@
     font-size: 15px;
     border-radius: 5px;
 }
-.login__container{
+.Admin_login__container{
+    background-image: url('../../../asset/login-page/resetPass_bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; 
+    height: 100vh; 
     .left{
     background-image: url('../../../asset/login-page/login_bg.png');
     background-repeat: no-repeat;
@@ -46,7 +51,7 @@
         }
     }
 }
-.signin__container{
+.Admin_signin__container{
     @include default();
     padding: 0px calc_width(219) 0px calc_width(219);
 

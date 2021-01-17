@@ -21,19 +21,6 @@ import { withTheme } from '@material-ui/core';
 import { set } from 'mongoose';
 import { ISO_8601 } from 'moment';
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-//   });
-// export default function AlertDialogSlide() {
-//     const [open, setOpen] = React.useState(false);
-
-//     const handleClickOpen = () => {
-//       setOpen(true);
-//     };
-
-//     const handleClose = () => {
-//       setOpen(false);
-//     };}
 class UserProfile extends Component {
 
     state = {

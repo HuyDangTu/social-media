@@ -3,6 +3,7 @@ import axios from 'axios'
 import { USER_SERVER } from '../ultils/mise';
 import { update, ifFormValid, generateData } from '../ultils/Form/FormActions';
 import React, { Component } from 'react';
+import './index.scss';
 
 class ResetUser extends Component {
     state = {
@@ -13,10 +14,10 @@ class ResetUser extends Component {
                 element: 'input',
                 value: '',
                 config: {
-                    label: 'Tên tài khoản',
+                    label: 'Email',
                     name: 'email_input',
                     type: 'email',
-                    placeholder: ''
+                    placeholder: 'Nhập email của bạn'
                 },
                 validation: {
                     required: true,
@@ -25,7 +26,7 @@ class ResetUser extends Component {
                 valid: false,
                 touched: false,
                 validationMessage: '',
-                showlabel: true
+                showlabel: false
             }
         }
     }
@@ -67,29 +68,41 @@ class ResetUser extends Component {
 
     render() {
         return (
-            <div>
-                <FormField
-                    id={'email'}
-                    formData={this.state.formData.email}
-                    change={(element) => this.updateForm(element)}
-                />
-                {
-                    this.state.formSuccess ?
-                        <div>
-                            Done, check your email
-                        </div>
-                        : null
-                }
-                {
-                    this.state.formError ?
-                        <div>
-                            Please check your data
-                        </div>
-                        : null
-                }
-                <button className='signin__button' onClick={(event) => { this.submitForm(event) }}>
-                    Send Email to reset password
-                </button>
+            <div className="resetPass">
+                <div className="banner">
+                    <div className='signin__logo'>
+                        <img className="logo" src={require('../../asset/login-page/logo2x.png')} />
+                        <img className="stunning_text" src={require('../../asset/login-page/stun2x.png')} />
+                    </div>
+                </div>
+                <div className="content">
+                  
+                    <div className="wrapper">
+                        <div className="title">Reset password</div>
+                        <FormField
+                            id={'email'}
+                            formData={this.state.formData.email}
+                            change={(element) => this.updateForm(element)}
+                        />
+                        <button className='signin__button' onClick={(event) => { this.submitForm(event) }}>
+                            Send Email to reset password
+                        </button>
+                        {
+                            this.state.formSuccess ?
+                                <div className="message">
+                                    Done, check your email
+                                </div>
+                                : null
+                        }
+                        {
+                            this.state.formError ?
+                                <div className="message">
+                                    Please check your data
+                                </div>
+                                : null
+                        }
+                    </div>
+                </div>
             </div>
         );
     }

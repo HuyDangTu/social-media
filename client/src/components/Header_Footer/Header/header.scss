@@ -24,46 +24,7 @@
 //        }
 //     }
 // }
-@media only screen and (max-width : 992px){
-    .header__logo{
-        width: 100%;
-        height: 100%;
-        img{
-            width: 30px;
-        
-            object-fit: cover;
-        }
-       .Logo_stunn{
-        margin-left: 10px;
-        width: 40px; 
-       }
-    }
-    .header__container {
-        @include default();
-        width: 80%;
-        margin: 0 auto;
-        padding: 10px 0px 10px 0px;
-    }
-    
-}
 
-@media only screen and (min-width : 992px){
-    .header__logo{
-        img{
-            width: calc_width(45);
-        }
-        .Logo_stunn{
-             width: calc_width(60);
-             margin-left: 10px;
-        }
-    }
-    .header__container {
-        @include default();
-        width: 70%;
-        margin: 0 auto;
-        padding: 10px 0px 10px 0px;
-    }
-}
 
 .header{
     @include default();
@@ -71,15 +32,9 @@
     border-bottom: 1px solid #dadada;
 }
 
-
-
-
-
 .header__nav-page{
   width: 100%
 }
-
-
 .header__nav-user{
     height: 100%;
     @include default();
@@ -229,9 +184,59 @@
                   opacity: 0.7 !important;
               }
           }
-          .noti_wrapper:hover{
-background-color: #f2f2f2;
-          }
+        .noti_wrapper:hover{
+            background-color: #f2f2f2;
         }
+        }
+    }
+}
+
+
+@media only screen and (min-width : 992px){
+    .header__logo{
+        img{
+            width: calc_width(45);
+        }
+        .Logo_stunn{
+             width: calc_width(60);
+             margin-left: 10px;
+        }
+    }
+    
+    .header__container {
+        @include default();
+        width: 70%;
+        margin: 0 auto;
+        padding: 10px 0px 10px 0px;  
+    }
+}
+
+@media only screen and (max-width : 992px){
+    .header__logo{
+        width: 100%;
+        height: 100%;
+        img{
+            width: 30px;
+        
+            object-fit: cover;
+        }
+       .Logo_stunn{
+        margin-left: 10px;
+        width: 40px; 
+       }
+    }
+    .header__container {
+        @include default();
+        width: 80%;
+        margin: 0 auto;
+        padding: 10px 0px 10px 0px;
+    }
+    .header__nav-user{
+    .notify{
+        .notifydropdown{
+            left:-260px;
+           
+        }
+    }
     }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './card.scss';
 import ImageLightBox from './ImageLightBox'
 import {connect} from 'react-redux';
-import { likePost, unlikePost, makeComment, hidePost, deletePost} from '../../actions/product_actions';
+import {likePost, unlikePost, makeComment, hidePost, deletePost, savePost, unSavePost} from '../../actions/product_actions';
 import { unfollow, follow } from '../../actions/user_action';
 import { getTagId } from '../../actions/tag_actions';
 import Avatar from '@material-ui/core/Avatar';
@@ -149,6 +149,7 @@ class  Card extends Component {
         switch(item.name){
             case 'Like':
                 const liked = this.props.likes.filter(item => item._id === this.props.user.userData._id);
+               
                 return (
                 <div>
                     { 
@@ -167,11 +168,18 @@ class  Card extends Component {
                         <img src={require('../../asset/newfeed_page/comment_icon2x.png')}/>
                 </div>)
             case 'Pin':
+                const saved = this.props.user.userData.saved.filter(item => item == this.props._id);
+                console.log(saved);
                 return (
-                <div onClick={() => {
-                        this.props.history.push(`/postDetail/${this.props._id}`)
-                    }}>
-                        <img src={require('../../asset/newfeed_page/store_icon2x.png')} />
+                <div >
+                    {
+                    saved[0] ? 
+                    <img onClick={() => this.props.dispatch(unSavePost(this.props._id))}
+                            src={require('../../asset/newfeed_page/like_icon2x.png')} />
+                    :<img onClick={() => this.props.dispatch(savePost(this.props._id))}
+                        src={require('../../asset/newfeed_page/store_icon2x.png')} />
+                    
+                    }
                 </div>
             )
         }

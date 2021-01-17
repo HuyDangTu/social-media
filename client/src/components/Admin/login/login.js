@@ -63,7 +63,7 @@ class Login extends Component {
         let dataToSubmit = generateData(this.state.formData, 'login');
 
         let formIsValid = ifFormValid(this.state.formData, 'login');
-
+        console.log("login",dataToSubmit);
         if (formIsValid) {
             this.props.dispatch(loginUser(dataToSubmit)).then(response => {
                 if (response.payload.loginSuccess) {
@@ -71,7 +71,7 @@ class Login extends Component {
                     this.props.history.push('/Admin/Dashboard')
                 } else {
                     this.setState({
-                        formError: false
+                        formError: true
                     });
                 }
             });
@@ -87,7 +87,7 @@ class Login extends Component {
     render() {
         return (
             <div className="signin">
-                <div className='signin__container'>
+                <div className='Admin_signin__container'>
                     <form className='signin__form' onSubmit={(event) => this.submitForm(event)}>
                         {/* Component Formfild trả lại các thành phần của form 
                     như text, checkBox, button,... dựa vào prop id 
@@ -118,8 +118,8 @@ class Login extends Component {
                             <img className="stunning_text" src={require('../../../asset/login-page/stun2x.png')} />
                         </div>
                         <div className="or_label">
-                            HOẶC
-                    </div>
+                            DÀNH CHO QUẢN TRỊ VIÊN
+                        </div>
                         <FormField
                             id={'email'}
                             formData={this.state.formData.email}
@@ -150,18 +150,7 @@ class Login extends Component {
                             : ''}
 
                         <button className='signin__button' onClick={(event) => { this.submitForm(event) }}>Login</button>
-                        <div className="register_wrapper">
-                            <div className="label">
-                                Chưa có tài khoản?
-                        </div>
-                            <div className="register_link">
-                                <MyButton
-                                    type="default"
-                                    title="Đăng ký"
-                                    linkTo="/register"
-                                />
-                            </div>
-                        </div>
+                      
                     </form>
                 </div>
             </div>

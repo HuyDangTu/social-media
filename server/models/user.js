@@ -61,6 +61,10 @@ const userSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Post"
     }],
+    saved: [{
+        type: Schema.Types.ObjectId,
+        ref: "Post"
+    }],
     resetToken: {
         type:String
     },

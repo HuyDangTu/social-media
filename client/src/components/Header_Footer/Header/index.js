@@ -117,17 +117,15 @@ class Header extends Component {
             return (
                 <div className="notify">
                     <div>
-
-                    {/* <div className="number_content">
-                    <div className="number"> */}
                         {
-                            this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.forEach(
-                                (item) => {
-                                    console.log(item.seenStatus)
-                                    if (!item.seenStatus) {
-                                        notinumber = notinumber + 1;
+                            this.props.notification ? this.props.notification.notifylist ? 
+                                this.props.notification.notifylist.forEach(
+                                    (item) => {
+                                        console.log(item.seenStatus)
+                                        if (!item.seenStatus) {
+                                            notinumber = notinumber + 1;
+                                        }
                                     }
-                                }
                             ) : '' : ''
                         }
                         <Badge badgeContent={notinumber} overlap="circle" color="secondary">
@@ -135,23 +133,6 @@ class Header extends Component {
                         </Badge>
 
                     </div>
-
-
-                    {/* {    
-                              this.props.notification?  this.props.notification.notifylist?   this.props.notification.notifylist.map(data =>{
-                                    return(
-                                        <div>
-                                        {    
-                                            (data.seenStatus==false)?notinumber++:''
-                                            
-                                        }
-                                        {notinumber}
-                                        </div>
-                                    )
-                              }):'':''} */}
-
-                    {/* </div>
-                </div> */}
                     {
                         this.state.notifydropdown ?
                             <NativeClickListener onClick={() => this.setState({ notifydropdown: false })}>
@@ -162,29 +143,30 @@ class Header extends Component {
                                             return (
                                                
                                                 <div className={data.seenStatus ? "noti_wrapper seen" : "noti_wrapper"} onClick={() => this.handleNotiClick(data._id, data.type, data.link)}>
-                                                <div className="user_avt">
-                                                    <img src={data.sentFrom.avt}></img>
-                                                </div>
-                                                <div className="content">
-                                                    <p>
-                                                        <h6>{data.sentFrom.userName}</h6>
-                                                        {
-                                                            data.type == "follow" ? ' đã theo dõi bạn' : 
-                                                            data.type == "likepost" ? ' đã thích bài viết của bạn' :
-                                                            data.type=='comment'? ' đã bình luận về bài viết của bạn' :
-                                                            data.type=='likecomment'? ' đã thích bình luận của bạn':
-                                                            data.type=='report'? 'đã gỡ bài viết của bạn, vì vi phạm chính sách' :''
-                                                        }
-                                                    </p>
-                                                    <h6>
-                                                    <h6>{moment(data.createdAt).fromNow()} </h6>
-                                                    </h6>
-                                                </div>
-                                                <div className="status">
-                                                    <Point visibility={data.seenStatus?"hidden":""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
-                                                </div>
-                                            </div>
-                                                  
+                                                    <div className="user_avt">
+                                                        <img src={data.sentFrom.role == 0 ? data.sentFrom.avt : "https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png"}></img>
+                                                    </div>
+                                                    <div className="content">
+                                                        <p>
+                                                            <h6>{data.sentFrom.role == 0 ?data.sentFrom.userName : "Stunning "}</h6>
+                                                            {
+                                                                data.type == "follow" ? ' đã theo dõi bạn' : 
+                                                                data.type == "likepost" ? ' đã thích bài viết của bạn' :
+                                                                data.type=='comment'? ' đã bình luận về bài viết của bạn' :
+                                                                data.type=='likecomment'? ' đã thích bình luận của bạn':
+                                                                data.type=='discardReport'? 'Nội dung bạn báo cáo chưa vi phạm chính sách cộng đồng':
+                                                                data.type=='deletePost'? 'Bài viết của bạn đã bị xoá vì vi phạm chính sách cộng đông' :
+                                                                data.type == 'deleteComment' ? 'Bình luận của bạn đã bị xoá vì vi phạm chính sách cộng đồng ' :''
+                                                            }
+                                                        </p>
+                                                        <h6>
+                                                        <h6>{moment(data.createdAt).fromNow()} </h6>
+                                                        </h6>
+                                                    </div>
+                                                    <div className="status">
+                                                        <Point visibility={data.seenStatus?"hidden":""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
+                                                    </div>
+                                                </div>     
                                             )
                                         }) : '' : ''
                                     }
@@ -207,21 +189,25 @@ class Header extends Component {
                                 <div className="snack_noti">
                                     <div className="noti_wrapper" onClick={() => this.handleNotiClick(this.props.notification.notifylist[0]._id, this.props.notification.notifylist[0].type, this.props.notification.notifylist[0].link)}>
                                         <div className="user_avt">
-                                            <img src={this.props.notification.notifylist[0].sentFrom.avt}></img>
+                                            <img src={this.props.notification.notifylist[0].sentFrom.role == 0 ? 
+                                                this.props.notification.notifylist[0].sentFrom.avt : "https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png" }></img>
                                         </div>
                                         <div className="content">
                                             <p>
-                                                <h6>{this.props.notification.notifylist[0].sentFrom.userName}</h6>
-                                                {
-                                                    this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' : 
-                                                    this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' : 
-                                                    this.props.notification.notifylist[0].type == "comment" ? 'đã bình luận về bài viết của bạn' : 
-                                                    this.props.notification.notifylist[0].type == "likecomment" ? 'đã thích bình luận của bạn':''
-                                                }
+                                            <h6>{this.props.notification.notifylist[0].sentFrom.userName}</h6>
+                                            {
+                                                this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' : 
+                                                this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' : 
+                                                this.props.notification.notifylist[0].type == "comment" ? 'đã bình luận về bài viết của bạn' : 
+                                                this.props.notification.notifylist[0].type == "likecomment" ? 'đã thích bình luận của bạn':
+                                                this.props.notification.notifylist[0].type == "discardReport" ? 'Báo cáo của bạn chưa phù hợp' : 
+                                                this.props.notification.notifylist[0].type == "deletePost" ? 'Bài viết của bạn đã vi phạm chính sách' : 
+                                                this.props.notification.notifylist[0].type == "deleteComment" ? 'Báo cáo của bạn đã vi phạm chính sách':''
+                                            }
                                             </p>
                                             <h6>
-                                                6 giờ trước
-                                                      </h6>
+                                                <h6>{moment(this.props.notification.notifylist[0].createdAt).fromNow()} </h6>
+                                            </h6>
                                         </div>
                                         <div className="status">
                                             <Point visibility="hidden" size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>

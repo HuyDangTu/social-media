@@ -1,9 +1,9 @@
 @import '../../ultils/initial.scss';
 
 .dashboard{
-    padding: 10px;
-    h4{
-        color: #969696
+    .page_title{
+        padding: 10px;
+        border-bottom: 1px solid #dddddd;
     }
     .button{
         display: flex;
@@ -48,6 +48,7 @@
     }
     .report-list{
         width: 100%;
+        padding: 20px;
         .report{
             width: 55%;
         }
@@ -76,4 +77,30 @@
         float: right; 
         margin: 20px;
     }
+}
+
+
+@media screen and (max-width: 922px){
+ .report-list{
+     .table-header{
+            th{
+                 font-size: 0.6em;
+             }
+        }
+        .table-content{
+            td{
+                font-size: 0.8em;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px){
+    .report-list{
+            .table-content{
+                td{
+                    font-size: 0.68em;
+                }
+            }
+        }
 }

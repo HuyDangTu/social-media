@@ -83,8 +83,7 @@ class AccountPage extends Component {
             <div>
                 <Layout page="account">
                     <div className="account">
-                        <h4>Chào!</h4>
-                        <h2>Danh sách </h2>
+                        <h2 className="page_title">Quản trị viên</h2>
                         <div className="button">
                             <button className="add_btn" onClick={() => {this.props.history.push("/Admin/Account/add_new")}}>Thêm mới</button>
                             <div class="dropdown filter">

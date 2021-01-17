@@ -27,6 +27,8 @@ import {
     GET_STORY,
     UPDATE_POST,
     UPDATE_POST_DETAIL,
+    SAVE_DETAIL,
+    SAVE_POST
 } from './types';
 
 export function getPostDetail(id){
@@ -208,7 +210,38 @@ export function getTopTenTags(skip, limit, previousState = []) {
     }
 }
 
-export function likePost(postId,ActionType){
+
+export function savePost(postId) {
+    const data = {
+        postId
+    }
+    const request = axios.put(`${POST_SERVER}/save`, data)
+        .then(response => {
+            console.log(response.data.user);
+            return response.data.user;
+        })
+    return {
+        type:SAVE_POST,
+        payload: request,
+    }
+}
+
+export function unSavePost(postId) {
+    const data = {
+        postId
+    }
+    const request = axios.put(`${POST_SERVER}/unSave`, data)
+        .then(response => {
+            console.log(response.data.user);
+            return response.data.user;
+        })
+    return {
+        type: SAVE_POST,
+        payload: request,
+    }
+}
+
+export function likePost(postId, ActionType){
     const data ={
         postId
     }

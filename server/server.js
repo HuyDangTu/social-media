@@ -119,6 +119,7 @@ app.get('/api/users/auth', auth, (req, res) => {
         followers: req.user.followers,
         followings: req.user.followings,
         userName: req.user.userName,
+        saved: req.user.saved,
         hiddenPost: req.user.hiddenPost,
     });
 });
@@ -888,6 +889,30 @@ app.post('/api/tags/getTop10Tags', auth, (req, res) => {
     )
 })
 
+app.put('/api/posts/save', auth, (req, res) => {
+
+    User.findByIdAndUpdate(req.user._id, {
+        $push: { saved: req.body.postId }
+    }, {
+        new: true
+    }).exec((err, user) => {
+        if (err) res.status(400).json(err);
+        res.status(200).json({user});
+    })
+})
+
+app.put('/api/posts/unSave', auth, (req, res) => {
+    User.findByIdAndUpdate(req.user._id, {
+        $pull: { saved: req.body.postId }
+    },{
+        new: true
+    }).exec((err, user) => {
+        if (err) res.status(400).json(err);
+        res.status(200).json({user});
+    })
+})
+
+
 app.put('/api/posts/like', auth, (req, res) => {
 
     Post.findByIdAndUpdate(req.body.postId, {
@@ -954,25 +979,36 @@ app.get('/api/users/profile/:id', auth, (req, res) => {
 })
 app.get('/api/users/tagged/:id', auth, (req, res) => {
     Post.find({ userTag: req.params.id })
-        .populate("userTag", "_id userName")
-        .sort({ "createdAt": -1 })
-        .exec((err, posts) => {
-            if (err) {
-                return res.status(422).json({ error: err })
-            }
-            res.json({ posts })
-        })
+    .populate("userTag", "_id userName")
+    .sort({ "createdAt": -1 })
+    .exec((err, posts) => {
+        if (err) {
+            return res.status(422).json({ error: err })
+        }
+        res.json({ posts })
+    })
 })
+
+app.post('/api/users/getSavedPost', auth, (req, res) => {
+
+    Post.find({_id:{$in: req.user.saved}})
+    .sort({ "createdAt": -1 })
+    .exec((err, posts) => {
+        if (err) return res.status(422).json({ error: err })
+        res.status(200).json({posts})
+    })
+})
+
 app.get('/api/users/posted/:id', auth, (req, res) => {
     Post.find({ postedBy: req.params.id })
-        .populate("postedBy", "_id userName")
-        .sort({ "createdAt": -1 })
-        .exec((err, posts) => {
-            if (err) {
-                return res.status(422).json({ error: err })
-            }
-            res.json({ posts })
-        })
+    .populate("postedBy", "_id userName")
+    .sort({ "createdAt": -1 })
+    .exec((err, posts) => {
+        if (err) {
+            return res.status(422).json({ error: err })
+        }
+        res.json({ posts })
+    })
 })
 app.put('/api/users/updatepic', auth, (req, res) => {
     User.findByIdAndUpdate(req.user._id, { $set: { avt: req.body.url } }, { new: true },
@@ -1094,7 +1130,6 @@ app.get('/api/messages/get/:id', auth, (req, res) => {
                         user1: req.params.id,
                         user2: req.user._id,
                         seenBy: [(req.user._id)]
-
                     })
                     Conversation.create(conversation, (err, conver) => {
                         if (err) {
@@ -1144,17 +1179,22 @@ app.get('/api/messages/conversations', auth, (req, res) => {
 
 app.get('/api/notify/getall', auth, (req, res) => {
     Notification.find({ "sentTo": req.user._id }).
-        populate("sentFrom", "_id userName avt")
-        .sort({ "createdAt": -1 })
-        .exec((err, data) => {
-            if (err) {
-                res.status(500).send(err)
-            }
-            else {
-                res.json(data)
-            }
-        })
+    populate("sentFrom", "_id userName avt role")
+    .sort({ "createdAt": -1 })
+    .exec((err, data) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+        else {
+            res.json(data)
+        }
+    })
 })
+
+
+
+
+
 app.post('/api/notify/seen/:id', auth, (req, res) => {
     Notification.findByIdAndUpdate(req.params.id, {
         $set: { seenStatus: true }
@@ -1406,8 +1446,6 @@ app.get('/api/policies/getAll', auth, (req, res) => {
         })
 })
 
-
-
 app.post('/api/story/create', auth, (req, res) => {
 
     let story = new Story({
@@ -1644,13 +1682,14 @@ app.post('/api/users/reset_user', (req, res) => {
 //  ADMIN
 //=======================
 
-app.post('/api/admin/login', jsonParser, (req, res) => {
+app.post('/api/users/loginAdmin', jsonParser, (req, res) => {
     // find the email
     User.findOne({ 'email': req.body.email }, (err, user) => {
         if (!user) return res.json({ loginSuccess: false, message: 'Auth failes,email not found' });
         //check password
         if (user.role === 0) res.json({ loginSuccess: false, message: 'Auth failes' });
         user.comparePassword(req.body.password, (err, isMatch) => {
+            console.log(err);
             if (!isMatch) return res.json({ loginSuccess: false, message: 'wrongPassword' })
             user.gennerateToken((err, user) => {
                 if (err) return res.status(400).send(err);
@@ -1897,33 +1936,47 @@ app.put('/api/reports/updateReport', auth, admin, (req, res) => {
         new: true
     }).exec((err, report) => {
         if (err) res.status(400).json(err);
+        const notification = new Notification({
+            sentFrom: req.user._id,
+            sentTo: report.sentBy,
+            type: "discardReport",
+            link: report.post,
+            "seenStatus": false
+        });
+        SaveNotification(notification);
         res.status(200).json({ report });
     })
 })
 
-app.post('/api/reports/delete_post', auth, (req, res) => {
+app.post('/api/reports/delete_post', auth, admin, (req, res) => {
     Post.findByIdAndUpdate(req.body.postId, {
-        $set: { hidden: true }
-
-    }).exec((err) => {
+        $set: { hidden: true } }, {new: true })
+    .exec((err,post) => {
         if (err) res.status(400).send(err);
         Report.findByIdAndUpdate(req.body.reportId, {
             $set: { status: true }
         }, {
             new: true
         }).exec((err, report) => {
+
             if (err) res.status(400).json(err);
+            const notification = new Notification({
+                sentFrom: req.user._id,
+                sentTo: post.postedBy,
+                type: "deletePost",
+                link: report.post,
+                "seenStatus": false
+            });
+            SaveNotification(notification);
             res.status(200).json({ report });
         })
     })
 })
 
-app.post('/api/reports/delete_comment', auth, (req, res) => {
+app.post('/api/reports/delete_comment', auth, admin, (req, res) => {
     Comment.findByIdAndUpdate(req.body.commentId, {
-        $set: { hidden: true }
-    }, {
-        new: true
-    }).exec((err, post) => {
+        $set: { hidden: true }}, {new: true })
+    .exec((err, comment) => {
         if (err) res.status(400).send(err);
         Report.findByIdAndUpdate(req.body.reportId, {
             $set: { status: true }
@@ -1931,6 +1984,14 @@ app.post('/api/reports/delete_comment', auth, (req, res) => {
             new: true
         }).exec((err, report) => {
             if (err) res.status(400).json(err);
+            const notification = new Notification({
+                sentFrom: req.user._id,
+                sentTo: comment.postedBy,
+                type: "deleteComment",
+                link: report.post,
+                "seenStatus": false
+            });
+            SaveNotification(notification);
             res.status(200).json(report);
         })
     })
@@ -1992,6 +2053,7 @@ app.post('/api/users/login', jsonParser, (req, res) => {
 })
 
 app.post('/api/users/changePassword', auth, (req, res) => {
+    console.log()
     User.findOne({
         _id: req.user._id,
     }, (err, user) => {
@@ -2000,6 +2062,7 @@ app.post('/api/users/changePassword', auth, (req, res) => {
         user.comparePassword(req.body.currentPassword, (err, isMatch) => {
             if (!isMatch) return res.json({ success: false, message: 'Mật khẩu hiện tại không đúng!' })
             user.password = req.body.password;
+            console.log(user.password)
             user.save((err, doc) => {
                 if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
                 return res.status(200).json({

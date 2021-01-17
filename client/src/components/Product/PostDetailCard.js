@@ -13,7 +13,9 @@ import { likePost,
         unLikeComment, 
         deleteComment, 
         deletePost, 
-        clearPostDetail } 
+        clearPostDetail, 
+        unSavePost,
+        savePost } 
         from '../../actions/product_actions';
 import Avatar from '@material-ui/core/Avatar';
 import { getTagId } from '../../actions/tag_actions';
@@ -207,9 +209,16 @@ class PostDetailCard extends Component {
                     </div>
                 )
             case 'Pin':
+                const saved = this.props.user.userData.saved.filter(item => item == this.props.post._id);
                 return (
-                    <div>
-                        <img src={require('../../asset/newfeed_page/store_icon2x.png')} />
+                    <div >
+                        {
+                            saved[0] ?
+                                <img onClick={() => this.props.dispatch(unSavePost(this.props.post._id))}
+                                src={require('../../asset/newfeed_page/like_icon2x.png')} />
+                                : <img onClick={() => this.props.dispatch(savePost(this.props.post._id))}
+                                src={require('../../asset/newfeed_page/store_icon2x.png')} />
+                        }
                     </div>
                 )
         }
@@ -385,6 +394,7 @@ class PostDetailCard extends Component {
     render() {
         const props = this.props;
         return (
+   
             <div className="detail_card">
                 <div className="card_item_wrapper">
                         <div className="left"> 
