@@ -175,8 +175,9 @@ class  Card extends Component {
                     {
                     saved[0] ? 
                     <img onClick={() => this.props.dispatch(unSavePost(this.props._id))}
-                            src={require('../../asset/newfeed_page/like_icon2x.png')} />
-                    :<img onClick={() => this.props.dispatch(savePost(this.props._id))}
+                            src={require('../../asset/newfeed_page/stored_icon2x.png')} />
+                    :
+                    <img onClick={() => this.props.dispatch(savePost(this.props._id))}
                         src={require('../../asset/newfeed_page/store_icon2x.png')} />
                     
                     }

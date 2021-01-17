@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
 import Skeleton from '@material-ui/lab/Skeleton'
-import { getMessage, getConversation, sendMessage, seenMessage, sendimg } from '../../../src/actions/message_action'
+import { getMessage, getConversation, sendMessage, seenMessage, sendimg} from '../../../src/actions/message_action'
 import './Message.scss';
 import { update, generateData } from '../ultils/Form/FormActions';
 import { Link, withRouter } from 'react-router-dom';
@@ -17,12 +17,6 @@ const StyleButton = styled(Button)`
 class Mess extends Component {
     state = {
         show: false
-    }
-    handleMessClick = () => {
-       this.setState({show:true})
-    }
-    handleClickAway = () =>{
-        this.setState({show:false})
     }
     render() {
         return (this.props.mess ? this.props.mess.sentBy == this.props.yourProfile._id ?
@@ -45,17 +39,7 @@ class Mess extends Component {
                                     <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> : ''
 
                     }
-                    {
-                        this.state.show ?
-                           
-                                <div className="dialog_mess">
-                                    <StyleButton>Thu hồi</StyleButton>
-                                    <StyleButton>Sao chép</StyleButton>
-                                    <StyleButton>Xóa</StyleButton>
-                                </div>
-                           
-                            : ''
-                    }
+                
                 </div>
                 </ClickAwayListener>
 
@@ -83,4 +67,5 @@ class Mess extends Component {
             </div> : "")
     }
 }
-export default Mess
+
+export default Mess;

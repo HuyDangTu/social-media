@@ -264,9 +264,11 @@ class Header extends Component {
         });
         const channel2 = pusher.subscribe('messages');
         channel2.bind('newMessage', data => {
+            if (data.change.operationType == "insert") {
             if (data.change.fullDocument.sentTo == this.props.user.userData._id || data.change.fullDocument.sentBy == this.props.user.userData._id) {
                 this.props.dispatch(getConversation())
             }
+        }
         });
     }
 
