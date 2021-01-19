@@ -134,7 +134,7 @@ class Login extends Component {
                                 <MyButton
                                     type="default"
                                     title="Quên mật khẩu"
-                                    linkTo="/forgot_password"
+                                    linkTo="/reset_password"
                                 />
                             </div>
                         </div>

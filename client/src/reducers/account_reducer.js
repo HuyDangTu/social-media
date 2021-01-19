@@ -11,7 +11,7 @@ export default function (state = {}, action) {
         case GET_ALL_ACCOUNT: {
             return {
                 ...state,
-                list: action.payload.reports,
+                list: action.payload.accounts,
                 size: action.payload.size,
             }
         }

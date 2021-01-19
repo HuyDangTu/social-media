@@ -21,7 +21,6 @@ class PostDetail extends Component {
         }
     }
 
-
     message(){
         return "sorry! post not found"
     }

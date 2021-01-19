@@ -2019,7 +2019,7 @@ app.post('/api/accounts/getAll', auth, admin, (req, res) => {
                 "lastname": 1,
             }
         },
-        { "$sort": { createdAt: -1 } },
+        { "$sort": { "name": 1 } },
         { "$skip": skip },
         { "$limit": limit }
     ], function (err, accounts) {
@@ -2029,8 +2029,7 @@ app.post('/api/accounts/getAll', auth, admin, (req, res) => {
             accounts: accounts,
             size: accounts.length
         });
-    }
-    )
+    })
 })
 
 

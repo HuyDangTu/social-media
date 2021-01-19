@@ -34,9 +34,13 @@ export default function(ComposedClass,reload,adminRoute = null){
                 //nếu isAuth true là thì dẫn vào trang newfeed
                 else
                 {
-                    if(adminRoute){
+                    //Là trang của admin
+                    if(adminRoute != null){
+                        //ng dùng k phải admin chuyển qua trang đăng nhập của admin
                         if(!user.isAdmin){
-                            this.props.history.push(adminRoute);
+                            if (reload === true) {
+                                this.props.history.push(adminRoute);
+                            }
                         }
                     }else{
                         if (user.isAdmin) {

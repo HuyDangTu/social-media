@@ -17,13 +17,14 @@ export function getAll(limit, skip, prevState = []) {
     console.log(data);
     const request = axios.post(`${ACCOUNT_SERVER}/getAll`, data)
         .then(response => {
+            console.log(response.data.accounts);
             let newState = [
                 ...prevState,
                 ...response.data.accounts
             ]
             return {
                 size: response.data.size,
-                reports: newState
+                accounts: newState
             }
         })
     return {
@@ -37,8 +38,10 @@ export function sort(sortBy, list) {
         case "name":
             list.sort((a, b) => {
                 if (a.name > b.name) {
+                    console.log(a.name,b.name);
                     return 1 * sortBy.order
                 } else {
+                    console.log(a.name, b.name);
                     return -1 * sortBy.order
                 }
             })

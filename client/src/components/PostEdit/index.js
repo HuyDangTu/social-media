@@ -9,6 +9,8 @@ import './postEdit.scss';
 import 'react-autocomplete-input/dist/bundle.css';
 import { getAllTags, getUserTag } from '../../actions/tag_actions';
 import { clearProduct, updatePost } from '../../actions/product_actions';
+import Skeleton from '@material-ui/lab/Skeleton'
+import MuiAlert from '@material-ui/lab/Alert';
 
 class PostEdit extends Component {
 
@@ -61,6 +63,7 @@ class PostEdit extends Component {
         const newDescription = {
             ...newFormdata["description"]
         }
+
         const newUsertag = {
             ...newFormdata["userTag"]
         }
@@ -203,32 +206,36 @@ class PostEdit extends Component {
                     <form class="create_post_form">
                         <div className="row no-gutters">
                             <div className='col-xl-12 no-gutters'>
-                                <FormField
-                                    id={'description'}
-                                    change={(element) => this.updateForm(element)}
-                                    formData={this.state.formData.description}
-                                />
-                                {/* <FormField
-                                    id={'description'}
-                                    change={(element) => this.updateForm(element)}
-                                    formData={this.state.formData.description}
-                                /> */}
+                                {
+                                    this.state.formData.description.value == "" ? <Skeleton variant="rect" width={100} height={60} />:
+                                    <FormField
+                                        id={'description'}
+                                        change={(element) => this.updateForm(element)}
+                                        formData={this.state.formData.description}
+                                    />
+                                
+                                }
                                 <div className="field_container">
+                                { this.state.formData.userTag.value == "" ? <Skeleton variant="rect" width={100} height={60} /> :
                                     <FormField
                                         id={'userTag'}
                                         change={(element) => this.updateForm(element)}
                                         formData={this.state.formData.userTag}
                                     />
+                                }
                                 </div>
-                               
-                               <div className="button_wrapper">
+                            {
+                                this.state.formData.userTag.value == "" ? <Skeleton variant="rect" width={100} height={60} /> :
+                                <div className="button_wrapper">
                                     <button className='cancel_button' onClick={() => {this.props.close()}}>Hủy</button>
                                     <button className='create_button' onClick={(event) => { this.submitForm(event)}}>Lưu</button>
+                              
                                 </div>
+                            }
                                 {
                                     this.state.formError ?
-                                        <p>Hãy thêm ảnh để đăng bài nhé :( </p>
-                                        : <p></p>
+                                    <p>Hãy thêm ảnh để đăng bài nhé :( </p>
+                                    : <p></p>
                                 }
                             </div>
                         </div>

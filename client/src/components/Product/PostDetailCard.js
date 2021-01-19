@@ -98,9 +98,22 @@ class PostDetailCard extends Component {
         this.props.dispatch(getPolicy());
     }
 
-    // componentWillUnmount() {
-    //     this.props.dispatch(clearPostDetail());
-    // }
+    componentDidUpdate() {
+        if (this.props.post.images) {
+            let lightboxImages = [];
+
+            this.props.post.images.forEach(item => {
+                lightboxImages.push(item.url)
+            })
+
+            this.state.lightboxImages = lightboxImages
+        }
+
+        let hashtag = this.findHashtags(this.props.post.description)
+        getTagId(hashtag).then((response) => {
+            this.state.tags = [...response]
+        })
+    }
 
     handlelightBox = () => {
         if (this.props.post.images) {
