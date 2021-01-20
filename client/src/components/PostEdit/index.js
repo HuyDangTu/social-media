@@ -207,7 +207,7 @@ class PostEdit extends Component {
                         <div className="row no-gutters">
                             <div className='col-xl-12 no-gutters'>
                                 {
-                                    this.state.formData.description.value == "" ? <Skeleton variant="rect" width={100} height={60} />:
+                                this.state.formData.description.value == "" ? <Skeleton variant="rect" width={300} height={50} />:
                                     <FormField
                                         id={'description'}
                                         change={(element) => this.updateForm(element)}
@@ -216,7 +216,7 @@ class PostEdit extends Component {
                                 
                                 }
                                 <div className="field_container">
-                                { this.state.formData.userTag.value == "" ? <Skeleton variant="rect" width={100} height={60} /> :
+                                {this.state.formData.description.value == "" ? <Skeleton variant="rect" width={300} height={50}  /> :
                                     <FormField
                                         id={'userTag'}
                                         change={(element) => this.updateForm(element)}
@@ -224,14 +224,14 @@ class PostEdit extends Component {
                                     />
                                 }
                                 </div>
-                            {
-                                this.state.formData.userTag.value == "" ? <Skeleton variant="rect" width={100} height={60} /> :
-                                <div className="button_wrapper">
-                                    <button className='cancel_button' onClick={() => {this.props.close()}}>Hủy</button>
-                                    <button className='create_button' onClick={(event) => { this.submitForm(event)}}>Lưu</button>
-                              
-                                </div>
-                            }
+                                {
+                                this.state.formData.description.value == "" ? <Skeleton variant="rect" width={300} height={50} /> :
+                                    <div className="button_wrapper">
+                                        <button className='cancel_button' onClick={() => {this.props.close()}}>Hủy</button>
+                                        <button className='create_button' onClick={(event) => { this.submitForm(event)}}>Lưu</button>
+                                
+                                    </div>
+                                }
                                 {
                                     this.state.formError ?
                                     <p>Hãy thêm ảnh để đăng bài nhé :( </p>

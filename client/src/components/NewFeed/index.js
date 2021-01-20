@@ -94,8 +94,6 @@ class Newfeed extends Component {
         const html = document.documentElement;
         const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
         const windowBottom = Math.ceil(windowHeight + window.pageYOffset);
-        //console.log(windowBottom, docHeight, windowHeight)
-      
        
         if (windowBottom >= docHeight) {
             if (this.props.products.toShopSize == this.state.limit) {

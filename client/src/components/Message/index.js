@@ -223,7 +223,7 @@ class Message extends Component {
                                                                                 <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                
-                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
+                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6> */}
                                                                                 </div>
                                                                             </div>
                                                                         </Link>
@@ -242,7 +242,7 @@ class Message extends Component {
                                                                                 <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                 
-                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)} </h6>
+                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)} </h6> */}
                                                                                    
                                                                                 </div>
                                                                             </div>
@@ -262,7 +262,7 @@ class Message extends Component {
                                                                                 <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                    
-                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
+                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6> */}
                                                                                 </div>
                                                                             </div>
                                                                         </Link>
@@ -279,7 +279,7 @@ class Message extends Component {
                                                                                 <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                  
-                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
+                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6> */}
                                                                                 </div>
                                                                             </div>
                                                                         </Link>

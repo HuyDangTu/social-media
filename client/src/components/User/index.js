@@ -157,7 +157,7 @@ class UserDashboard extends Component {
             })
             return (tags);
         } else {
-            return false;
+            return [];
         }
     }
 
@@ -172,7 +172,7 @@ class UserDashboard extends Component {
             })
             return (userTag);
         } else {
-            return false;
+            return [];
         }
     }
 
@@ -186,7 +186,7 @@ class UserDashboard extends Component {
         let dataToSubmit = {...data}
         dataToSubmit.tags = this.findHashtags(data.description);
         dataToSubmit.userTag = this.findUserTag(data.userTag);
-        
+        console.log(dataToSubmit);
         if (formIsValid) {
             console.log(dataToSubmit);
             this.props.dispatch(createPost(dataToSubmit)).then(() => {

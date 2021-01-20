@@ -276,16 +276,21 @@ class  Card extends Component {
                     open={this.state.DialogShowing}
                     TransitionComponent={Transition}
                     keepMounted
-                    handleSnackBar={this.props.handleSnackBar()}
                     onClose={() => { this.setState({ DialogShowing: false }) }}>
                     <div className="deleteConfirm">
                         <h5> Bạn chắc chắn muốn xóa bài viết này?</h5>
                         <div className="btn_wrapper">
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false})}>Hủy</p>
                             <p className="confirm_btn" onClick={() => this.props.dispatch(deletePost(this.props._id))
-                                .then(() => {
-                                    this.props.handleSnackBar("Đã xóa bài viết")
-                                    this.props.history.push('/newfeed');
+                                .then((response) => {
+                                    console.log(response)
+                                    if(response.payload.success){
+                                        this.props.handleSnackBar("Đã xóa bài viết")
+                                        this.closeReportForm();
+                                    }else{
+                                        this.closeReportForm();
+                                        alert("đã xãy ra lỗi")
+                                    }
                                 })}>Xóa</p>
                         </div>
                     </div>

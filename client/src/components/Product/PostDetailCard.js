@@ -228,7 +228,7 @@ class PostDetailCard extends Component {
                         {
                             saved[0] ?
                                 <img onClick={() => this.props.dispatch(unSavePost(this.props.post._id))}
-                                src={require('../../asset/newfeed_page/like_icon2x.png')} />
+                                    src={require('../../asset/newfeed_page/stored_icon2x.png')} />
                                 : <img onClick={() => this.props.dispatch(savePost(this.props.post._id))}
                                 src={require('../../asset/newfeed_page/store_icon2x.png')} />
                         }
@@ -444,16 +444,21 @@ class PostDetailCard extends Component {
                                                     {
                                                         props.post.postedBy[0]._id === this.props.user.userData._id ?
                                                             <div>
-                                                            <p className="delete_button" onClick={()=>{this.setState({
-                                                                DialogShowing: true,
-                                                                dialogType: "deleteConfirm",
-                                                            })}} >Xóa</p>
-                                                            <p className="delete_button" onClick={() => {
-                                                                this.setState({
-                                                                    showEditor: true,
-                                                                    dropdown: false
-                                                                })
-                                                            }} >Sửa</p>
+                                                                <div>
+                                                                <p className="delete_button" onClick={()=>{this.setState({
+                                                                    DialogShowing: true,
+                                                                    dialogType: "deleteConfirm",
+                                                                })}} >Xóa</p>
+                                                                </div>
+                                                                <hr />
+                                                                <div>
+                                                                <p className="edit_button" onClick={() => {
+                                                                    this.setState({
+                                                                        showEditor: true,
+                                                                        dropdown: false
+                                                                    })
+                                                                }} >Sửa</p>
+                                                                </div>
                                                             </div>
                                                             : <div>
                                                                 <p className="report_button" 

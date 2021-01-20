@@ -353,12 +353,13 @@ export function deleteComment(postId, commentId) {
     }
 }
 
-export function deletePost(postId) {
+export function deletePost(id) {
     const data = {
-        postId
+        id
     }
     const request = axios.post(`${POST_SERVER}/delete_post`, data)
     .then(response => {
+        console.log(response.data)
         return response.data;
     })
     console.log(request)

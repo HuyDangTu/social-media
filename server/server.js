@@ -132,30 +132,49 @@ app.get('/api/users/auth', auth, (req, res) => {
 app.post('/api/users/register', jsonParser, (req, res) => {
 
     let message = "", isValidUserName = false;
-    User.findOne({ userName: req.body.userName }, (err, user) => {
+    User.findOne({ userName: req.body.userName}, (err, user) => {
         console.log(user)
         if (user) {
             message += "Username đã được sử dụng!";
-            isValidUserName = false;
+            //isValidUserName = false;
+            res.json({ success: false, err: message });
         } else {
-            isValidUserName = true;
-        }
-    }).then(() => {
-        if (isValidUserName) {
-            const newUser = new User(req.body);
-            newUser.save((err, user) => {
-                if (err) return res.json({ success: false, err: "Thêm không thành công" });
-                sendEmail(user.email, user.userName, null, "welcome")
-                return res.status(200).json({
-                    success: true,
-                    message: "Thành công"
+            User.findOne({ email: req.body.email }, (err, user) => {
+                console.log(user)
+                if (user) {
+                    message += "Username đã được sử dụng!";
+                    //isValidUserName = false;
+                    res.json({ success: false, err: message });
+                } else {
+                //isValidUserName = true;
+                const newUser = new User(req.body);
+                newUser.save((err, user) => {
+                    if (err) return res.json({ success: false, err: "Thêm không thành công" });
+                    sendEmail(user.email, user.userName, null, "welcome")
+                    return res.status(200).json({
+                        success: true,
+                        message: "Thành công"
+                    });
                 });
-            });
-        } else {
-
-            return res.json({ success: false, message: message });
+            }});
         }
     })
+    // .then(() => {
+    //     if (isValidUserName) {
+    //         const newUser = new User(req.body);
+    //         newUser.save((err, user) => {
+    //             if (err) return res.json({ success: false, err: "Thêm không thành công" });
+    //             sendEmail(user.email, user.userName, null, "welcome")
+    //             return res.status(200).json({
+    //                 success: true,
+    //                 message: "Thành công"
+    //             });
+    //         });
+    //     } else {
+
+    //         return res.json({ success: false, message: message });
+    //     }
+    // })
 });
 
 //LOGIN
@@ -382,7 +401,7 @@ app.post('/api/posts/delete_post', auth, (req, res) => {
         new: true
     }).exec((err, post) => {
         if (err) res.status(400).send(err);
-        res.status(200).json({ success: true });
+        res.status(200).json({ success: true, post: post});
     })
     // let posts = [];
     // posts.push(req.body.postId);
@@ -840,7 +859,7 @@ app.post('/api/tags/getTag', auth, (req, res) => {
     Tag.findOne({ _id: id })
         .exec((err, tag) => {
             if (err) return res.status(400).send(err);
-            Post.find({ "_id": { "$in": [...tag.posts] } })
+            Post.find({ "_id": { "$in": [...tag.posts]},"hidden": false})
                 .populate("postedBy", "_id userName")
                 .sort([[sortBy, order]])
                 .skip(skip)
@@ -958,7 +977,10 @@ app.get('/api/users/:id', auth, (req, res) => {
         .populate("followings", "_id userName avt")
         .select("-password")
         .then(user => {
-            Post.find({ postedBy: req.params.id })
+            Post.find({ 
+                    postedBy: req.params.id, 
+                    hidden: { $eq: false }
+                })
                 .populate("postedBy", "_id userName")
                 .exec((err, posts) => {
                     if (err) {
@@ -970,6 +992,8 @@ app.get('/api/users/:id', auth, (req, res) => {
             return res.status(404).json({ error: "Users not found" })
         })
 })
+
+
 app.get('/api/users/profile/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
         .select('-password')
@@ -978,7 +1002,7 @@ app.get('/api/users/profile/:id', auth, (req, res) => {
         })
 })
 app.get('/api/users/tagged/:id', auth, (req, res) => {
-    Post.find({ userTag: req.params.id })
+    Post.find({ userTag: req.params.id, hidden: {$eq: false}})
     .populate("userTag", "_id userName")
     .sort({ "createdAt": -1 })
     .exec((err, posts) => {

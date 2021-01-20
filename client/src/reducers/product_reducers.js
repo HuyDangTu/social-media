@@ -187,8 +187,15 @@ export default function (state = {}, action) {
             }
         }
         case DELETE_POST: {
+            let updatedPosts = [...state.toShop]
+            console.log(action.payload.post._id);
+            updatedPosts = updatedPosts.filter(item =>
+                item._id !== action.payload.post._id
+            );
+            console.log("data", updatedPosts);
             return {
-                ...state
+                ...state,
+                toShop: updatedPosts,
             }
         }
         case REPORT_POST:{
