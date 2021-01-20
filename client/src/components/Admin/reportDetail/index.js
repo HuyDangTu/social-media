@@ -9,7 +9,7 @@ import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
-
+import moment from 'moment';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -235,7 +235,7 @@ class ReportDetail extends Component {
                                                 {detail.sentBy[0].userName}
                                             </div>
                                         </div>
-                                    <p>Ngày: <b>{detail.createdAt}</b></p>
+                                    <p>Ngày: <b>{moment(detail.createdAt).fromNow()}</b></p>
                                     <p>Tình trạng: <b>{detail.status ? "Đã xử lý" : "Chưa xử lý"}</b></p>
                                     <p>Chính sách vi phạm</p>
                                     <div>
@@ -260,7 +260,7 @@ class ReportDetail extends Component {
                                                     })
                                                 }}>Đồng ý</button>
                                         </div>
-                                        : <p>Đã xử lý ngày: <b>{detail.updatedAt}</b></p>
+                                                : <p>Đã xử lý ngày: <b>{moment(detail.updatedAt).fromNow()} </b></p>
                                     }
                                 </div>
                             </div>

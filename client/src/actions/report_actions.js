@@ -19,6 +19,7 @@ export function getAll(limit, skip, filter, prevState = []) {
     console.log(data);
     const request = axios.post(`${REPORT_SERVER}/getAll`, data)
     .then(response => {
+        console.log(response.data.reports)
         let newState = [
             ...prevState,
             ...response.data.reports
@@ -41,7 +42,10 @@ export function sort(sortBy, list){
             list.sort((a,b)=>{
                 if (a.dateDifference > b.dateDifference){
                     return 1 * sortBy.order
-                }else{
+                }else if (a.dateDifference == b.dateDifference){
+                    return 0
+                }
+                else {
                     return -1 * sortBy.order
                 }
             })

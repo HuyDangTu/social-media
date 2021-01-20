@@ -5,11 +5,11 @@ import './dashboard.scss'
 import { getAll, sort} from '../../../actions/report_actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withRouter } from 'react-router-dom';
-
+import moment from 'moment';
 
 class Dashboard extends Component {
     state={
-        limit: 4,
+        limit: 8,
         skip: 0,
         filter: ["all"],
         sortBy: {type: "date", order: 1},
@@ -199,7 +199,8 @@ class Dashboard extends Component {
                                             <img className="avt" src={item.sentBy[0].avt} />
                                             <div className="report_info">
                                                 {this.renderReportContent(item)}
-                                                <p className="date">{item.dateDifference >= 30 ? item.createdAt : this.postedDate(item.dateDifference)}</p>
+                                                {/* <p className="date">{item.dateDifference >= 30 ? item.createdAt : this.postedDate(item.dateDifference)}</p> */}
+                                                <p>{moment(item.createdAt).fromNow()} </p>
                                             </div>
                                         </div>
                                         </td>

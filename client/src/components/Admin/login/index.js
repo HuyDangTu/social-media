@@ -7,14 +7,14 @@ const AdminLogin = () => {
         <div className="login">
             <div className="Admin_login__container">
                 <div className="row no-gutters">
-                    <div className="col-xl-3 col-lg-3 col-md-3 no-gutters">
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 no-gutters">
                     </div>
-                    <div className="col-xl-6 col-lg-6 col-md-6 no-gutters">
+                    <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 no-gutters">
                         <div className="right">
                             <Login />
                         </div>
                     </div>
-                    <div className="col-xl-3 col-lg-3 col-md-3 no-gutters">
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 no-gutters">
                     </div>
                 </div>
             </div>

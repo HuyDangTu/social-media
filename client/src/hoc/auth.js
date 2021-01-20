@@ -39,8 +39,11 @@ export default function(ComposedClass,reload,adminRoute = null){
                         //ng dùng k phải admin chuyển qua trang đăng nhập của admin
                         if(!user.isAdmin){
                             if (reload === true) {
-                                this.props.history.push(adminRoute);
+                                this.props.history.push("/Newfeed");
                             }
+                        }
+                        if (reload === false) {
+                            this.props.history.push('/Admin/Dashboard');
                         }
                     }else{
                         if (user.isAdmin) {

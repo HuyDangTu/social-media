@@ -51,7 +51,7 @@ const Routes = () =>{
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
 
         {/* Admin route */}
-        <Route path="/Admin/login" exact component={Auth(AdminLogin, true, "/Admin/login")} />
+        <Route path="/Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />
         <Route path="/Admin/Dashboard" exact component={Auth(Dashboard, true, "/Admin/login")} />
         <Route path="/Admin/ReportDetail/:id" exact component={Auth(ReportDetail, true, "/Admin/login")} />
         <Route path="/Admin/Account" exact component={Auth(AccountPage, true, "/Admin/login")} />

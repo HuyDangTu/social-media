@@ -149,17 +149,16 @@ class  Card extends Component {
         switch(item.name){
             case 'Like':
                 const liked = this.props.likes.filter(item => item._id === this.props.user.userData._id);
-               
                 return (
-                <div>
-                    { 
+                    <div>
+                        { 
                         liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props._id))}
                             src={require('../../asset/newfeed_page/active_like_icon2x.png')} /> 
                         : 
                         <img onClick={() => this.props.dispatch(likePost(this.props._id))} 
                             src={require('../../asset/newfeed_page/like_icon2x.png')} />  
-                    }                      
-                </div>)
+                        }                      
+                    </div>)
             case 'Comment':
                 return (
                 <div onClick={()=>{
@@ -283,7 +282,7 @@ class  Card extends Component {
                         <h5> Bạn chắc chắn muốn xóa bài viết này?</h5>
                         <div className="btn_wrapper">
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false})}>Hủy</p>
-                            <p className="confirm_btn" onClick={() => this.props.dispatch(deletePost(this.props.post._id))
+                            <p className="confirm_btn" onClick={() => this.props.dispatch(deletePost(this.props._id))
                                 .then(() => {
                                     this.props.handleSnackBar("Đã xóa bài viết")
                                     this.props.history.push('/newfeed');

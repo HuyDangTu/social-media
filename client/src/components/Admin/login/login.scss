@@ -76,7 +76,6 @@
                 width: calc_width(78);              
             }
         }
-
         .facebook_signin_button{
             @include general();
             background-color: $darkBlueColor;
@@ -135,7 +134,6 @@
             color: white;
             border: none;
         }
-
         .formField_container{
         width: 100%;
             .formBlock{
@@ -153,7 +151,6 @@
             }
 
         }
-   
         //////////////////////
         .facebook_signin_button,
         .gmail_signin_button{
@@ -166,14 +163,177 @@
         }
         ////
         .signin__logo,
-        .signin__button
-        {
+        .signin__button{
             margin-bottom: 20px;
         }
         ////
         .or_label{
             margin-top: 15px;
             margin-bottom: 20px;
+            color:$primaryColor;
+            font-weight: bold;
+        }
+    }
+}
+
+@media screen and (max-width: 1024px){
+    .Admin_signin__container{
+        padding: 0px 0px 0px 0px;
+        .signin__form{
+            .signin__logo{
+                .logo{
+                    width: calc_width(200);
+                    height: calc_width(200);
+                }
+                .stunning_text{
+                    padding: 5px;
+                    width: calc_width(230);              
+                }
+            }
+            .formField_container{
+                width: 100%;
+                .formBlock{
+                    input{
+                        padding: 10px;
+                        width: 100%;
+                        height: calc_width(140);
+                        font-size: 15px;
+                        border-radius: 5px;
+
+                        color: black;
+                        border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+            .signin__button{
+                
+                padding: 10px;
+                width: 100%;
+                height: calc_width(140);
+                font-size: 15px;
+                border-radius: 5px;
+
+                background-color: $primaryColor;
+                color: white;
+                border: none;
+            }
+            .or_label{
+                margin-top: 15px;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 922px){
+    .Admin_signin__container{
+        padding: 0px 0px 0px 0px;
+        .signin__form{
+            .signin__logo{
+                .logo{
+                    width: calc_width(200);
+                    height: calc_width(200);
+                }
+                .stunning_text{
+                    padding: 5px;
+                    width: calc_width(230);              
+                }
+            }
+            .formField_container{
+                width: 100%;
+                .formBlock{
+                    input{
+                        padding: 10px;
+                        width: 100%;
+                        height: calc_width(140);
+                        font-size: 15px;
+                        border-radius: 5px;
+
+                        color: black;
+                        border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+            .signin__button{
+                
+                padding: 10px;
+                width: 100%;
+                height: calc_width(140);
+                font-size: 15px;
+                border-radius: 5px;
+
+                background-color: $primaryColor;
+                color: white;
+                border: none;
+            }
+            .or_label{
+                margin-top: 15px;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+
+
+
+
+@media screen and (max-width: 568px){
+    .Admin_signin__container{
+        .signin__form{
+            .signin__logo{
+                .logo{
+                    width: calc_width(200);
+                    height: calc_width(200);
+                }
+                .stunning_text{
+                    padding: 5px;
+                    width: calc_width(230);              
+                }
+            }
+            .formField_container{
+                width: 100%;
+                .formBlock{
+                    input{
+                        padding: 10px;
+                        width: 100%;
+                        height: calc_width(140);
+                        font-size: 15px;
+                        border-radius: 5px;
+
+                        color: black;
+                        border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+            .signin__button{
+                
+                padding: 10px;
+                width: 100%;
+                height: calc_width(140);
+                font-size: 15px;
+                border-radius: 5px;
+
+                background-color: $primaryColor;
+                color: white;
+                border: none;
+            }
+            .or_label{
+                margin-top: 15px;
+                font-size: 0.8rem;
+            }
         }
     }
 }
