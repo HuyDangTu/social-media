@@ -178,7 +178,6 @@ class  Card extends Component {
                     :
                     <img onClick={() => this.props.dispatch(savePost(this.props._id))}
                         src={require('../../asset/newfeed_page/store_icon2x.png')} />
-                    
                     }
                 </div>
             )

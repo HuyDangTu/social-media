@@ -21,21 +21,21 @@ class FacebookLoginButton extends Component {
     responseFacebook = (response) =>{
         if (response) {
             console.log(response);
-            // this.props.dispatch(loginByFaceGoogle(response.email))
-            // .then(res => {
-            //     if (res.payload.loginSuccess) {
-            //         this.props.history.push('/newfeed')
-            //     }else {
-            //         console.log(response)
-            //         // let data = {
-            //         //     name: response.name,
-            //         //     email: response.email,
-            //         //     picture: response.image.url,
-            //         // }
-            //         // this.props.dispatch(storeInfoForRegister(data));
-            //         // this.props.history.push('/register');
-            //     }
-            // });
+            this.props.dispatch(loginByFaceGoogle(response.email))
+            .then(res => {
+                if (res.payload.loginSuccess) {
+                    this.props.history.push('/newfeed')
+                }else {
+                    console.log(response)
+                    // let data = {
+                    //     name: response.name,
+                    //     email: response.email,
+                    //     picture: response.image.url,
+                    // }
+                    // this.props.dispatch(storeInfoForRegister(data));
+                    // this.props.history.push('/register');
+                }
+            });
         }
         else {
             console.log(response)

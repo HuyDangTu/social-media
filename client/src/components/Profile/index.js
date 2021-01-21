@@ -74,6 +74,14 @@ class Profile extends Component {
     showDialog = () => {
         this.setState({ setDialog: true })
     }
+    countNumberOfPost = () => {
+        const postlist = this.props.user.postlist;
+        let cnt = 0;
+        postlist.forEach(item => {
+            if(item.hidden==false) cnt+=1;
+        })
+        return cnt;
+    }
     render() {
         const postlist = this.props.user.postlist
         const typelist = this.props.user.typelist
@@ -147,7 +155,7 @@ class Profile extends Component {
                                         </div>
                                         <div className="profile_number">
                                             <div className="number_holder">
-                                                <div className="number">{postlist ? postlist.length : <Skeleton variant="rect" width={50} height={30} />}</div>
+                                                <div className="number">{postlist ? this.countNumberOfPost() : <Skeleton variant="rect" width={50} height={30} />}</div>
                                                 <div className="type">Bài viết</div>
                                             </div>
                                             <div className="number_holder" onClick={() => { this.setState({ setfollowerDiaglog: true }) }}>
@@ -217,7 +225,8 @@ class Profile extends Component {
                                 <div className="row body">
                                     {
                                         typelist ? typelist.map(posts => {
-                                            return (
+                                            return posts.hidden ? null :
+                                             (
                                                     <div className="col-xl-4 col-sm-6 col-12 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
                                                         <div className="img_overlay">
                                                             <div className="overlay_info">

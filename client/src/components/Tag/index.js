@@ -54,8 +54,7 @@ class Tag extends Component {
         const windowBottom = Math.ceil(windowHeight + window.pageYOffset);
         console.log(windowBottom, docHeight, windowHeight)
         if (windowBottom >= docHeight) {
-            this.setState({isLoading: true});
-            this.LoadmoreCards()
+            this.setState({ isLoading: true }, () => { this.LoadmoreCards()});
             console.log('bottom reached');
         }
     }
@@ -96,7 +95,8 @@ class Tag extends Component {
                     <div className="row">
                         {
                         tag.posts.map((item)=>{
-                            return (
+                            return item.hidden ? null :
+                            (
                                 <div className="col-xl-4 col-md-4  pb-3 pt-3 ">
                                 <div className="image-wrapper" onClick={()=>{
                                         this.props.history.push(`/postDetail/${item._id}`)

@@ -859,11 +859,9 @@ app.post('/api/tags/getTag', auth, (req, res) => {
     Tag.findOne({ _id: id })
         .exec((err, tag) => {
             if (err) return res.status(400).send(err);
-            Post.find({ "_id": { "$in": [...tag.posts]},"hidden": false})
+            Post.find({ "_id": { "$in": [...tag.posts]},hidden: {$eq: false}})
                 .populate("postedBy", "_id userName")
                 .sort([[sortBy, order]])
-                .skip(skip)
-                .limit(limit)
                 .exec((err, posts) => {
                     if (err) return res.status(400).send(err)
                     console.log(posts);
@@ -978,8 +976,7 @@ app.get('/api/users/:id', auth, (req, res) => {
         .select("-password")
         .then(user => {
             Post.find({ 
-                    postedBy: req.params.id, 
-                    hidden: { $eq: false }
+                    postedBy: req.params.id
                 })
                 .populate("postedBy", "_id userName")
                 .exec((err, posts) => {
