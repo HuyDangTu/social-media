@@ -34,7 +34,7 @@ const Routes = () =>{
         <Route path="/post/create_post" exact component={Auth(UserDashboard, true)} />
         <Route path="/postDetail/:id" exact component={Auth(PostDetail, true)} /> 
         <Route path="/story/:id" exact component={Auth(StoryPage, true)} /> 
-        <Route path="/" exact component={Auth(Home, true)} />
+        <Route path="/:id" exact component={Auth(Home, true)} />
         <Route path="/register_login" exact component={Auth(RegisterLogin, false)} />
         <Route path="/register" exact component={Auth(Register, false)} />
         <Route path="/newfeed" exact component={Auth(Newfeed, true)} />

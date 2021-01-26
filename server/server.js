@@ -17,6 +17,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+app.use(express.static('client/build'))
+
 require('dotenv').config();
 
 const mongoose = require('mongoose');
@@ -59,7 +61,6 @@ mongoose.connection.once('connected', async () => {
         });
     })
 })
-
 
 mongoose.connection.on('connected', () => {
     console.log("mongoose is ready");
@@ -2097,13 +2098,16 @@ app.post('/api/users/changePassword', auth, (req, res) => {
 
 //---------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
+if(process.env.NODE_ENV === 'production'){
+    const path = require('path');
+    app.get('*/',(req,res)=>{
+        res.sendfile(path.resolve(__dirname,'../client','build','index.html'))
+    })
+}
 
-
-
-app.use(function (req, res, next) {
-    res.status(404).send('Unable to find the requested resource!');
-});
-
+// app.use(function (req, res, next) {
+//     res.status(404).send('Unable to find the requested resource!');
+// });
 const port = process.env.PORT || 3002;
 app.listen(port, () => {
     {
