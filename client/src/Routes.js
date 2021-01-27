@@ -43,13 +43,11 @@ const Routes = () =>{
         <Route path="/post/edit" exact component={Auth(PostEdit, true)} /> 
         <Route path="/reset_password" exact component={Auth(ResetUser, false)} /> 
         <Route path="/reset_password/:token" exact component={Auth(ResetPass, false)} /> 
-
         <Route path="/user/:id" exact component={Auth(Profile, true)}></Route>
         <Route path="/message/inbox" exact component={Auth(Message, true)}></Route>
         <Route path="/profile" exact component={Auth(UserProfile, true)}></Route>
         <Route path="/profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
-
         {/* Admin route */}
         <Route path="/Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />
         <Route path="/Admin/Dashboard" exact component={Auth(Dashboard, true, "/Admin/login")} />
