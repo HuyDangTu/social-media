@@ -6,7 +6,7 @@ class Layout extends Component {
     render() {
         return (
             <div>
-            <Header/>
+            {/* <Header/> */}
                 <div className="page_container">
                     {this.props.children}
                 </div>

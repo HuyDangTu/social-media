@@ -66,7 +66,7 @@ export function storeInfoForRegister(data) {
 }
 
 export function auth(){
-    const request = axios.get(`${USER_SERVER}/auth`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/auth`)
     .then(response => response.data);
 
     return {

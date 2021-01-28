@@ -80,7 +80,7 @@ export function getProductsToShop(skip, limit, filters =[],previousState = []){
         limit,
         filters
     }
-    const request = axios.post(`${USER_SERVER}/newfeed`,data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/newfeed`,data)
     .then(response =>{
         let newState = [
             ...previousState,
