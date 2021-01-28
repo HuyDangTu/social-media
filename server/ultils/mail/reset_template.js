@@ -1,6 +1,6 @@
 const resetpass = (data) =>{
     
-    const URL = process.env.NODE_ENV === "production" ? process.env.ROOT_URL : "http://localhost:3000";
+    const URL = process.env.NODE_ENV === "production" ? process.env.ROOT_URL : "https://myreactsocialnetwork.herokuapp.com/";
     
     return `
         <!DOCTYPE html>
