@@ -49,7 +49,7 @@ class ResetUser extends Component {
 
         if (formIsValid) {
             //console.log(dataToSubmit)
-            axios.post(`${USER_SERVER}/reset_user`, dataToSubmit)
+            axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/reset_user`, dataToSubmit)
                 .then(response => {
                     if (response.data.success)
                         this.setState({
