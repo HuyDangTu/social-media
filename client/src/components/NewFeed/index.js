@@ -183,13 +183,13 @@ class Newfeed extends Component {
                                     <Link to="/post/create_post">Thêm bài viết</Link>
                                 </div>
                             </div>
-                            {/* <LoadmoreChart 
+                            <LoadmoreChart 
                                 title="Xu hướng"
                                 isShow={this.state.isShow}
                                 topTenTags={products.topTenTag}
                                 loadMore={() => this.LoadmoreTags()}
                                 close={() => this.closeTagChart()}
-                            /> */}
+                            />
                         </div> 
                         </div>
                     </div>

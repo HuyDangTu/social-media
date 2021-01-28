@@ -9,7 +9,7 @@ import {
     UPLOAD_IMG
 } from './types';
 export function getMessage(id) {
-    const request = axios.get(`${MESS_SERVER}/get/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/get/${id}`)
         .then(response => response.data);
 
     return {
@@ -19,7 +19,7 @@ export function getMessage(id) {
 }
 
 export function getConversation(){
-    const request = axios.get(`${MESS_SERVER}/conversations`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/conversations`)
     .then(response=> response.data);
     return{
         type: GET_CONVERSATION,
@@ -27,7 +27,7 @@ export function getConversation(){
     }
 }
 export function sendMessage(datatoSubmit){
-    const request = axios.post(`${MESS_SERVER}/save`,datatoSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/save`,datatoSubmit)
     .then(response=>response.data);
     return{
         type: SEND_MESS,
@@ -35,7 +35,7 @@ export function sendMessage(datatoSubmit){
     }
 }
 export function seenMessage(id) {
-    const request = axios.get(`${MESS_SERVER}/seen/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/seen/${id}`)
         .then(response => response.data);
     return {
         type: SEEN_MESS,
@@ -48,7 +48,7 @@ export function sendimg(file) {
         header: { 'content-type': 'multipart/form-data' }
     }
     formData.append("file", file)
-    const request = axios.post('/api/users/uploadimage', formData, config)
+    const request = axios.post('https://myreactsocialnetwork.herokuapp.com/api/users/uploadimage', formData, config)
         .then(response => response.data);
     return {
         type: UPLOAD_IMG,

@@ -6,7 +6,7 @@ import {
     NOTIFICATION_SEENALL,
 } from './types';
 export function getNotification() {
-    const request = axios.get(`${NOTIFY_SERVER}/getall`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/notify/getall`)
         .then(response => response.data);
     return {
         type: GET_NOTIFICATION,
@@ -14,7 +14,7 @@ export function getNotification() {
     }
 }
 export function seenNotification(id){
-    const request = axios.post(`${NOTIFY_SERVER}/seen/${id}`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/notify/seen/${id}`)
     .then(response => response.data);
     return{
         type: NOTIFICATION_DETAIL,
@@ -22,7 +22,7 @@ export function seenNotification(id){
     }
 }
 export function seenAllNotification(){
-    const request = axios.post(`${NOTIFY_SERVER}/seenall`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/notify/seenall`)
     .then(response=>response.data);
     return {
         type: NOTIFICATION_SEENALL,
