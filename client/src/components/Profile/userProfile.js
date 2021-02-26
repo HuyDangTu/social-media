@@ -68,134 +68,121 @@ class UserProfile extends Component {
             <Layout>
                 <div className="shop_container">
                     <div className="shop_wrapper">
-                        <div className="row">
-                            <div className="col-xl-2"></div>
-                            <div className="col-xl-8">
-                                <div className="row pro_header">
-                                    <div className="col-xl-4 img_contain">
-                                        <div className="profile-img">
-
-                                            <img src={this.props.user.userData.avt}></img>
-
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-7 action_contain">
-                                        <div className="prolile_header">
-                                            <div className="name">{this.props.user.userData.userName}</div>
-                                            <Button className="follow_options"><Link to={`/profilesettings`}>Chỉnh sửa thông tin cá nhân</Link></Button>
-                                            <Button> <Settings size={30} strokeWidth={1} color="grey" /></Button>
-                                        </div>
-                                        <div className="profile_number">
-                                            <div className="number_holder">
-                                                <div className="number">{postlist ? postlist.length : 0}</div>
-                                                <div className="type">Bài viết</div>
-                                            </div>
-                                            <div className="number_holder" onClick={()=>{this.setState({setfollowerDiaglog:true})}}>
-                                                <div className="number">{this.props.user.userData.followers.length}</div>
-                                                <div className="type">Người theo dõi</div>
-                                            </div>
-                                            <div className="number_holder" onClick={()=>{this.setState({setfollowingDiaglog:true})}}>
-                                                <div className="number">{this.props.user.userData.followings.length}</div>
-                                                <div className="type">Đang theo dõi</div>
-                                            </div>
-                                        </div>
-                                        <div className="bio">
-                                            {this.props.user.userData.bio}
-                                        </div>
-                                    </div>
+                        <div className="row pro_header">
+                            <div className="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 img_contain">
+                                <div className="profile-img">
+                                    <img src={this.props.user.userData.avt}></img>
                                 </div>
-                                <div className="row no-gutters divide_type">
-                                    <ul>
-                                        <li>
-                                            {
-                                                this.state.setType == 'posted' ?
-                                                    <Button className="photo_type" onClick={() => this.handleType('posted')}>
-                                                        <GridDots size={20} strokeWidth={1} color="black"></GridDots>
-                                                        <h2>ĐÃ ĐĂNG</h2>
-                                                    </Button> :
-                                                    <Button className="photo_type diselected" onClick={() => this.handleType('posted')}>
-                                                        <GridDots size={20} strokeWidth={1} color="black"></GridDots>
-                                                        <h2>ĐÃ ĐĂNG</h2>
-                                                    </Button>
-
-                                            }
-                                        </li>
-                                        <li>
-                                            {
-                                                this.state.setType == 'tagged' ?
-                                                    <Button className="photo_type" onClick={() => this.handleType('tagged')}>
-                                                        <Tag size={20} strokeWidth={1} color="black"></Tag>
-                                                        <h2>ĐƯỢC GẮN THẺ</h2>
-                                                    </Button>
-                                                    :
-                                                    <Button className="photo_type diselected" onClick={() => this.handleType('tagged')}>
-                                                        <Tag size={20} strokeWidth={1} color="black"></Tag>
-                                                        <h2>ĐƯỢC GẮN THẺ</h2>
-                                                    </Button>
-                                            }
-                                        </li>
-                                        <li>
-                                            {
-                                                this.state.setType == 'saved' ?
-                                                    <Button className="photo_type" onClick={() => this.handleType('saved')}>
-                                                        <Bookmark size={20} strokeWidth={1} color="black"></Bookmark>
-                                                        <h2>ĐÃ LƯU</h2>
-                                                    </Button>
-                                                    :
-                                                    <Button className="photo_type diselected" onClick={() => this.handleType('saved')}>
-                                                        <Bookmark size={20} strokeWidth={1} color="black"></Bookmark>
-                                                        <h2>ĐÃ LƯU</h2>
-                                                    </Button>
-                                            }
-                                        </li>
-                                    </ul>
-                                </div>
-                                {
-                                    typelist ? typelist.map(posts => {
-                                        return (
-                                            <div>
-                                                <div className="row body">
-
-                                                    <div className="col-xl-4 image_contain">
-                                                        <img src={posts.images[0].url}></img>
-                                                    </div>
-                                                    <div className="col-xl-4 image_contain">
-
-                                                        <img src={posts.images[0].url}></img>
-                                                    </div><div className="col-xl-4 image_contain">
-
-                                                        <img src={posts.images[0].url}></img>
-                                                    </div>
-
-                                                </div>
-                                                <div className="row body">
-
-                                                    <div className="col-xl-4 image_contain">
-                                                        <img src={posts.images[0].url}></img>
-                                                    </div>
-                                                    <div className="col-xl-4 image_contain">
-
-                                                        <img src={posts.images[0].url}></img>
-                                                    </div><div className="col-xl-4 image_contain">
-
-                                                        <img src={posts.images[0].url}></img>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                        )
-                                    }) : ''
-                                }
-
-
                             </div>
-                            
-
+                            <div className="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-7 action_contain">
+                                <div className="prolile_header">
+                                    <div className="name">{this.props.user.userData.userName}</div>
+                                    <Button className="follow_options"><Link to={`/profilesettings`}>Chỉnh sửa thông tin cá nhân</Link></Button>
+                                    <Button> <Settings size={30} strokeWidth={1} color="grey" /></Button>
+                                </div>
+                                <div className="profile_number">
+                                    <div className="number_holder">
+                                        <div className="number">{postlist ? postlist.length : 0}</div>
+                                        <div className="type">Bài viết</div>
+                                    </div>
+                                    <div className="number_holder" onClick={()=>{this.setState({setfollowerDiaglog:true})}}>
+                                        <div className="number">{this.props.user.userData.followers.length}</div>
+                                        <div className="type">Người theo dõi</div>
+                                    </div>
+                                    <div className="number_holder" onClick={()=>{this.setState({setfollowingDiaglog:true})}}>
+                                        <div className="number">{this.props.user.userData.followings.length}</div>
+                                        <div className="type">Đang theo dõi</div>
+                                    </div>
+                                </div>
+                                <div className="bio">
+                                    {this.props.user.userData.bio}
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-xl-2"></div>
-                    </div>
+                        <div className="row no-gutters divide_type">
+                            <ul>
+                                <li>
+                                    {
+                                        this.state.setType == 'posted' ?
+                                            <Button className="photo_type" onClick={() => this.handleType('posted')}>
+                                                <GridDots size={20} strokeWidth={1} color="black"></GridDots>
+                                                <h2>ĐÃ ĐĂNG</h2>
+                                            </Button> :
+                                            <Button className="photo_type diselected" onClick={() => this.handleType('posted')}>
+                                                <GridDots size={20} strokeWidth={1} color="black"></GridDots>
+                                                <h2>ĐÃ ĐĂNG</h2>
+                                            </Button>
 
+                                    }
+                                </li>
+                                <li>
+                                    {
+                                        this.state.setType == 'tagged' ?
+                                            <Button className="photo_type" onClick={() => this.handleType('tagged')}>
+                                                <Tag size={20} strokeWidth={1} color="black"></Tag>
+                                                <h2>ĐƯỢC GẮN THẺ</h2>
+                                            </Button>
+                                            :
+                                            <Button className="photo_type diselected" onClick={() => this.handleType('tagged')}>
+                                                <Tag size={20} strokeWidth={1} color="black"></Tag>
+                                                <h2>ĐƯỢC GẮN THẺ</h2>
+                                            </Button>
+                                    }
+                                </li>
+                                <li>
+                                    {
+                                        this.state.setType == 'saved' ?
+                                            <Button className="photo_type" onClick={() => this.handleType('saved')}>
+                                                <Bookmark size={20} strokeWidth={1} color="black"></Bookmark>
+                                                <h2>ĐÃ LƯU</h2>
+                                            </Button>
+                                            :
+                                            <Button className="photo_type diselected" onClick={() => this.handleType('saved')}>
+                                                <Bookmark size={20} strokeWidth={1} color="black"></Bookmark>
+                                                <h2>ĐÃ LƯU</h2>
+                                            </Button>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                        {
+                            typelist ? typelist.map(posts => {
+                                return (
+                                    <div>
+                                        <div className="row body">
+
+                                            <div className="col-xl-4 image_contain">
+                                                <img src={posts.images[0].url}></img>
+                                            </div>
+                                            <div className="col-xl-4 image_contain">
+
+                                                <img src={posts.images[0].url}></img>
+                                            </div><div className="col-xl-4 image_contain">
+
+                                                <img src={posts.images[0].url}></img>
+                                            </div>
+
+                                        </div>
+                                        <div className="row body">
+
+                                            <div className="col-xl-4 image_contain">
+                                                <img src={posts.images[0].url}></img>
+                                            </div>
+                                            <div className="col-xl-4 image_contain">
+
+                                                <img src={posts.images[0].url}></img>
+                                            </div><div className="col-xl-4 image_contain">
+
+                                                <img src={posts.images[0].url}></img>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                )
+                            }) : ''
+                        }
+                    </div>
                 </div>
                 <Dialog className="dialog_cont" onClose={() => {this.setState({ setfollowerDiaglog: false });this.props.dispatch(findProfile(this.props.user.userData._id))}} open={this.state.setfollowerDiaglog} >
                     <div className="header">

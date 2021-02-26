@@ -206,7 +206,7 @@ class Register extends Component {
             <div className="register">
                 <div className="register_page_container">
                     <div className="row no-gutters">
-                        <div className="col-xl-6 no-gutters">
+                        <div className="col-xl-6 col-lg-6 col-md-6 no-gutters">
                             <div className="left">
                                 <div className="register_slogan">
                                     <img className="logo" src='./images/landingPage/logoIcon2x.png' />
@@ -216,7 +216,7 @@ class Register extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-6 no-gutters">
+                        <div className="col-xl-6 col-lg-6 col-md-6  no-gutters">
                             <div className="right">
                                 <div className="register">
                                     <div className='register__container'>

@@ -65,6 +65,10 @@
         }
         .errorLabel{
             color: red;
+            font-size: calc_width(20);
+        }
+        .or_label{
+            font-size: calc_width(20);
         }
         .register__row1{
             display: flex;
@@ -145,6 +149,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: calc_width(20);
             a{
                 margin-left: 10px;
                 color: $primaryColor;
@@ -170,3 +175,519 @@
 }
 
 
+@media screen and (max-width: 1200px){
+    .register_page_container{
+        .left{
+       
+            .register_slogan{
+                img{
+
+                }
+                h1{
+
+                }
+            }
+        }
+    }
+    .register__container{
+         padding: calc_width(78) calc_width(169) calc_width(78) calc_width(169);
+        .register__form{
+            .avt_wrapper{
+                img{
+                }
+            }
+        .errorLabel{
+        }
+        .register__row1{
+            .formField_container{
+                .formBlock{
+                    input{
+                    width: 100%;
+                    height: calc_width(100);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+        }
+        .register__row2{
+            .display_input{
+            }
+            .formField_container{
+                .formBlock{
+                
+                input{
+                }
+                .label_input{
+                }
+                .error_label{
+                    div{
+                        font-size: calc_width(20);
+                    }
+                }
+                }
+            }
+        }
+         .register__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(80);
+                height: calc_width(80);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(90);              
+            }
+        }
+        .gmail_signin_button,.facebook_signin_button{
+           font-size: calc_width(26);
+            img{
+                width: calc_width(40);
+                padding-right: 5px;
+            }
+        }
+        .register_wrapper{
+               font-size: calc_width(26);
+        }
+        .register__button{
+            .facebook_signin_button, 
+            .or_label,
+            .register__logo,
+            .register__button
+            {
+            } 
+        }   
+        }
+    }
+}
+
+@media screen and (max-width: 992px){
+    .register_page_container{
+        .left{
+       
+            .register_slogan{
+                img{
+
+                }
+                h1{
+
+                }
+            }
+        }
+    }
+    .register__container{
+         padding: calc_width(78) calc_width(120) calc_width(78) calc_width(120);
+        .register__form{
+            .avt_wrapper{
+                img{
+                }
+            }
+        .errorLabel{
+            font-size: calc_width(30);
+        }
+        .or_label{
+            font-size: calc_width(30);
+        }
+        .register__row1{
+            .formField_container{
+                .formBlock{
+                    input{
+                    width: 100%;
+                    height: calc_width(120);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+        }
+        .register__row2{
+            .display_input{
+            }
+            .formField_container{
+                .formBlock{
+                
+                input{
+                     height: calc_width(100);
+                     font-size: calc_width(26);
+                }
+                .label_input{
+                }
+                .error_label{
+                    div{
+                        font-size: calc_width(30);
+                    }
+                }
+                }
+            }
+        }
+         .register__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(100);
+                height: calc_width(100);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(120);              
+            }
+        }
+        .gmail_signin_button,.facebook_signin_button{
+           font-size: calc_width(26);
+           height: calc_width(100);
+            img{
+                width: calc_width(40);
+                padding-right: 5px;
+            }
+        }
+        .register_wrapper{
+               font-size: calc_width(26);
+        }
+        .register__button{
+            font-size: calc_width(26);
+        }
+        }
+    }
+}
+
+@media screen and (max-width: 768px){
+    .register_page_container{
+        .left{
+            display: none;
+            .register_slogan{
+                img{
+
+                }
+                h1{
+
+                }
+            }
+        }
+    }
+    .register__container{
+        height: 100vh;
+        padding: calc_width(78) calc_width(120) calc_width(78) calc_width(120);
+        position: relative;
+        .register__form{
+            position: absolute;
+            width: 60%;
+            margin: 0 auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            .avt_wrapper{
+                img{
+                }
+            }
+        .errorLabel{
+            font-size: calc_width(30);
+        }
+        .or_label{
+            font-size: calc_width(30);
+        }
+        .register__row1{
+            .formField_container{
+                .formBlock{
+                    input{
+                    width: 100%;
+                    height: calc_width(110);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+        }
+        .register__row2{
+            .display_input{
+            }
+            .formField_container{
+                .formBlock{
+                    input{
+                        width: 100%;
+                        height: calc_width(110);
+                    }
+                .label_input{
+                }
+                .error_label{
+                    div{
+                        font-size: calc_width(30);
+                    }
+                }
+                }
+            }
+        }
+         .register__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(130);
+                height: calc_width(130);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(150);              
+            }
+        }
+        .gmail_signin_button,.facebook_signin_button{
+            height: calc_width(120);
+            font-size: calc_width(35);
+            img{
+                width: calc_width(50);
+                padding-right: 5px;
+            }
+        }
+        .register_wrapper{
+               font-size: calc_width(40);
+        }
+        .register__button{
+            height: calc_width(110);
+            font-size: calc_width(35);
+        }
+        }
+    }
+}
+
+
+@media screen and (max-width: 576px){
+    .register_page_container{
+        .left{
+            display: none;
+            .register_slogan{
+                img{
+
+                }
+                h1{
+
+                }
+            }
+        }
+    }
+    .register__container{
+        height: 100vh;
+        padding: calc_width(78) calc_width(90) calc_width(78) calc_width(90);
+        position: relative;
+        .register__form{
+            position: absolute;
+            width: 70%;
+            margin: 0 auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            .avt_wrapper{
+                img{
+                }
+            }
+        .errorLabel{
+            font-size: calc_width(45);
+        }
+        .or_label{
+            font-size: calc_width(45);
+        }
+        .register__row1{
+            .formField_container{
+                .formBlock{
+                    input{
+                    width: 100%;
+                    height: calc_width(130);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+        }
+        .register__row2{
+            .display_input{
+            }
+            .formField_container{
+                .formBlock{
+                    input{
+                        width: 100%;
+                        height: calc_width(140);
+                        font-size: calc_width(50);
+                    }
+                .label_input{
+                }
+                .error_label{
+                    div{
+                        font-size: calc_width(45);
+                    }
+                }
+                }
+            }
+        }
+        .register__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(160);
+                height: calc_width(160);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(180);              
+            }
+        }
+        .gmail_signin_button,.facebook_signin_button{
+            height: calc_width(140);
+            font-size: calc_width(45);
+            img{
+                width: calc_width(70);
+                padding-right: 5px;
+            }
+        }
+        .register_wrapper{
+            font-size: calc_width(45);
+            a{
+              
+            }
+        }
+        .register__button{
+            height: calc_width(140);
+            font-size: calc_width(35);
+        }
+        }
+    }
+}
+
+@media screen and (max-width: 500px){
+    .register_page_container{
+        .left{
+            display: none;
+            .register_slogan{
+                img{
+
+                }
+                h1{
+
+                }
+            }
+        }
+    }
+    .register__container{
+        height: 100vh;
+        padding: calc_width(78) calc_width(90) calc_width(78) calc_width(90);
+        position: relative;
+        .register__form{
+            position: absolute;
+            width: 80%;
+            margin: 0 auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            .avt_wrapper{
+                img{
+                }
+            }
+        .errorLabel{
+            font-size: calc_width(55);
+            margin-bottom: 10px;
+        }
+        .or_label{
+            font-size: calc_width(55);
+        }
+        .register__row1{
+            .formField_container{
+                .formBlock{
+                    input{
+                    width: 100%;
+                    height: calc_width(130);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+        }
+        .register__row2{
+            .display_input{
+            }
+            .formField_container{
+                .formBlock{
+                    input{
+                        width: 100%;
+                       height: calc_width(180);
+                        font-size: calc_width(50);
+                    }
+                .label_input{
+                }
+                .error_label{
+                    div{
+                        font-size: calc_width(45);
+                    }
+                }
+                }
+            }
+        }
+        .register__logo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .logo{
+                padding: 5px;
+                width: calc_width(200);
+                height: calc_width(200);
+            }
+            .stunning_text{
+                padding: 5px;
+                width: calc_width(220);              
+            }
+        }
+        .gmail_signin_button,.facebook_signin_button{
+            height: calc_width(180);
+            font-size: calc_width(55);
+            img{
+                width: calc_width(90);
+                padding-right: 5px;
+            }
+        }
+        .register_wrapper{
+            font-size: calc_width(55);
+            a{
+              
+            }
+        }
+        .register__button{
+             height: calc_width(180);
+            font-size: calc_width(55);
+            }
+        }
+    }
+}

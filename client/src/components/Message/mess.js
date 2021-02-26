@@ -21,10 +21,10 @@ class Mess extends Component {
     render() {
         return (this.props.mess ? this.props.mess.sentBy == this.props.yourProfile._id ?
             <div className="row no-gutters sent">
-                <div className="col-xl-6">
+                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 ">
                 </div>
                 <ClickAwayListener onClickAway={this.handleClickAway}>
-                <div className="col-xl-6 sent_mess">
+                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6  sent_mess">
                     {
                         this.props.mess.type == 'text' ?
 
@@ -46,7 +46,7 @@ class Mess extends Component {
             </div> :
             <div className="row no-gutters receive">
 
-                <div className="col-xl-6 receive_mess">
+                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 receive_mess">
 
                     {
                         this.props.mess.type == 'text' ?
@@ -62,7 +62,7 @@ class Mess extends Component {
                                     <img className="sticker_mess" src={this.props.mess.content}></img> : ''
                     }
                 </div>
-                <div className="col-xl-6">
+                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                 </div>
             </div> : "")
     }

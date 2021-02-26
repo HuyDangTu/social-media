@@ -332,7 +332,7 @@ class Header extends Component {
     render() {
         return (
             <header className="header">    
-                <div className="header__container container-fluid"> 
+                <div className="header__container"> 
                     <div className="row no-gutters">
                         <div className="col-xl-4 col-sm-4 col-4 no-gutters">
                             <div className="header__logo" onClick={()=>{this.props.history.push('/newfeed')}}>

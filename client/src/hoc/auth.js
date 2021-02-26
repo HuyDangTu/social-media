@@ -65,8 +65,9 @@ export default function(ComposedClass,reload,adminRoute = null){
                         position: 'absolute',
                         top: '50%',
                         left: '50%',
-                        transform: 'translateX(-50 %) translateY(- 50 %)' }}>
-                        <CircularProgress style={{ color: '#5477D5'}} thickness={7}/>
+                        transform: 'translate(-50%, -50%)'
+                    }}>
+                        <CircularProgress style={{ color: '#5477D5' }} thickness={7} />
                     </div>
                 );
             }else{

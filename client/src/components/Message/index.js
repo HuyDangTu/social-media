@@ -182,7 +182,7 @@ class Message extends Component {
                 <div className="message_container">
                     <div className="message_wrapper">
                         <div className="row no-gutters">
-                            <div className="col-xl-4 left_contain">
+                            <div className="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-2 left_contain">
                                 <div className="chat_info">
                                     <div className="chat_settings">
                                         <h2> Trò chuyện</h2>
@@ -195,7 +195,7 @@ class Message extends Component {
                                     </div>
                                     <div className="search_box">
                                         <Search size={22} strokeWidth={1} color="grey" ></Search>
-                                        <input type="text" placeholder="Tìm kiếm tin nhắn..." />
+                                        <input type="text" placeholder="Tìm kiếm" />
                                     </div>
                                 </div>
                                 <div className="message_box">
@@ -213,38 +213,39 @@ class Message extends Component {
                                                                     con.user1._id != yourProfile._id ?
                                                                         <Link className="link" to={`/message/inbox/${con.user1._id}`}>
                                                                             <div className="row no-gutters message_contain">
-                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
+                                                                                <div className="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 avt">
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
+                                                                                <div className="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-12 message">
                                                                                     <h2>{con.user1.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}   {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
+                                                                                {/* <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                
-                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6> */}
-                                                                                </div>
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
+                                                                                </div> */}
                                                                             </div>
                                                                         </Link>
                                                                         :
                                                                         <Link className="link" to={`/message/inbox/${con.user2._id}`}>
                                                                             <div className="row no-gutters message_contain">
-                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
+                                                                                <div className="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 avt">
+
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
+                                                                                <div className="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-12  message">
                                                                                     <h2 >{con.user2.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}
                                                                                         {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
 
                                                                                 </div>
-                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
+                                                                                {/* <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                 
-                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)} </h6> */}
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)} </h6>
                                                                                    
-                                                                                </div>
+                                                                                </div> */}
                                                                             </div>
                                                                         </Link>
                                                                     :
@@ -252,35 +253,35 @@ class Message extends Component {
                                                                     con.user1._id != yourProfile._id ?
                                                                         <Link className="link" to={`/message/inbox/${con.user1._id}`} onClick={() => this.props.dispatch(seenMessage(con.user1._id))}>
                                                                             <div className="row no-gutters message_contain unseen">
-                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
+                                                                                <div className="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-12 avt">
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
+                                                                                <div className="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-12  message">
                                                                                     <h2>{con.user1.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}  {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
+                                                                                {/* <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                    
-                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6> */}
-                                                                                </div>
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
+                                                                                </div> */}
                                                                             </div>
                                                                         </Link>
                                                                         :
                                                                         <Link className="link" to={`/message/inbox/${con.user2._id}`} onClick={() => this.props.dispatch(seenMessage(con.user2._id))}>
                                                                             <div className="row no-gutters message_contain unseen">
-                                                                                <div className="col-xl-2 col-sm-2 col-2 avt">
+                                                                                <div className="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 avt">
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
-                                                                                <div className="col-xl-7 col-sm-7 col-7  message">
+                                                                                <div className="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-12  message">
                                                                                     <h2 >{con.user2.userName}</h2>
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}  {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
-                                                                                <div className="col-xl-3 col-sm-3 col-3  info">
+                                                                                {/* <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
                                                                                  
-                                                                                    {/* <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6> */}
-                                                                                </div>
+                                                                                    <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
+                                                                                </div> */}
                                                                             </div>
                                                                         </Link>
                                                             }
@@ -294,7 +295,7 @@ class Message extends Component {
 
                                 </div>
                             </div>
-                            <div className="col-xl-8 right_contain">
+                            <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-10 right_contain">
                                 <div className="top_info">
 
                                     <div className="user_info">
@@ -378,7 +379,7 @@ class Message extends Component {
 
 
                                         </div>
-                                        <div className="emoji_icon">
+                                        <div className="img_upload">
                                             <label className="custom-file-upload">
                                                 <input type="file" onChange={this.onFileChange} />
                                                 <Photo size={32} strokeWidth={1} color="black"></Photo>

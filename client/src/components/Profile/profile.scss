@@ -9,85 +9,81 @@
 @mixin linkColor{
     color:  $primaryColor;
 }
-
-@media only screen and (max-width : 992px){
-    .profile_container{
-        width: 80%;
-        margin: auto;
-
-        margin-top: 24px;
-        .img_contain{
-            display: flex;
-            justify-content: center;
-           img{
-               width: 100%;
-            //    height: 80px;
-            object-fit: cover;
-               border-radius:80px;
-           }
+.profile_container{
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 24px;
+        
+    .profile-img{
+        width: 100%;
+        padding-bottom:100%; 
+        overflow:hidden; 
+        position:relative;
+        img{
+            object-fit:cover;
+            position:absolute;
+            width:100%;
+            height: 100%;
+            border-radius: 100%;
         }
-    
     }
-    
     .action_contain
     {
         justify-content: left;
-    .prolile_header{
-        justify-content: left;
-      
-        padding-bottom: 16px;
-        align-items: center;
-        .name{
-            font-size: 1.5rem;
-            margin-right: 24px;
-          
+        .prolile_header{
+            justify-content: left;
+            display: flex;
+            padding-bottom: 16px;
+            align-items: center;
+            .name{
+                font-size: 24px;
+                margin-right: 24px;
+            }
+            .follow_options
+            {
+                font-size: 16px;
+                background-color: #f2f9ff;
+                border: solid 0.1px #f2f9ff;
+                color: #7166F9;
+                padding: 5px 30px;
+                border-radius: 3px;
+                margin-right: 8px;
+            }
+            .secondary_btn{
+                height: 100%;   
+                font-size: 16px;
+                color: black;
+                padding: 5px 30px;
+                border: solid 0.1px rgba(0,0,0,0.2);
+                border-radius: 3px;
+                margin-right: 8px;
+            }
         }
-        .follow_options
+        .profile_number
         {
-           display: inline-block;
-            background-color: #f2f9ff;
-            border: solid 0.1px #f2f9ff;
-            color: #7166F9;
-            // padding: 5px 30px;
-            border-radius: 3px;
-            margin-right: 8px;
-            width: 100%;
-            font-size: 0.875rem !important;
-        }
-        .secondary_btn
-        {
-            height: 100%;   
-            font-size: 0.875rem !important;
-            
-            color: black;
-            padding: 5px 30px;
-            border: solid 0.1px rgba(0,0,0,0.2);
-            border-radius: 3px;
-            margin-right: 8px;
-        }
-       
-    }
-    }
-    .profile_number
-{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    .number_holder{
-       
-        text-align: center;
-        .number{
-            font-size: 0.875rem;
-            font-weight: bold;
-        }
-    }
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            .number_holder{
+                // margin: auto;
+                // justify-content: center;
+                text-align: center;
+                .number{
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+            }
 
+        }
+    }
 }
+    
 .divide_type{
+    width: fit-content;
+    margin: 0 auto;
     margin-bottom: 24px;
-    display: flex;
-    justify-content: center;
     ul{
+        padding:0;
         display: flex;
         justify-content: space-between;
         li{
@@ -95,10 +91,11 @@
             text-decoration: none;
             padding-bottom: 8px;
             margin-left: 24px;
+        }:first-child{
+            margin: 0;
         }
     }
     .photo_type{
-        
         display: flex;
         justify-content: center;
         border-top: solid 1px black;
@@ -118,130 +115,33 @@
     }
     .diselected{
         border-top: none !important;
- opacity: 0.6 !important;
-    }
-}
-}
-@media only screen and (min-width : 992px){
-    .profile_container{
-        width: 100%;
-        margin-top: 24px;
-        
-        .img_contain{
-            display: flex;
-            justify-content: center;
-           img{
-               width: 160px;
-               height: 160px;
-            object-fit: cover;
-               border-radius:80px;
-           }
-        }
-    
-    }
-    
-    .action_contain
-{
-    justify-content: left;
-.prolile_header{
-    justify-content: left;
-    display: flex;
-    padding-bottom: 16px;
-    align-items: center;
-    .name{
-        font-size: 24px;
-        margin-right: 24px;
-    }
-    .follow_options
-    {
-        font-size: 16px;
-        background-color: #f2f9ff;
-        border: solid 0.1px #f2f9ff;
-        color: #7166F9;
-        padding: 5px 30px;
-        border-radius: 3px;
-        margin-right: 8px;
-    }
-    .secondary_btn
-    {
-        height: 100%;   
-        font-size: 16px;
-        color: black;
-        padding: 5px 30px;
-        border: solid 0.1px rgba(0,0,0,0.2);
-        border-radius: 3px;
-        margin-right: 8px;
-    }
-   
-}
-}
-.profile_number
-{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    .number_holder{
-        // margin: auto;
-        // justify-content: center;
-        text-align: center;
-        .number{
-            font-size: 20px;
-            font-weight: bold;
-        }
-    }
-
-}
-.divide_type{
-    margin-bottom: 24px;
-    display: flex;
-    justify-content: center;
-    ul{
-        display: flex;
-        justify-content: space-between;
-        li{
-            display: block;
-            text-decoration: none;
-            padding-bottom: 8px;
-            margin-left: 24px;
-        }
-    }
-    .photo_type{
-        display: flex;
-        justify-content: center;
-        border-top: solid 1px black;
-        border-radius: 0px;
-        width: 100%;
-        padding:0px;
-        padding-top:16px;
-        align-items: center;
-        h2{
-            font-size: 16px;
-        
-            margin-left: 8px;
-            margin-bottom: 0px !important;
-        }
-    }
-    .diselected{
-        border-top: none !important;
         opacity: 0.6 !important;
-        }
     }
 }
+
+
 .pro_header{
     padding-bottom: 24px;
     border-bottom: solid 0.1px rgba(0,0,0,0.1);
+    .profile-img{
+        img{
+            width: 100%;
+        }
+    }
 }
+
 .Profile
 {
     .bio
     {
         font-size: 16px;
         font-weight: bold;
+        font-style: italic;
     }
     .image_contain
     {
-    height: 314.26px;
-    margin-bottom: 30px;
+        height: 314.26px;
+        margin-bottom: 30px;
         position: relative;
         img{
             display: block;
@@ -288,7 +188,7 @@
                     padding:0px;
                     display: flex;
                     align-items: center;
-                justify-content: center;
+                    justify-content: center;
                     margin-right:32px;
             
                 }
@@ -313,7 +213,7 @@
 }
 .image_contain:hover .img_overlay {
     opacity: 1;
-}
+    }   
 }
 .dialog_cont
 {
@@ -354,4 +254,279 @@
             border: solid 0.5px grey;
         }
     }  
+}
+
+@media only screen and (max-width : 1200px){
+    .profile_container{
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 30px;
+    }
+}
+
+@media only screen and (max-width : 992px){
+    .profile_container{
+        width: 80%;
+        margin: auto;
+        margin-top: 24px;
+        .action_contain
+        {
+            justify-content: left;
+            .prolile_header{
+            justify-content: left;
+            padding-bottom: 16px;
+            align-items: center;
+            .name{
+                font-size: 1.5rem;
+                margin-right: 24px;
+            }
+            
+            button{
+                font-size: calc_width(25);
+            }
+            .follow_options
+            {
+                display: inline-block;
+                background-color: #f2f9ff;
+                border: solid 0.1px #f2f9ff;
+                color: #7166F9;
+                border-radius: 3px;
+                margin-right: 8px;
+                width: 100%;
+                font-size: 0.7rem !important;
+            }
+            .secondary_btn
+            {
+                height: 100%;   
+                font-size: 0.875rem !important;
+                color: black;
+                padding: 5px 30px;
+                border: solid 0.1px rgba(0,0,0,0.2);
+                border-radius: 3px;
+                margin-right: 8px;
+            }
+        
+        }
+        }
+    }
+    
+  
+    .profile_number
+    {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        .number_holder{
+        
+            text-align: center;
+            .number{
+                font-size: 0.875rem;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : 768px){
+    .profile_container{
+        width: 80%;
+        margin: auto;
+        margin-top: 24px;
+        .action_contain
+        {
+            justify-content: left;
+            .prolile_header{
+            justify-content: left;
+            
+            padding-bottom: 16px;
+            align-items: flex-start;
+            .name{
+                height: 100%;
+                font-size: 1.2rem;
+                margin-right: 24px;
+            }
+            button{
+                font-size: calc_width(25);
+            }
+            .follow_options
+            {
+                font-size: 0.8rem !important;
+                
+            }
+            .secondary_btn
+            {
+                height: 100%;   
+                font-size: 0.875rem !important;
+                color: black;
+                padding: 5px 30px;
+                border: solid 0.1px rgba(0,0,0,0.2);
+                border-radius: 3px;
+                margin-right: 8px;
+            }
+        
+            }
+            .profile_number{
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                .number_holder{
+                    text-align: center;
+                    .number{
+                        font-size: 0.8375rem;
+                        font-weight: bold;
+                    }
+                    .type{
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media only screen and (max-width : 576px){
+    .profile_container{
+        width: 80%;
+        margin: auto;
+        margin-top: 24px;
+        .action_contain
+        {
+            justify-content: left;
+            .prolile_header{
+            justify-content: left;
+            flex-direction: column;
+            padding-bottom: 16px;
+            align-items: flex-start;
+            width: 100%;
+            .name{
+                height: 100%;
+                font-size: 0.8rem;
+                margin-right: 24px;
+                padding-bottom: 16px;
+                font-weight: bold;
+            }
+            button{
+                font-size: calc_width(25);
+            }
+            div{
+                width: 100%;
+                .follow_options
+                {
+                font-size: 0.7rem !important;
+                width: 100%;
+                }
+            }
+            .secondary_btn
+            {
+                // height: 100%;   
+                // font-size: 0.875rem !important;
+                // color: black;
+                // padding: 5px 30px;
+                // border: solid 0.1px rgba(0,0,0,0.2);
+                // border-radius: 3px;
+                // margin-right: 8px;
+            }
+        
+            }
+            .profile_number{
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                .number_holder{
+                    text-align: center;
+                    .number{
+                        font-size: 0.8375rem;
+                        font-weight: bold;
+                    }
+                    .type{
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+            .bio{
+            font-weight: unset;
+               font-size: 0.8375rem;
+            }
+        }
+    }
+
+}
+
+
+@media only screen and (max-width : 500px){
+    .profile_container{
+        width: 90%;
+        margin: auto;
+        margin-top: 24px;
+        .profile_wrapper{
+            .pro_header{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        .action_contain
+        {
+           
+            .prolile_header{
+  
+            flex-direction: column;
+            padding-bottom: 16px;
+            align-items: center;
+            width: 100%;
+            .name{
+               text-align: center;
+                font-size: 1rem;
+                margin:0;
+                padding:0;
+                font-weight: bold;
+            }
+            button{
+                font-size: calc_width(25);
+            }
+            div{
+                width: 100%;
+                .follow_options
+                {
+                    font-size: 0.6rem !important;
+                    margin-top: 10px;
+                    width: 100%;
+                }
+            }
+            .secondary_btn
+            {
+                // height: 100%;   
+                // font-size: 0.875rem !important;
+                // color: black;
+                // padding: 5px 30px;
+                // border: solid 0.1px rgba(0,0,0,0.2);
+                // border-radius: 3px;
+                // margin-right: 8px;
+            }
+        
+            }
+            .profile_number{
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                .number_holder{
+                    text-align: center;
+                    .number{
+                        font-size: 0.85rem;
+                        font-weight: bold;
+                    }
+                    .type{
+                        font-size: 0.7rem;
+                    }
+                }
+            }
+            .bio{
+            font-weight: unset;
+               font-size: 0.8375rem;
+               text-align: center;
+            }
+        }
+    }
+
 }

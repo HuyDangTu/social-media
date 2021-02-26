@@ -301,8 +301,8 @@ class ProfileSettings extends Component {
             <Layout>
                 <div className="setting_container">
                     <div className="setting_wrapper">
-                        <div className="row">
-                            <div className="col-xl-3 col-md-3 col-sm-3 col-3 setting_options">
+                        <div className="row no-gutters">
+                            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-2 setting_options">
                                 {
                                     this.state.settingState == 'profile' ?
                                         <Button className="options" onClick={() => this.handleSetting('profile')}><User size={20} strokeWidth={1} color="black" /><p>Thông tin</p></Button>
@@ -318,9 +318,9 @@ class ProfileSettings extends Component {
                             </div>
                             {
                                 this.state.settingState == 'profile' ?
-                                    <form className="col-xl-9 col-md-9 col-sm-9 col-9 setting_detail" onSubmit={(event) => this.submitForm(event)}>
+                                    <form className="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail" onSubmit={(event) => this.submitForm(event)}>
                                         <div className="row setting_type">
-                                            <div className="col-xl-3 col-md-3 col-sm-3 col-3 label">
+                                            <div className="col-xl-3 col-md-3 col-sm-3 col-4 label">
                                                 {
                                                     this.state.loading ?
                                                         <div class="overlay"><CircularProgress style={{ color: '#5477D5' }} thickness={7} />
@@ -331,7 +331,7 @@ class ProfileSettings extends Component {
                                                 }
                                                 <img src={this.props.user.userData.avt}></img>
                                             </div>
-                                            <div className="col-xl-9 col-md-9 col-sm-9 col-9 field">
+                                            <div className="col-xl-9 col-md-9 col-sm-9 col-8 field">
                                                 <h2>{this.props.user.userData.userName}</h2>
                                                 <label className="custom-file-upload">
                                                     <input type="file" onChange={this.onFileChange} />
@@ -436,10 +436,10 @@ class ProfileSettings extends Component {
                                         </div>
                                     </form>
                                     :
-                                    <form className="col-xl-9 col-md-9 col-sm-8 col-8 setting_detail" onSubmit={(event) => this.changePassword(event)}>
+                                    <form className="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail" onSubmit={(event) => this.changePassword(event)}>
                                        
                                         <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
+                                            <div className="col-xl-3 col-md-3 label">
                                                 <h3>Mật khẩu</h3>
                                             </div>
                                             <div className="col-xl-9 col-md-9 field">

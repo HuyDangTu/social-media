@@ -14,16 +14,15 @@
     font-family: 'Montserrat', sans-serif;
 }
 .setting_container{
-    
-        width: 100%;
-        margin-top: 24px;
+    width: 100%;
+    margin-top: 24px;
 }
 .disable{
     opacity: 0.6 !important;
-    border: none;
+    border: none !important;
 }
 .setting_options{
-    border: solid 0.5px rgba(0,0,0,0.2);
+    border: solid 0.5px rgb(233, 233, 233);
     padding: 0px;
     .options{
         justify-content: left;
@@ -140,30 +139,41 @@
 }
 }
 
-@media screen and (max-width : 1024px){
-     .setting_options{
-        .options{
-            span{
-                display: flex;
-                flex-direction: column;
-                p{
-                    margin-top: 10px;
-                }
-            }
+@media screen and (max-width : 1200px){
+    .setting_container{
+        .setting_wrapper{
+            width: 90%;
         }
     }
+    
 }
 
 @media screen and (max-width : 768px){
-    .setting_options{
-        .options{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            p{
-                display: none;
+    .setting_container{
+        margin: 0;
+
+        .setting_wrapper{
+            width: 100%;
+            border-bottom: 1px solid rgb(238, 238, 238);
+             .setting_detail{
+                border: none;
             }
-          
+        }
+    }
+   
+    .setting_options{
+        border:none;
+        border-right: 1px solid rgb(238, 238, 238);
+        .options{
+            .MuiButton-label{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    margin-top: 5px;
+                }
+            }
         }
     }
     .setting_wrapper{
@@ -179,4 +189,170 @@
         }
     }
 }
+
+@media screen and (max-width : 576px){
+    .setting_options{
+        .options{
+            .MuiButton-label{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    display:none;
+                }
+            }
+        }
+    }
+    .setting_wrapper{
+        .setting_detail{
+            .setting_type{
+                .label{
+                   justify-content: flex-start;
+                }
+                .field{
+                  
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width : 476px){
+    .setting_options{
+        .options{
+            .MuiButton-label{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    display:none;
+                }
+            }
+        }
+    }
+    .setting_wrapper{
+        .setting_detail{
+            .setting_type{
+                .label{
+                   justify-content: flex-start;
+                }
+                .field{
+                  
+                }
+                 img{
+                width: 30px;
+                height: 30px;
+                object-fit: cover;
+                border-radius: 30px;
+                }
+                h3{
+                    font-size: 16px;
+                }
+                .overlay{
+                    position: absolute;
+                    justify-content: center;
+                    align-items: center;
+                    width: 60px;
+                    height:60px;
+                    padding: 10px 5px 5px 10px;
+                    background: rgba(0,0,0,0.3);
+                    border-radius: 30px;
+                }
+            }
+        }
+//         .setting_detail{
+//     border: solid 0.5px rgba(0,0,0,0.2);
+//     border-left:none;
+//     padding: 32px;
+//     .setting_type{
+//         margin-bottom: 16px;
+//         align-items: flex-start;
+//         .label{
+//             display: flex;
+//             justify-content:flex-end;
+//             img{
+//                 width: 60px;
+//                 height: 60px;
+//                 object-fit: cover;
+//                 border-radius: 30px;
+//             }
+//             h3{
+//                 font-size: 16px;
+//             }
+//             .overlay{
+//                 position: absolute;
+//                 justify-content: center;
+//                 align-items: center;
+//                 width: 60px;
+//                 height:60px;
+//                 padding: 10px 5px 5px 10px;
+//                 background: rgba(0,0,0,0.3);
+//                 border-radius: 30px;
+//             }
+           
+//         }
+//         // .flexbox
+//         // {
+//         //     display: flex !important;
+//         //     align-items: flex-start !important;
+//         // }
+//         .field{
+//             justify-content: right;
+           
+//             h2{
+//                 font-size: 20px;
+//             }
+//             h5{
+//                 width: fit-content;
+//                 display: flex;
+//                 font-size: 14px;
+//                 font-weight: 500;
+//             }
+//             // width: 100%;
+//             // display: flex;
+//             // justify-content: space-between;
+//             // margin-bottom: 20px;
+//             .formField_container{
+//                 width: 100%;
+
+//                 input{
+//                     padding: 5px;
+//                     width: 100%;
+//                     border-radius: 5px;
+//                     border: 1px solid #d4d4d4;
+//                 }
+//                 textarea{
+//                     padding: 5px;
+//                     width: 100%;
+//                     border-radius: 5px;
+//                     border: 1px solid #d4d4d4;
+//                 }
+//             }
+//             .send_btn{
+//                 padding:8px;
+//                 background-color: #7166F9;
+//                 color: white;
+//             }
+//             input[type="file"] {
+//                 display: none;
+//             }
+//             .custom-file-upload {
+               
+//                 display: inline-block;
+//                 cursor: pointer;
+//             }
+//             h6{
+//                 color: #7166F9;
+//                 font-size: 16px;
+//             }
+//         } 
+        
+//     }   
+// }
+    }
+}
+
+
 

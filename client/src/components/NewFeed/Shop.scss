@@ -14,19 +14,48 @@
 @mixin  text-font {
     font-family: 'Montserrat', sans-serif;
 }
-@media only screen and (max-width : 992px){
-    .shop_container{
-        width: 80%;
-        margin: auto;
-    }
-}
-@media only screen and (min-width : 992px){
-    .shop_container{
+
+.shop_container{
         width: 70%;
         margin: auto;
+        .shop_wrapper{
+            .button_create{
+                display: none;        
+                .wrapper{   
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-top: 20px;
+                    .title{
+                        color: black;
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+                    .craete_post_button{
+                        background: $primaryColor;
+                        padding: 10px;
+                        width: 20vw;
+                        border-radius: 5px;
+                        display: flex;
+                        justify-content: space-around;    
+                        .craete_button_container{
+                            display: flex;
+                            align-items: center;
+                            img{
+                                width: 20px;
+                            }
+                            a{
+                                padding-left: 10px;
+                                color: white;
+                                font-size: 15px;
+                                font-weight: 400;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-}
-
 .shop_options{
     display: flex;
     justify-content: space-between;
@@ -41,26 +70,32 @@
         }
     }
 }
-.craete_post_button{
-    background: $primaryColor;
-    margin-top: 20px;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-around;    
-    .craete_button_container{
-        display: flex;
-        align-items: center;
-        img{
-            width: 25px;
+ .shop_container{
+    .shop_wrapper{
+      .shop_left{
+        .craete_post_button{
+            background: $primaryColor;
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-around;    
+            .craete_button_container{
+                display: flex;
+                align-items: center;
+                img{
+                    width: 25px;
+                }
+                a{
+                    padding-left: 10px;
+                    color: white;
+                    font-size: 18px;
+                    font-weight: 400;
+                }
+            }
         }
-        a{
-            padding-left: 10px;
-            color: white;
-            font-size: 18px;
-            font-weight: 400;
-        }
+      }
     }
 }
 .load_more_container{
@@ -86,3 +121,109 @@
        color: white;
     }
 }
+
+
+@media only screen and (max-width : 1200px){
+    .shop_container{
+        width: 90%;
+        margin: auto;
+        .shop_wrapper{
+              .button_create{   
+                  
+              }
+        }
+    }
+}
+
+@media only screen and (max-width : 992px){
+    .shop_container{
+        width: 90%;
+        margin: auto;
+        .shop_wrapper{
+            .shop_left{
+                display: none;
+            }
+            .button_create{   
+                 display: block;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : 768px){
+    .shop_container{
+        width: 90%;
+        margin: auto;
+        .shop_wrapper{
+            .shop_left{
+                display: none;
+            }
+            .button_create{   
+                    .wrapper{   
+                    .title{
+                    }
+                    .craete_post_button{
+                        width: 30vw;
+                        .craete_button_container{
+                            img{
+                                
+                            }
+                            a{
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width : 576px){
+    .shop_container{
+        width: 90%;
+        margin: auto;
+        .shop_wrapper{
+            .shop_left{
+                display: none;
+            }
+            .button_create{   
+                  display: block;
+              }
+        }
+    }
+}
+
+@media only screen and (max-width : 476px){
+    .shop_container{
+        width: 90%;
+        margin: auto;
+        .shop_wrapper{
+            .shop_left{
+                display: none;
+            }
+            .button_create{   
+                    .wrapper{   
+                    .title{
+                    }
+                    .craete_post_button{
+                        width: 40vw;
+                        .craete_button_container{
+                            img{
+                                
+                            }
+                            a{
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+   
+

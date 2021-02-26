@@ -136,7 +136,18 @@ class Newfeed extends Component {
                 <div className="shop_container" onScroll={(event) => this.handleScroll(event)}>
                     <div className="shop_wrapper">
                         <div className="row">
-                        <div className="col-xl-8 shop_right">
+                            <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 button_create">
+                                <div className="wrapper">
+                                    <div className="title">New feed</div>
+                                    <div className="craete_post_button">
+                                        <div className="craete_button_container">
+                                            <img src={require("../../asset/headerIcon/create_icon2x.png")} />
+                                            <Link to="/post/create_post">Thêm bài viết</Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 shop_right">
                             <div className="right">
                                     {/* <Story 
                                         list={products.storyList}
@@ -176,21 +187,21 @@ class Newfeed extends Component {
                                     }
                                 </div>
                             </div>
-                        <div className="col-xl-4 shop_left">
-                            <div  className="craete_post_button">
+                            <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 shop_left">
+                                <div  className="craete_post_button">
                                 <div className="craete_button_container">
                                     <img src={require("../../asset/headerIcon/create_icon2x.png")}/>
                                     <Link to="/post/create_post">Thêm bài viết</Link>
                                 </div>
                             </div>
-                            <LoadmoreChart 
+                                <LoadmoreChart 
                                 title="Xu hướng"
                                 isShow={this.state.isShow}
                                 topTenTags={products.topTenTag}
                                 loadMore={() => this.LoadmoreTags()}
                                 close={() => this.closeTagChart()}
-                            />
-                        </div> 
+                                />
+                            </div> 
                         </div>
                     </div>
                 </div>
