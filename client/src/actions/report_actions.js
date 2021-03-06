@@ -17,7 +17,7 @@ export function getAll(limit, skip, filter, prevState = []) {
         filter,
     }
     console.log(data);
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/reports/getAll`, data)
+    const request = axios.post(`${REPORT_SERVER}/getAll`, data)
     .then(response => {
         console.log(response.data.reports)
         let newState = [
@@ -74,7 +74,7 @@ export function sort(sortBy, list){
 
 export function getReportDetail(id) {
     const data={id}
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/reports/getDetail`, data)
+    const request = axios.post(`${REPORT_SERVER}/getDetail`, data)
         .then(response => {
             console.log(response.data);
             return response.data
@@ -96,7 +96,7 @@ export function clearDetail(){
 
 export function updateReport(id){
     const data = { id }
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/reports/updateReport`, data)
+    const request = axios.put(`${REPORT_SERVER}/updateReport`, data)
         .then(response => {
             console.log(response.data);
             return response.data
@@ -109,7 +109,7 @@ export function updateReport(id){
 
 export function deletePost(postId,reportId){
     const data = { postId, reportId }
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/reports/delete_post`, data)
+    const request = axios.post(`${REPORT_SERVER}/delete_post`, data)
         .then(response => {
             console.log(response.data);
             return response.data
@@ -122,7 +122,7 @@ export function deletePost(postId,reportId){
 
 export function deleteComment(commentId, reportId) {
     const data = { commentId, reportId }
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/reports/delete_comment`, data)
+    const request = axios.post(`${REPORT_SERVER}/delete_comment`, data)
         .then(response => {
             console.log(response.data);
             return response.data
