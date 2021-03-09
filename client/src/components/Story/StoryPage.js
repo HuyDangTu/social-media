@@ -38,6 +38,31 @@ class StoryPage extends Component {
         })
     }
 
+     nextStory = () =>{
+       if(this.state.nextStoryId!=-1)
+       {
+           console.log("yes");
+            const storyToShow = this.props.products.storyList.find(element => element._id === this.state.nextStoryId);
+            console.log("storyToShow", storyToShow);
+            const index = this.props.products.storyList.indexOf(storyToShow);
+            console.log("index", index);
+            let nextStoryId = -1;
+            if (index < this.props.products.storyList.length - 1) {
+                nextStoryId = this.props.products.storyList[index + 1]._id;
+                console.log("nextStoryId", nextStoryId);
+            }
+            this.setState({
+                storyToShow: storyToShow,
+                nextStoryId: nextStoryId,
+                currentDisplay: index,
+            });
+            // ()=> console.log("nextstory",this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId)
+        }else{
+             this.props.history.push(`/newfeed`);
+             console.log("no");
+        }
+    }
+ 
     storyCreate = (obj) => {
         return obj.stories.map((item)=>{
             return {
@@ -45,26 +70,8 @@ class StoryPage extends Component {
                 header: item.dateDifference
             }
         })
-    }
-
-    nextStory = () =>{
-       if(this.state.nextStoryId!=-1)
-       {
-                const storyToShow = this.props.products.storyList.find(element => element._id === this.state.nextStoryId);
-                const index = this.props.products.storyList.indexOf(storyToShow);
-                let nextStoryId = -1;
-                if (index < this.props.products.storyList.length - 1) {
-                    nextStoryId = this.props.products.storyList[index + 1]._id;
-                }
-                this.setState({
-                    storyToShow: storyToShow,
-                    storiId: this.state.nextStoryId,
-                    currentDisplay: index,
-                });
-                console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
-        }
-    }
-
+    } 
+   
     render() {
 
         return (
@@ -81,15 +88,15 @@ class StoryPage extends Component {
                     </div>
                     <div className="story_wrapper">
                         {
-                                <Stories
-                                    stories={this.storyCreate(this.state.storyToShow)}
-                                    defaultInterval={3000}
-                                    width={350}
-                                    height={560}
-                                    currentIndex={0}
-                                    onAllStoriesEnd={() => this.nextStory()}
-                                />
-                               
+                            <Stories
+                                stories={this.storyCreate(this.state.storyToShow)}
+                                defaultInterval={3000}
+                                width={350}
+                                height={560}
+                                isPaused={false}
+                                currentIndex={0}
+                                onAllStoriesEnd={() => this.nextStory()}
+                            />
                         }
                     </div>
                 </div>

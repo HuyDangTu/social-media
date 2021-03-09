@@ -13,6 +13,7 @@ import LoadmoreChart from '../LoadmoreChart/index';
 import { Link, withRouter } from 'react-router-dom';
 import Search from '../Search/index';
 import LoadingCard from '../ultils/LoadingCard/index';
+
 class Newfeed extends Component {
 
     state = {
@@ -149,10 +150,10 @@ class Newfeed extends Component {
                             </div> 
                             <div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 shop_right">
                             <div className="right">
-                                    {/* <Story 
+                                    <Story 
                                         list={products.storyList}
                                         setDisplayIndex={(index)=>this.setDisplayIndex(index)}
-                                    /> */}
+                                    />
                                     <div className="shop_options">
                                         {
                                             /* <div>Bài viết mới</div>

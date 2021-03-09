@@ -94,8 +94,6 @@ const post = require("./models/post");
 const { sendEmail } = require('./ultils/mail/index');
 const user = require("./models/user");
 
-
-
 // ============== API ===============
 
 //TEST
@@ -1619,9 +1617,9 @@ app.get('/api/story/getAll', auth, (req, res) => {
         {
             $match: { "postedBy": { "$in": req.user.followings } }
         },
-        {
-            $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
-        },
+        // {
+        //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+        // },
         {
             "$project": {
                 "_id": 1,
@@ -1655,7 +1653,7 @@ app.get('/api/story/getAll', auth, (req, res) => {
                     "dateDifference": 1,
                 },
             }
-        }], function (err, stories) {
+        },{ "$sort": { "stories.createdAt": -1 } }], function (err, stories) {
             if (err) return res.status(400).json(err);
             res.status(200).json(stories);
         }
@@ -2096,18 +2094,6 @@ app.post('/api/users/changePassword', auth, (req, res) => {
 })
 
 
-//---------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------
-if(process.env.NODE_ENV === 'production'){
-    const path = require('path');
-    app.get('/*',(req,res)=>{
-        res.sendfile(path.resolve(__dirname,'../client','build','index.html'))
-    })
-}
-
-// app.use(function (req, res, next) {
-//     res.status(404).send('Unable to find the requested resource!');
-// });
 const port = process.env.PORT || 3002;
 app.listen(port, () => {
     {
