@@ -1783,8 +1783,7 @@ function getReport(postId, userHiddenPost) {
     ], function (err, post) {
         if (err) return {}
         return post[0];
-    }
-    )
+    })
     return post;
 }
 
@@ -2094,13 +2093,21 @@ app.post('/api/users/changePassword', auth, (req, res) => {
 })
 
 
+app.put('/api/story/view', auth, (req, res) => {
+    Story.findByIdAndUpdate(req.body.id, {
+        $push: { viewedBy: req.user._id }
+    }, {
+        new: true
+    }).exec((err, story) => {
+        if (err) res.status(400).json(err);
+        res.status(200).json({story});
+    })
+})
+
+
 const port = process.env.PORT || 3002;
 app.listen(port, () => {
     {
         console.log(`Server is running at ${port}`);
     }
 })
-
-
-
-

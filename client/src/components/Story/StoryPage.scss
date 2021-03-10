@@ -3,12 +3,12 @@
 .storyPage{
     width: 100%;
     height: 100%;
+    margin: 0 auto;
     background: rgba($color: #000000, $alpha: 0.7);
     position: fixed;
     z-index: 20;
     top: 0;
     left:0;
-
     .story_add_button{
         .avatar{
             position: relative;
@@ -95,18 +95,17 @@
             }
         }
     }
-
     .current_story{
-        width: 80%;
-        margin: 0 auto;
+        width: 100%;
+        height: 100%;
         border-radius: 0px 0px 5px 5px;
         .info{
         display: flex;
         align-items: center;
         justify-content: flex-start;
         .user_avt{
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             img{
                 width: 100%;
@@ -123,10 +122,11 @@
         }
     }
     .story_wrapper{
-        height: 650px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        width: 100%;
+        height: 100%;
         box-sizing: border-box;
+        display: flex;
+        justify-content: center;
         img{
             width: 100%;
             height: 100%;

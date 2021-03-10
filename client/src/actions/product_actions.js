@@ -28,7 +28,8 @@ import {
     UPDATE_POST,
     UPDATE_POST_DETAIL,
     SAVE_DETAIL,
-    SAVE_POST
+    SAVE_POST,
+    VIEW_STORY
 } from './types';
 
 export function getPostDetail(id){
@@ -407,6 +408,21 @@ export function getStory(){
 
     return {
         type: GET_STORY,
+        payload: request,
+    }
+
+}
+
+export function viewStory(id){
+    let data={id}
+    console.log(id)
+    const request = axios.put(`${STORY_SERVER}/view`,data)
+        .then(response => {
+            console.log(response.data);
+            return response.data
+        })
+    return {
+        type: VIEW_STORY,
         payload: request,
     }
 

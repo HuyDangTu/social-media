@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import './StoryPage.scss';
 import { connect } from 'react-redux';
 import Stories from 'react-insta-stories';
-import { getStory } from '../../actions/product_actions';
+import { getStory, viewStory } from '../../actions/product_actions';
 import { withRouter } from 'react-router-dom';
+import storyHeader from './storyHeader';
 
 class StoryPage extends Component {
 
@@ -12,6 +13,7 @@ class StoryPage extends Component {
         currentDisplay: 0,
         storyToShow: null,
         nextStoryId: "",
+        currentIndex: 0,
     }
 
     loadingStory = {
@@ -38,7 +40,7 @@ class StoryPage extends Component {
         })
     }
 
-     nextStory = () =>{
+    nextStory = () =>{
        if(this.state.nextStoryId!=-1)
        {
            console.log("yes");
@@ -55,8 +57,8 @@ class StoryPage extends Component {
                 storyToShow: storyToShow,
                 nextStoryId: nextStoryId,
                 currentDisplay: index,
+                currentIndex: 0,
             });
-            // ()=> console.log("nextstory",this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId)
         }else{
              this.props.history.push(`/newfeed`);
              console.log("no");
@@ -67,34 +69,41 @@ class StoryPage extends Component {
         return obj.stories.map((item)=>{
             return {
                 url: item.image,
-                header: item.dateDifference
+                header: {
+                   profileImage: this.state.storyToShow.postedBy[0].avt,
+                   heading: this.state.storyToShow.postedBy[0].userName,
+                   subheading:  "12h"
+                }
             }
         })
     } 
+
+    viewStory = (items,currentIndex) =>{
+        console.log(items);
+        this.props.dispatch(viewStory(this.state.storyToShow.stories[currentIndex]._id))
+    }
+
+    increaseCurrentIndex = () =>{
+
+        this.setState({currentIndex: this.state.currentIndex+1});
+    }
    
     render() {
-
         return (
             this.state.storyToShow ?
             <div className="storyPage">
                 <div className="current_story">
-                    <div className="info">
-                        <div className="user_avt">
-                            <img src={this.state.storyToShow.postedBy[0].avt} />
-                        </div>
-                        <div className="user_info">
-                            <span className="user_name">{this.state.storyToShow.postedBy[0].userName}</span>
-                        </div>
-                    </div>
                     <div className="story_wrapper">
                         {
                             <Stories
                                 stories={this.storyCreate(this.state.storyToShow)}
-                                defaultInterval={3000}
-                                width={350}
-                                height={560}
+                                defaultInterval={2000}
+                                width="26rem"
+                                height="100%"
                                 isPaused={false}
                                 currentIndex={0}
+                                onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
+                                onStoryEnd={()=>{this.increaseCurrentIndex()}}
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
                         }

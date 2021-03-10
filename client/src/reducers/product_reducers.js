@@ -25,6 +25,7 @@ import {
     GET_STORY,
     UPDATE_POST,
     UPDATE_POST_DETAIL,
+    VIEW_STORY,
 } from '../actions/types';
 
 
@@ -203,11 +204,25 @@ export default function (state = {}, action) {
                 ...state,
             }
         }
-        case GET_STORY: {
-            return {
-                ...state,
-                storyList: action.payload
-            }
+       case GET_STORY: {
+           return {
+               ...state,
+                storyList: action.payload, 
+           }
+       }
+        case VIEW_STORY: {
+            // let newStoryList = [...state.storyList]
+            // newStoryList = newStoryList.map(item => {
+            //     if (item._id == action.payload.story._id) {
+            //         return action.payload.story
+            //     } else {
+            //         return item
+            //     }
+            // })
+            // return {
+            //     ...state,
+            //     storyList: newStoryList,
+            // }
         }
 
         default: return state;
