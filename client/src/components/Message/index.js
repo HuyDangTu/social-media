@@ -7,7 +7,7 @@ import { getMessage, getConversation, sendMessage, seenMessage, sendimg } from '
 import './Message.scss';
 import { update, generateData } from '../ultils/Form/FormActions';
 import { Link, withRouter } from 'react-router-dom';
-import { GridDots, LayoutList, Edit, Settings, LayoutGrid, Tag, Dots, CircleX, Heart, Message2, Bookmark, Pencil, Search, Point, Photo, Sticker, Send, Ghost } from 'tabler-icons-react'
+import { Settings,  Dots,  Heart,  Pencil, Search,Photo, Sticker, Send, Ghost } from 'tabler-icons-react'
 import Pusher from 'pusher-js'
 import { Button, LinearProgress } from '@material-ui/core';
 import Mess from './mess';
@@ -368,16 +368,11 @@ class Message extends Component {
                                           <input value={this.state.mess.sentBy} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input> */}
                                             <input id="description_textarea" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
                                             <div className="action_icon" onClick={this.sendHeartIcon}>
-
                                                 <Heart size={32} strokeWidth={1} color="black"></Heart>
-
                                             </div>
                                             <div className="action_icon" onClick={this.GifIconClick}>
                                                 <Ghost size={32} strokeWidth={1} color="black"> </Ghost>
-
                                             </div>
-
-
                                         </div>
                                         <div className="img_upload">
                                             <label className="custom-file-upload">
