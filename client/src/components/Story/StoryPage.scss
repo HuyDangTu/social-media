@@ -127,12 +127,20 @@
             }
         }
     }
-
     .reply-wrapper{
         transform: translatex(100%);
         visibility: hidden;
         transition: all 0.25s linear;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        // form{
+        //     position: absolute;
+        //     bottom: 0;
+        // }
         .chat_box{
+           
             padding: 16px;
             display: flex;
             align-items: center;

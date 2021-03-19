@@ -7,6 +7,8 @@ import { withRouter } from 'react-router-dom';
 import storyHeader from './storyHeader';
 import {  Heart, Photo, Sticker, Send, Ghost } from 'tabler-icons-react'
 import { Picker } from 'emoji-mart'
+import Reaction from '../Reaction/index';
+
 class StoryPage extends Component {
 
     state={
@@ -127,6 +129,7 @@ class StoryPage extends Component {
                     </div>
                 </div>
                 <div className="reply-wrapper">
+                            <Reaction/>
                         <form onSubmit={(event) => this.submitForm(event)}>
                             <div className="chat_box">
                             <div className="chat_area">
@@ -146,7 +149,7 @@ class StoryPage extends Component {
                                 </label>
                             </div> */}
                             <div className="emoji_icon">
-                                <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>\
+                                <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
                                 {
                                     this.state.emojiToggle ?
                                         <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
