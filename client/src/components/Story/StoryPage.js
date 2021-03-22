@@ -98,7 +98,6 @@ class StoryPage extends Component {
 
         this.setState({currentIndex: this.state.currentIndex+1});
     }
-   
     render() {
         return (
             this.state.storyToShow ?

@@ -1653,7 +1653,7 @@ app.get('/api/story/getAll', auth, (req, res) => {
                     "dateDifference": 1,
                 },
             }
-        },{ "$sort": { "stories.createdAt": -1 } }], function (err, stories) {
+        },{ "$sort": { "stories.dateDifference": -1 } }], function (err, stories) {
             if (err) return res.status(400).json(err);
             res.status(200).json(stories);
         }
