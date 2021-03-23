@@ -4,7 +4,20 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
 class Story extends Component {
-
+  
+    isViewed(item){
+        let res = true;
+        item.stories.map(story=>{
+            
+            //console.log(this.props.user.userData._id, story.viewedBy)
+            if(!story.viewedBy.includes(this.props.user.userData._id)){
+                console.log("false")
+                res =  false;
+            }
+        
+        })
+        return res;
+    }
     render() {
         console.log(this.props.list);
         return (
@@ -26,7 +39,7 @@ class Story extends Component {
                                 this.props.list.map((item,index) =>{
                                     return (
                                         <li onClick={() => this.props.history.push(`/story/${item._id}`)} className="has-story">
-                                            <div className="story_wrapper">
+                                            <div className={ this.isViewed(item) ? "story_wrapper_actived":"story_wrapper"}>
                                                 <img src={item.postedBy[0].avt}/>
                                             </div>
                                             <span className="user">{item.postedBy[0].userName}</span>

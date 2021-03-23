@@ -95,7 +95,6 @@ class StoryPage extends Component {
     }
 
     increaseCurrentIndex = () =>{
-
         this.setState({currentIndex: this.state.currentIndex+1});
     }
     render() {
@@ -121,7 +120,7 @@ class StoryPage extends Component {
                                 isPaused={false}
                                 currentIndex={0}
 
-                                onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
+                                //onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
                                 onStoryEnd={()=>{this.increaseCurrentIndex()}}
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
