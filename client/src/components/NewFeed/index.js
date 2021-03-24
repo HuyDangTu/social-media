@@ -54,7 +54,7 @@ class Newfeed extends Component {
             this.state.tagSkip,
             this.state.tagLimit,
         ));
-        this.props.dispatch(getStory());
+        this.props.dispatch(getStory(this.props.user.userData._id));
         window.addEventListener("scroll", this.handleScroll);
     }
 

@@ -7,9 +7,8 @@ class Story extends Component {
   
     isViewed(item){
         let res = true;
+        console.log(item);
         item.stories.map(story=>{
-            
-            //console.log(this.props.user.userData._id, story.viewedBy)
             if(!story.viewedBy.includes(this.props.user.userData._id)){
                 console.log("false")
                 res =  false;
