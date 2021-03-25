@@ -13,7 +13,6 @@ class Story extends Component {
                 console.log("false")
                 res =  false;
             }
-        
         })
         return res;
     }

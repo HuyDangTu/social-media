@@ -1612,43 +1612,6 @@ app.post('/api/users/searchTag', auth, (req, res) => {
     })
 })
 
-function isViewed(item,id){
-    console.log("user",typeof String(id));
-    let res = false;
-   
-    for(i=0;i<item.stories.length;i++){
-        if(item.stories[i].viewedBy.length == 0){
-            console.log("empty");
-            return false;
-        }
-        else {
-            console.log(item.stories[i].viewedBy[0])
-            console.log("có chứa",item.stories[i].viewedBy.indexOf("5f8fa136d1fa3f28443d9a74"));
-            if(item.stories[i].viewedBy.indexOf(id) >= 0 ){
-                //console.log("yes");
-                res =  true;
-                break;
-            }else{
-                //console.log("no");
-            }
-        }
-    }
-    
-    return res;
-    // item.stories.map(story=>{
-    //     console.log("here-----------------",story)
-      
-    // })
-}
-
-function sortStory(stories,id){
-    stories.sort((x, y) => {
-        console.log((isViewed(x,id) == isViewed(y,id)) ? 0 : isViewed(x,id) ? -1 : 1)
-        return (isViewed(x,id) == isViewed(y,id)) ? 0 : isViewed(x,id) ? -1 : 1;
-    })
-    //console.log("hereeeeeeeeeeeeeeeeee",stories);
-    return stories;
-}
 
 app.get('/api/story/getAll', auth, (req, res) => {
     Story.aggregate([
@@ -1693,7 +1656,6 @@ app.get('/api/story/getAll', auth, (req, res) => {
             }
         },{"$sort": {"stories.createdAt": -1 }}], function (err, stories) {
             if (err) return res.status(400).json(err);
-            sortStory(stories,req.user._id);
             res.status(200).json(stories);
         }
     )

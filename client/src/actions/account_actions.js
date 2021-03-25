@@ -8,7 +8,6 @@ import {
     GET_ACCOUNT,
 } from './types';
 
-
 export function getAll(limit, skip, prevState = []) {
     const data = {
         skip,

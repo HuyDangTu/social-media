@@ -119,7 +119,6 @@ class StoryPage extends Component {
                                 height="100%"
                                 isPaused={false}
                                 currentIndex={0}
-
                                 //onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
                                 onStoryEnd={()=>{this.increaseCurrentIndex()}}
                                 onAllStoriesEnd={() => this.nextStory()}

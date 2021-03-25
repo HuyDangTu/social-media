@@ -411,7 +411,6 @@ export function getStory(id){
         type: GET_STORY,
         payload: request,
     }
-
 }
 
 export function viewStory(id){
@@ -429,16 +428,15 @@ export function viewStory(id){
 
 }
 
-
 function isViewed(item,id){
     // console.log("user",typeof String(id));
     let res = false;
    
     for(let i=0;i<item.stories.length;i++){
         if(item.stories[i].viewedBy.length == 0){
-            // console.log("empty");
-            return false;
+            //console.log("empty");
             //break;
+            return false;
         }
         else {
             // console.log(item.stories[i].viewedBy[0])
@@ -449,14 +447,11 @@ function isViewed(item,id){
             }
         }
     }
-    
     return res;
 }
 
 function sortStory(stories,id){
     stories.sort((x, y) => {
-        console.log("x",isViewed(x,id))
-        console.log("y",isViewed(y,id))
         return (isViewed(x,id) == isViewed(y,id)) ? 0 : isViewed(x,id) ? 1 : -1;
     })
     return stories;
