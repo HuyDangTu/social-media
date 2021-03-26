@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component}  from 'react';
 import './StoryPage.scss';
 import { connect } from 'react-redux';
 import Stories from 'react-insta-stories';
 import { getStory, viewStory } from '../../actions/product_actions';
 import { withRouter } from 'react-router-dom';
-import storyHeader from './storyHeader';
 import {  Heart, Photo, Sticker, Send, Ghost } from 'tabler-icons-react'
 import { Picker } from 'emoji-mart'
 import Reaction from '../Reaction/index';
@@ -23,6 +22,7 @@ class StoryPage extends Component {
         url: "https://nguahanoi.vn/wp-content/themes/gv-coporation/images/default.jpg",
         header: ""
     }
+   
     pauseStory(){
         const reply = document.querySelector(".reply-wrapper");
         if (reply.classList.contains("displayed")){
@@ -35,7 +35,7 @@ class StoryPage extends Component {
     componentDidMount(){
         const id = this.props.match.params.id;
         this.setState({storiId:id});
-        this.props.dispatch(getStory()).then(()=>{
+        this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
             const storyToShow = this.props.products.storyList.find(element => element._id === id);
             const index = this.props.products.storyList.indexOf(storyToShow);
             let nextStoryId = -1;
@@ -63,6 +63,8 @@ class StoryPage extends Component {
             if (index < this.props.products.storyList.length - 1) {
                 nextStoryId = this.props.products.storyList[index + 1]._id;
                 console.log("nextStoryId", nextStoryId);
+            }else{
+                console.log("this is end");
             }
             this.setState({
                 storyToShow: storyToShow,
@@ -75,8 +77,22 @@ class StoryPage extends Component {
              console.log("no");
         }
     }
- 
+    test = (obj) =>{
+        console.log( "testttttttttttttttttt",
+            obj.stories.map((item)=>{
+                return {
+                    url: item.image,
+                    header: {
+                    profileImage: this.state.storyToShow.postedBy[0].avt,
+                    heading: this.state.storyToShow.postedBy[0].userName,
+                    subheading:  "12h"
+                    }
+                }
+            })
+        )
+    }
     storyCreate = (obj) => {
+        this.test(obj);
         return obj.stories.map((item)=>{
             return {
                 url: item.image,
@@ -117,7 +133,7 @@ class StoryPage extends Component {
                                 defaultInterval={2000}
                                 width="26rem"
                                 height="100%"
-                                isPaused={false}
+                                isPaused={true}
                                 currentIndex={0}
                                 //onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
                                 onStoryEnd={()=>{this.increaseCurrentIndex()}}
@@ -126,7 +142,7 @@ class StoryPage extends Component {
                     </div>
                 </div>
                 <div className="reply-wrapper">
-                            <Reaction/>
+                        <Reaction/>
                         <form onSubmit={(event) => this.submitForm(event)}>
                             <div className="chat_box">
                             <div className="chat_area">

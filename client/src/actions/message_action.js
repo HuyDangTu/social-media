@@ -9,7 +9,7 @@ import {
     UPLOAD_IMG
 } from './types';
 export function getMessage(id) {
-    const request = axios.get(`{MESS_SERVER}/get/${id}`)
+    const request = axios.get(`${MESS_SERVER}/get/${id}`)
         .then(response => response.data);
 
     return {

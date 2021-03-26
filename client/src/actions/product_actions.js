@@ -371,7 +371,6 @@ export function deletePost(id) {
 }
 
 export function report(reportData, reportPolicy) {
-    
     let data = {}
     reportData.reportType == "post" ? 
     data = {
@@ -399,14 +398,12 @@ export function report(reportData, reportPolicy) {
 }
 
 export function getStory(id){
-
     const request = axios.get(`${STORY_SERVER}/getAll`)
         .then(response => {
             console.log(response.data);
             return sortStory(response.data,id);
             //return response.data;
         })
-
     return {
         type: GET_STORY,
         payload: request,
@@ -425,34 +422,28 @@ export function viewStory(id){
         type: VIEW_STORY,
         payload: request,
     }
-
 }
 
 function isViewed(item,id){
-    // console.log("user",typeof String(id));
-    let res = false;
-   
+    let res = false;   
     for(let i=0;i<item.stories.length;i++){
         if(item.stories[i].viewedBy.length == 0){
-            //console.log("empty");
-            //break;
-            return false;
+            console.log("Empty", id);
+            res = false;
         }
         else {
-            // console.log(item.stories[i].viewedBy[0])
-            // console.log("có chứa",item.stories[i].viewedBy.indexOf("5f8fa136d1fa3f28443d9a74"));
-            if(item.stories[i].viewedBy.indexOf(id) >= 0 ){
-                res =  true;
-                break;
+            if(item.stories[i].viewedBy.includes(id)){
+                res = true;
             }
         }
     }
+    console.log(item._id,res);
     return res;
 }
 
 function sortStory(stories,id){
     stories.sort((x, y) => {
-        return (isViewed(x,id) == isViewed(y,id)) ? 0 : isViewed(x,id) ? 1 : -1;
+        return (isViewed(x,id) === isViewed(y,id)) ? 0 : isViewed(x,id) ? 1 : -1;
     })
     return stories;
 }
