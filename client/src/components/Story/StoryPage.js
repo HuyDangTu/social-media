@@ -16,6 +16,7 @@ class StoryPage extends Component {
         storyToShow: null,
         nextStoryId: "",
         currentIndex: 0,
+        end: -1,
     }
 
     loadingStory = {
@@ -30,29 +31,35 @@ class StoryPage extends Component {
         }else{
             reply.classList.add("displayed");
         }
-        
     }
+
     componentDidMount(){
         const id = this.props.match.params.id;
-        this.setState({storiId:id});
+        this.setState({storiId:id});   
         this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
             const storyToShow = this.props.products.storyList.find(element => element._id === id);
             const index = this.props.products.storyList.indexOf(storyToShow);
-            let nextStoryId = -1;
+            let end = this.endPosition(this.props.products.storyList);
+            let nextStoryId = -1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
             if (index < this.props.products.storyList.length - 1) {
                 nextStoryId = this.props.products.storyList[index + 1]._id;
             }
             this.setState({ 
                 storyToShow: storyToShow,
                 currentDisplay: index,
-                nextStoryId: nextStoryId
+                nextStoryId: nextStoryId,
+                end: end
             });
             console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
         })
     }
-
+    endPosition = (list) => {
+        return list.findIndex(item => {
+            return item.stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
+        })
+    }
     nextStory = () =>{
-       if(this.state.nextStoryId!=-1)
+       if(this.state.nextStoryId!=-1 && this.state.currentDisplay<this.state.end)
        {
            console.log("yes");
             const storyToShow = this.props.products.storyList.find(element => element._id === this.state.nextStoryId);
@@ -77,6 +84,7 @@ class StoryPage extends Component {
              console.log("no");
         }
     }
+
     test = (obj) =>{
         console.log( "testttttttttttttttttt",
             obj.stories.map((item)=>{
@@ -91,6 +99,7 @@ class StoryPage extends Component {
             })
         )
     }
+
     storyCreate = (obj) => {
         this.test(obj);
         return obj.stories.map((item)=>{
