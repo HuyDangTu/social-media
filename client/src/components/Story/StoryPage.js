@@ -16,6 +16,7 @@ class StoryPage extends Component {
         storyToShow: null,
         nextStoryId: "",
         currentIndex: 0,
+        startIndex: 0,
         end: -1,
     }
 
@@ -41,6 +42,8 @@ class StoryPage extends Component {
             const storyToShow = this.props.products.storyList.find(element => element._id === id);
             const index = this.props.products.storyList.indexOf(storyToShow);
             let end = this.endPosition(this.props.products.storyList);
+            let startIndex = this.startIndex(storyToShow.stories)
+            console.log(startIndex);
             let nextStoryId = -1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
             if (index < this.props.products.storyList.length - 1) {
                 nextStoryId = this.props.products.storyList[index + 1]._id;
@@ -49,6 +52,7 @@ class StoryPage extends Component {
                 storyToShow: storyToShow,
                 currentDisplay: index,
                 nextStoryId: nextStoryId,
+                startIndex: startIndex,
                 end: end
             });
             console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
@@ -60,7 +64,7 @@ class StoryPage extends Component {
         })
     }
     startIndex = (stories) => {
-        return stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
+        return stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)});
     }
     nextStory = () => {
         if(this.state.nextStoryId!=-1)
@@ -70,6 +74,7 @@ class StoryPage extends Component {
             if(index == this.state.end){
                 this.props.history.push(`/newfeed`);
             }else{
+                let startIndex = this.startIndex(storyToShow.stories)
                 let nextStoryId = -1;
                 if (index < this.props.products.storyList.length - 1) {
                     nextStoryId = this.props.products.storyList[index + 1]._id;
@@ -79,6 +84,7 @@ class StoryPage extends Component {
                     storyToShow: storyToShow,
                     nextStoryId: nextStoryId,
                     currentDisplay: index,
+                    startIndex: startIndex,
                     currentIndex: 0,
                 });
             }
@@ -116,13 +122,13 @@ class StoryPage extends Component {
         })
     } 
 
-    viewStory = (items,currentIndex) =>{
+    viewStory = (items,index) =>{
         console.log(items);
-        this.props.dispatch(viewStory(this.state.storyToShow.stories[currentIndex]._id))
+        this.props.dispatch(viewStory(this.state.storyToShow.stories[index]._id))
     }
 
-    increaseCurrentIndex = () =>{
-        this.setState({currentIndex: this.state.currentIndex+1});
+    increaseStartIndex = () =>{
+        this.setState({startIndex: this.state.startIndex+1});
     }
     render() {
         return (
@@ -145,9 +151,9 @@ class StoryPage extends Component {
                                 width="26rem"
                                 height="100%"
                                 isPaused={true}
-                                currentIndex={0}
-                                onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
-                                onStoryEnd={()=>{this.increaseCurrentIndex()}}
+                                currentIndex={this.state.startIndex}
+                                onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.startIndex)}}
+                                onStoryEnd={()=>{this.increaseStartIndex()}}
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
                     </div>
