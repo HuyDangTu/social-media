@@ -60,6 +60,7 @@ class StoryPage extends Component {
         })
     }
     startIndex = (stories) => {
+        return stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
     }
     nextStory = () => {
         if(this.state.nextStoryId!=-1)
