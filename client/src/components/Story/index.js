@@ -36,7 +36,15 @@ class Story extends Component {
                             this.props.list ?
                                 this.props.list.map((item,index) =>{
                                     return (
-                                        <li onClick={() => this.props.history.push(`/story/${item._id}`)} className="has-story">
+                                        <li onClick={() => this.props.history.push(
+                                            {
+                                                pathname: '/story',
+                                                state: {
+                                                    id: item._id,
+                                                }
+                                            })} 
+                                            //`/story/${item._id}`)} 
+                                            className="has-story">
                                             <div className={ this.isViewed(item) ? "story_wrapper_actived":"story_wrapper"}>
                                                 <img src={item.postedBy[0].avt}/>
                                             </div>

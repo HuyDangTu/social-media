@@ -430,6 +430,7 @@ function isViewed(item,id){
         if(item.stories[i].viewedBy.length == 0){
             console.log("Empty", id);
             res = false;
+            break;
         }
         else {
             if(item.stories[i].viewedBy.includes(id)){

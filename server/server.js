@@ -357,7 +357,7 @@ app.post('/api/posts/update_post', auth, (req, res) => {
                 if (!oldTag.includes(item)) {
                     var query = { name: item }
                     update = { $push: { posts: req.body.postId } },
-                        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                    options = { upsert: true, new: true, setDefaultsOnInsert: true };
                     Tag.findOneAndUpdate(query, update, options, function (error, result) {
                         if (error) return;
                         console.log(result);
@@ -2094,9 +2094,7 @@ app.post('/api/users/changePassword', auth, (req, res) => {
 
 app.put('/api/story/view', auth, (req, res) => {
     Story.findByIdAndUpdate(req.body.id, {
-        $push: { viewedBy: req.user._id }
-    }, {
-        new: true
+        $addToSet: { viewedBy: req.user._id }
     }).exec((err, story) => {
         if (err) res.status(400).json(err);
         res.status(200).json({story});

@@ -34,7 +34,8 @@ class StoryPage extends Component {
     }
 
     componentDidMount(){
-        const id = this.props.match.params.id;
+        //const id = this.props.match.params.id;
+        const id = this.props.location.state.id;
         this.setState({storiId:id});   
         this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
             const storyToShow = this.props.products.storyList.find(element => element._id === id);
@@ -58,30 +59,30 @@ class StoryPage extends Component {
             return item.stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
         })
     }
-    nextStory = () =>{
-       if(this.state.nextStoryId!=-1 && this.state.currentDisplay<this.state.end)
-       {
-           console.log("yes");
+    startIndex = (stories) => {
+    }
+    nextStory = () => {
+        if(this.state.nextStoryId!=-1)
+        {
             const storyToShow = this.props.products.storyList.find(element => element._id === this.state.nextStoryId);
-            console.log("storyToShow", storyToShow);
             const index = this.props.products.storyList.indexOf(storyToShow);
-            console.log("index", index);
-            let nextStoryId = -1;
-            if (index < this.props.products.storyList.length - 1) {
-                nextStoryId = this.props.products.storyList[index + 1]._id;
-                console.log("nextStoryId", nextStoryId);
+            if(index == this.state.end){
+                this.props.history.push(`/newfeed`);
             }else{
-                console.log("this is end");
+                let nextStoryId = -1;
+                if (index < this.props.products.storyList.length - 1) {
+                    nextStoryId = this.props.products.storyList[index + 1]._id;
+                }else{
+                }
+                this.setState({
+                    storyToShow: storyToShow,
+                    nextStoryId: nextStoryId,
+                    currentDisplay: index,
+                    currentIndex: 0,
+                });
             }
-            this.setState({
-                storyToShow: storyToShow,
-                nextStoryId: nextStoryId,
-                currentDisplay: index,
-                currentIndex: 0,
-            });
         }else{
-             this.props.history.push(`/newfeed`);
-             console.log("no");
+            this.props.history.push(`/newfeed`);
         }
     }
 
@@ -144,7 +145,7 @@ class StoryPage extends Component {
                                 height="100%"
                                 isPaused={true}
                                 currentIndex={0}
-                                //onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
+                                onStoryStart={() => {this.viewStory(this.state.storyToShow, this.state.currentIndex)}}
                                 onStoryEnd={()=>{this.increaseCurrentIndex()}}
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
