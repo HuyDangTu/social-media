@@ -27,6 +27,8 @@ import UserProfile from './components/Profile/userProfile';
 import ProfileSettings from './components/ProfileSettings/index';
 import Message from './components/Message/index';
 
+import photoEditor from './components/photoEditor/index';
+
 const Routes = () =>{ 
   return(
     <Switch> 
@@ -48,6 +50,9 @@ const Routes = () =>{
         <Route path="/profile" exact component={Auth(UserProfile, true)}></Route>
         <Route path="/profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
+
+        <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route>
+
         {/* Admin route */}
         <Route path="/Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />
         <Route path="/Admin/Dashboard" exact component={Auth(Dashboard, true, "/Admin/login")} />
@@ -55,6 +60,7 @@ const Routes = () =>{
         <Route path="/Admin/Account" exact component={Auth(AccountPage, true, "/Admin/login")} />
         <Route path="/Admin/Account/add_new" exact component={Auth(AddAccount, true, "/Admin/login")} />
         <Route path="/Admin/EditAccount" exact component={Auth(EditAccount, true, "/Admin/login")} />
+        
     </Switch>
   )
 }

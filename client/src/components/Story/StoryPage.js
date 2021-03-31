@@ -12,7 +12,7 @@ class StoryPage extends Component {
 
     state={
         storyId: "",
-        currentDisplay: 0,
+        currentDisplay: 0, 
         storyToShow: null,
         nextStoryId: "",
         currentIndex: 0,
@@ -24,7 +24,7 @@ class StoryPage extends Component {
         url: "https://nguahanoi.vn/wp-content/themes/gv-coporation/images/default.jpg",
         header: ""
     }
-   
+
     pauseStory(){
         const reply = document.querySelector(".reply-wrapper");
         if (reply.classList.contains("displayed")){
@@ -41,6 +41,7 @@ class StoryPage extends Component {
         this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
             const storyToShow = this.props.products.storyList.find(element => element._id === id);
             const index = this.props.products.storyList.indexOf(storyToShow);
+            
             let end = this.endPosition(this.props.products.storyList);
             let startIndex = this.startIndex(storyToShow.stories)
             console.log(startIndex);
@@ -63,9 +64,16 @@ class StoryPage extends Component {
             return item.stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
         })
     }
-    startIndex = (stories) => {
-        return stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)});
+
+    startIndex = (stories) => { 
+        let index = stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)});
+        if(index === -1){
+            return 0;
+        }else{
+            return index; 
+        }
     }
+
     nextStory = () => {
         if(this.state.nextStoryId!=-1)
         {
@@ -123,13 +131,17 @@ class StoryPage extends Component {
     } 
 
     viewStory = (items,index) =>{
-        console.log(items);
-        this.props.dispatch(viewStory(this.state.storyToShow.stories[index]._id))
+        //console.log("Vị trí",index);
+        //console.log(items);
+        if(index !== -1){
+            this.props.dispatch(viewStory(this.state.storyToShow.stories[index]._id))
+        }
     }
 
     increaseStartIndex = () =>{
         this.setState({startIndex: this.state.startIndex+1});
     }
+
     render() {
         return (
             this.state.storyToShow ?

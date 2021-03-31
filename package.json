@@ -17,6 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@felipeferreiraads/toast-ui.react-image-editor": "^1.1.2",
+    "@toast-ui/react-image-editor": "^3.14.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.23.0",
