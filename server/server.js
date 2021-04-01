@@ -287,6 +287,19 @@ app.post('/api/users/uploadimage', auth, formidable(), (req, res) => {
     })
 })
 
+app.post('/api/users/testUploadImage', auth, (req, res) => {
+    cloudinary.uploader.upload( req.body.uri ,(result) => {
+        console.log(result);
+        res.status(200).send({
+            public_id: result.public_id,
+            url: result.url,
+        })
+    }, {
+        public_id: `${Date.now()}`,
+        resource_type: `auto`
+    })
+})
+
 app.get('/api/users/removeimage', auth, (req, res) => {
     let image_id = req.query.public_id;
     cloudinary.uploader.destroy(image_id, (error, result) => {
