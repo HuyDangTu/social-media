@@ -1,9 +1,16 @@
 const express = require("express");
 const app = express();
 const Pusher = require("pusher");
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// const bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// // app.use(express.bodyParser({ limit: '50mb' }));
+// // app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 const mailer = require('nodemailer');
 const moment = require("moment");
 const formidable = require('express-formidable');
@@ -286,8 +293,17 @@ app.post('/api/users/uploadimage', auth, formidable(), (req, res) => {
         resource_type: `auto`
     })
 })
+app.post('/api/upload', async (req,res)=>{
+    try{
+        const fileStr = req.body.data;
+        const uploadResponse = await cloudinary.uploader.upload(fileStr)
+        console.log(uploadResponse);
+    }catch (error){
+        console.error(error);
+    }
+})
 
-app.post('/api/users/testUploadImage', auth, (req, res) => {
+app.post('/api/users/testUploadImage',(req, res) => {
     cloudinary.uploader.upload( req.body.uri ,(result) => {
         console.log(result);
         res.status(200).send({
