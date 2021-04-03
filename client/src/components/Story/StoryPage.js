@@ -59,6 +59,7 @@ class StoryPage extends Component {
             console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
         })
     }
+
     endPosition = (list) => {
         return list.findIndex(item => {
             return item.stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
@@ -131,8 +132,6 @@ class StoryPage extends Component {
     } 
 
     viewStory = (items,index) =>{
-        //console.log("Vị trí",index);
-        //console.log(items);
         if(index !== -1){
             this.props.dispatch(viewStory(this.state.storyToShow.stories[index]._id))
         }

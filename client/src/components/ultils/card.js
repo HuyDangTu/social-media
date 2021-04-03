@@ -15,7 +15,7 @@ import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
 import PostEdit from '../PostEdit/index';
 import { Button} from '@material-ui/core';
-import {CircleX } from 'tabler-icons-react'
+import {CircleX } from 'tabler-icons-react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

@@ -1,3 +1,65 @@
-.tui-image-editor-header{
-    display: none;
+@import '../ultils/initial.scss';
+.photoEditor{
+    position: relative;
+    .header{
+        z-index: 1000;
+        padding: 0.5rem;
+        position: absolute;
+        width: 100%;
+        .header-wrapper{
+            display: flex;
+            justify-content: space-between;
+            .header__logo{
+                .Logo_stunn{
+                        width: 3rem;
+                }
+                .Logo_text{
+                    width: 4rem;
+                    margin-left: 0.5rem;
+                }
+            }
+            .close_button{
+                width: 2rem;
+                i{
+                    font-size: 2rem;
+                    color: white;
+                }
+            }
+            .btn-cancel{
+                // border: 2px solid $secondcolor;
+                // color: $secondcolor;
+            }
+            .btn-complete{
+                //border: 2px solid $primaryColor;
+                background-color: $primaryColor;
+                color: white;
+            }
+        }
+    }
+}
+
+.tui-image-editor{
+    &-header{
+        display: none;
+    }
+    &-main-container{
+        background-color: white !important;
+    }
+    &-menu{
+        background-color: white;
+        &-filter{
+            span{
+                color: #8e8e8e !important;
+                &::before{
+                  background-color: #e6e6e6 !important;
+                }
+            }
+        }
+    }
+    &-submenu{
+        &-style{
+            background-color: white !important;
+        }
+        
+    }
 }

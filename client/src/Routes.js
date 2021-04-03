@@ -27,7 +27,7 @@ import UserProfile from './components/Profile/userProfile';
 import ProfileSettings from './components/ProfileSettings/index';
 import Message from './components/Message/index';
 
-import photoEditor from './components/photoEditor/index';
+// import photoEditor from './components/photoEditor/index';
 
 const Routes = () =>{ 
   return(
@@ -51,7 +51,7 @@ const Routes = () =>{
         <Route path="/profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
 
-        <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route>
+        {/* <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route> */}
 
         {/* Admin route */}
         <Route path="/Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />

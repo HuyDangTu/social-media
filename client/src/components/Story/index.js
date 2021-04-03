@@ -22,7 +22,7 @@ class Story extends Component {
             <div className="story">
                 <div className="stories">
                     <ul>
-                        <li className="has-story">
+                        <li className="has-story" onClick={this.props.open}>
                             <div className="story_add_button">
                                 <div className="avatar">
                                     <div className="add_icon">
@@ -43,7 +43,6 @@ class Story extends Component {
                                                     id: item._id,
                                                 }
                                             })} 
-                                            //`/story/${item._id}`)} 
                                             className="has-story">
                                             <div className={ this.isViewed(item) ? "story_wrapper_actived":"story_wrapper"}>
                                                 <img src={item.postedBy[0].avt}/>

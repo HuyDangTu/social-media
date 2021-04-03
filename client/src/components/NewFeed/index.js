@@ -9,11 +9,16 @@ import faBars from '@fortawesome/fontawesome-free-solid/faBars';
 import faTh from '@fortawesome/fontawesome-free-solid/faTh';
 import Story from '../Story/index';
 import StoryPage from '../Story/StoryPage';
+import Dialog from '@material-ui/core/Dialog';
 import LoadmoreChart from '../LoadmoreChart/index';
 import { Link, withRouter } from 'react-router-dom';
 import Search from '../Search/index';
 import LoadingCard from '../ultils/LoadingCard/index';
-
+import PhotoEditor from '../photoEditor/index';
+import Slide from '@material-ui/core/Slide';
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 class Newfeed extends Component {
 
     state = {
@@ -37,6 +42,7 @@ class Newfeed extends Component {
         isStoryPageShow: false,
 
         isloading: true,
+        storyEditorShowing: true,
     }
     
     constructor(props) {
@@ -87,6 +93,10 @@ class Newfeed extends Component {
                 isloading: false,
             })
         })
+    }
+
+    openEditor = () => {
+        this.setState({storyEditorShowing: true})
     }
 
     handleScroll() {
@@ -151,6 +161,7 @@ class Newfeed extends Component {
                             <div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 shop_right">
                             <div className="right">
                                     <Story 
+                                        open={this.openEditor}
                                         list={products.storyList}
                                         setDisplayIndex={(index)=>this.setDisplayIndex(index)}
                                     />
@@ -207,6 +218,15 @@ class Newfeed extends Component {
                     </div>
                 </div>
             </Layout>
+            <Dialog
+                fullWidth={true}
+                maxWidth="lg"
+                open={this.state.storyEditorShowing}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={() => { this.setState({ storyEditorShowing: false }) }}>
+                <PhotoEditor/>
+            </Dialog>
             </div>
         );
     }
