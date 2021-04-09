@@ -29,7 +29,9 @@ import {
     UPDATE_POST_DETAIL,
     SAVE_DETAIL,
     SAVE_POST,
-    VIEW_STORY
+    VIEW_STORY,
+    CREATE_STORY,
+
 } from './types';
 
 export function getPostDetail(id){
@@ -424,6 +426,29 @@ export function viewStory(id){
     }
 }
 
+export async function createStory(uri,id){
+    try{
+        const request = await fetch('/api/story/create',{
+            method: 'POST',
+            body: JSON.stringify({uri: uri}),
+            headers: {'Content-type': 'application/json'}
+        }).then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            return data
+        })
+        return {
+            type: CREATE_STORY,
+            payload: {
+                success: request.success,
+                stories: sortStory(request.stories,id)
+            }
+        }
+    }catch (error){
+        console.log(error)
+    }
+}
+
 function isViewed(item,id){
     let res = false;   
     for(let i=0;i<item.stories.length;i++){
@@ -448,3 +473,5 @@ function sortStory(stories,id){
     })
     return stories;
 }
+
+

@@ -957,7 +957,6 @@ app.put('/api/posts/unSave', auth, (req, res) => {
     })
 })
 
-
 app.put('/api/posts/like', auth, (req, res) => {
 
     Post.findByIdAndUpdate(req.body.postId, {
@@ -1018,7 +1017,6 @@ app.get('/api/users/:id', auth, (req, res) => {
         })
 })
 
-
 app.get('/api/users/profile/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
         .select('-password')
@@ -1037,7 +1035,6 @@ app.get('/api/users/tagged/:id', auth, (req, res) => {
         res.json({ posts })
     })
 })
-
 app.post('/api/users/getSavedPost', auth, (req, res) => {
 
     Post.find({_id:{$in: req.user.saved}})
@@ -1047,7 +1044,6 @@ app.post('/api/users/getSavedPost', auth, (req, res) => {
         res.status(200).json({posts})
     })
 })
-
 app.get('/api/users/posted/:id', auth, (req, res) => {
     Post.find({ postedBy: req.params.id })
     .populate("postedBy", "_id userName")
@@ -1160,7 +1156,6 @@ app.put('/api/users/unfollow/:unfollowId', auth, (req, res) => {
             })
     })
 })
-
 app.get('/api/messages/get/:id', auth, (req, res) => {
     const userlist = [(req.params.id), (req.user._id)]
     Conversation.findOne({ $and: [{ user1: { $in: userlist } }, { user2: { $in: userlist } }] })
@@ -1205,7 +1200,6 @@ app.get('/api/messages/seen/:id', auth, (req, res) => {
             }
         })
 })
-
 app.get('/api/messages/conversations', auth, (req, res) => {
     Conversation.find(
         {
@@ -1225,7 +1219,6 @@ app.get('/api/messages/conversations', auth, (req, res) => {
             }
         })
 })
-
 app.get('/api/notify/getall', auth, (req, res) => {
     Notification.find({ "sentTo": req.user._id }).
     populate("sentFrom", "_id userName avt role")
@@ -1239,11 +1232,6 @@ app.get('/api/notify/getall', auth, (req, res) => {
         }
     })
 })
-
-
-
-
-
 app.post('/api/notify/seen/:id', auth, (req, res) => {
     Notification.findByIdAndUpdate(req.params.id, {
         $set: { seenStatus: true }
@@ -1495,56 +1483,6 @@ app.get('/api/policies/getAll', auth, (req, res) => {
         })
 })
 
-app.post('/api/story/create', auth, (req, res) => {
-
-    let story = new Story({
-        image: req.body.image,
-        header: req.body.header,
-        postedBy: req.user._id,
-    })
-
-    story.save((err, story) => {
-        if (err) return res.status(400).json({ err })
-        res.status(200).json(story)
-    })
-
-})
-
-
-
-function getStory() {
-    console.log(userHiddenPost);
-    const stories = Story.aggregate([
-        {
-            "$match": { "postedBy": { "$in": req.user.followings } }
-        },
-        {
-            $lookup: { from: 'users', localField: 'postedBy', foreignField: '_id', as: 'postedBy' }
-        },
-        // {
-        //     "$match": { "createdAt": { "$lt": new Date(Date.now() - 24 * 60 * 60 * 1000) } }
-        // },
-        {
-            "$project": {
-                "_id": 1,
-                "image": 1,
-                "postedBy": {
-                    "_id": 1,
-                    "avt": 1,
-                    "userName": 1,
-                },
-                "dateDifference": { $subtract: [new Date(), "$createdAt"] },
-                "createdAt": 1,
-                "updatedAt": 1,
-            }
-        }], function (err, stories) {
-            if (err) return {}
-            return stories;
-        }
-    )
-    return stories;
-}
-
 app.put('/api/tags/follow', auth, (req, res) => {
     Tag.findByIdAndUpdate(req.body.tagId, {
         $push: { followers: req.user._id }
@@ -1642,10 +1580,49 @@ app.post('/api/users/searchTag', auth, (req, res) => {
 })
 
 
+app.post('/api/users/reset_pass', (req, res) => {
+    var today = moment().startOf('day').valueOf();
+    User.findOne({
+        resetToken: req.body.resetToken,
+        resetTokenExp: {
+            $gte: today
+        }
+    }, (err, user) => {
+        if (err) console.log(err)
+        if (!user) return res.json({ success: false, message: "Sorry, your token is invalid, please gennerate new one!" })
+
+        user.password = req.body.password;
+        user.resetToken = '';
+        user.resetTokenExp = 0;
+
+        user.save((err, doc) => {
+            if (err) return res.json({ success: false, err })
+            return res.status(200).json({
+                success: true
+            })
+        })
+    })
+})
+
+app.post('/api/users/reset_user', (req, res) => {
+    User.findOne(
+        { 'email': req.body.email },
+        (err, user) => {
+            user.gennerateResetToken((err, user) => {
+                if (err) return res.json({ success: false, err });
+                sendEmail(user.email, user.name, null, "reset_password", user);
+                return res.json({ success: true })
+            })
+    })
+})
+// ==============================
+// STORY
+// ==============================
+
 app.get('/api/story/getAll', auth, (req, res) => {
     Story.aggregate([
         {
-            $match: { "postedBy": { "$in": req.user.followings } }
+            $match: { "postedBy": { "$in": [...req.user.followings, req.user._id] } }
         },
         // {
         //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
@@ -1690,41 +1667,129 @@ app.get('/api/story/getAll', auth, (req, res) => {
     )
 })
 
-app.post('/api/users/reset_pass', (req, res) => {
-    var today = moment().startOf('day').valueOf();
-    User.findOne({
-        resetToken: req.body.resetToken,
-        resetTokenExp: {
-            $gte: today
+app.get('/api/story/get', auth, (req, res) => {
+    Story.aggregate([
+        {
+            $match: { "postedBy": { "$in": [...req.user.followings, req.user._id] } }
+        },
+        // {
+        //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+        // },
+        {
+            "$project": {
+                "_id": 1,
+                "header": 1,
+                "image": 1,
+                "viewedBy": 1,
+                "postedBy": 1,
+                "createdAt": 1,
+                "dateDifference": { $subtract: [new Date(), "$createdAt"] },
+            }
+        },
+        {
+            $group: { _id: "$postedBy", stories: { $push: "$$ROOT" } }
+        },
+        {
+            $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'postedBy' }
+        },
+        {
+            "$project": {
+                "postedBy": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,
+                },
+                "stories": {
+                    "_id": 1,
+                    "header": 1,
+                    "image": 1,
+                    "viewedBy": 1,
+                    "createdAt": 1,
+                    "dateDifference": 1,
+                },
+            }
+        },{"$sort": {"stories.createdAt": -1 }}], function (err, stories) {
+            if (err) return res.status(400).json(err);
+            res.status(200).json(stories);
         }
-    }, (err, user) => {
-        if (err) console.log(err)
-        if (!user) return res.json({ success: false, message: "Sorry, your token is invalid, please gennerate new one!" })
+    )
+})
 
-        user.password = req.body.password;
-        user.resetToken = '';
-        user.resetTokenExp = 0;
+function getStories(followings,id) {
+    const list = Story.aggregate([
+        {
+            $match: { "postedBy": { "$in": [...followings,id] } }
+        },
+        // {
+        //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+        // },
+        {
+            "$project": {
+                "_id": 1,
+                "header": 1,
+                "image": 1,
+                "viewedBy": 1,
+                "postedBy": 1,
+                "createdAt": 1,
+                "dateDifference": { $subtract: [new Date(), "$createdAt"] },
+            }
+        },
+        {
+            $group: { _id: "$postedBy", stories: { $push: "$$ROOT" } }
+        },
+        {
+            $lookup: { from: 'users', localField: '_id', foreignField: '_id', as: 'postedBy' }
+        },
+        {
+            "$project": {
+                "postedBy": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,
+                },
+                "stories": {
+                    "_id": 1,
+                    "header": 1,
+                    "image": 1,
+                    "viewedBy": 1,
+                    "createdAt": 1,
+                    "dateDifference": 1,
+                },
+            }
+        },{"$sort": {"stories.createdAt": -1 }}], 
+        function (err, stories) {
+            if (err) return {}
+            return stories
+        }
+    )
+    return list;
+}
 
-        user.save((err, doc) => {
-            if (err) return res.json({ success: false, err })
-            return res.status(200).json({
-                success: true
+app.post('/api/story/create', auth, async (req, res) => {
+    try{
+        const fileStr = req.body.uri;
+        await cloudinary.uploader.upload(fileStr, (result)=>{
+            console.log("here",result)
+            let story = new Story({
+                image: {
+                    public_id: result.public_id,
+                    url: result.url
+                },
+                postedBy: req.user._id,
+            })
+            story.save((err) => {
+                if (err) return res.status(400).json({ err })
+                getStories(req.user.followings,req.user._id).then((stories)=>{
+                    
+                    res.status(200).json({success: true,stories: stories})
+                })
             })
         })
-    })
+    }catch (error){
+        return res.status(400).json({ error })
+    }
 })
 
-app.post('/api/users/reset_user', (req, res) => {
-    User.findOne(
-        { 'email': req.body.email },
-        (err, user) => {
-            user.gennerateResetToken((err, user) => {
-                if (err) return res.json({ success: false, err });
-                sendEmail(user.email, user.name, null, "reset_password", user);
-                return res.json({ success: true })
-            })
-    })
-})
 
 //=======================
 //  ADMIN
@@ -2079,7 +2144,6 @@ app.post('/api/accounts/getAll', auth, admin, (req, res) => {
     })
 })
 
-
 app.post('/api/users/login', jsonParser, (req, res) => {
     // find the email
     User.findOne({ 'email': req.body.email }, (err, user) => {
@@ -2120,7 +2184,6 @@ app.post('/api/users/changePassword', auth, (req, res) => {
     })
 })
 
-
 app.put('/api/story/view', auth, (req, res) => {
     Story.findByIdAndUpdate(req.body.id, {
         $addToSet: { viewedBy: req.user._id }
@@ -2129,7 +2192,6 @@ app.put('/api/story/view', auth, (req, res) => {
         res.status(200).json({story});
     })
 })
-
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {

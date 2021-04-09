@@ -16,9 +16,12 @@ import Search from '../Search/index';
 import LoadingCard from '../ultils/LoadingCard/index';
 import PhotoEditor from '../photoEditor/index';
 import Slide from '@material-ui/core/Slide';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert'
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
 class Newfeed extends Component {
 
     state = {
@@ -42,7 +45,12 @@ class Newfeed extends Component {
         isStoryPageShow: false,
 
         isloading: true,
-        storyEditorShowing: true,
+        
+        storyEditorShowing: false,
+        storyUploading: false,
+        isStoryUploading: false,
+
+        setSnack: false,
     }
     
     constructor(props) {
@@ -96,7 +104,7 @@ class Newfeed extends Component {
     }
 
     openEditor = () => {
-        this.setState({storyEditorShowing: true})
+        this.setState({storyEditorShowing: !this.state.storyEditorShowing})
     }
 
     handleScroll() {
@@ -163,6 +171,7 @@ class Newfeed extends Component {
                                     <Story 
                                         open={this.openEditor}
                                         list={products.storyList}
+                                        isLoading={this.state.storyUploading}
                                         setDisplayIndex={(index)=>this.setDisplayIndex(index)}
                                     />
                                     <div className="shop_options">
@@ -225,8 +234,25 @@ class Newfeed extends Component {
                 TransitionComponent={Transition}
                 keepMounted
                 onClose={() => { this.setState({ storyEditorShowing: false }) }}>
-                <PhotoEditor/>
+                <PhotoEditor
+                    close={this.openEditor}
+                    onSuccess={() => {this.setState({ setSnack: true, storyEditorShowing: false })}}
+                    isLoading={this.state.isStoryUploading}
+                />
             </Dialog>
+            {
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.setSnack}
+                    onClose={() => this.setState({ setSnack: false })}
+                    autoHideDuration={1000}
+                >
+                    <MuiAlert elevation={6} variant="filled" severity={"success"} >Đã thêm câu chuyện</MuiAlert>
+                </Snackbar>
+            }
             </div>
         );
     }

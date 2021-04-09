@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import {  Heart, Photo, Sticker, Send, Ghost } from 'tabler-icons-react'
 import { Picker } from 'emoji-mart'
 import Reaction from '../Reaction/index';
+import { WithSeeMore } from 'react-insta-stories';
 
 class StoryPage extends Component {
 
@@ -117,23 +118,82 @@ class StoryPage extends Component {
         )
     }
 
+    close = () => {
+        console.log("close")
+    }
+
+    customCollapsedComponent = ({ toggleMore, action }) =>
+        <div>
+            <h5 onClick={() => {
+                action('pause');
+                this.pauseStory();
+            }}>
+                pause
+            </h5>
+            <h5 onClick={() => {
+                action('play');
+                this.pauseStory();
+            }}>
+                play
+            </h5>
+        </div>
+    // CustomStoryContent = ({ story, action }) => {
+    //     return <WithSeeMore
+    //         story={story}
+    //         action={action}
+    //         customCollapsed={this.customCollapsedComponent}
+    //     >
+    //         <div>
+    //             <h1>Hello!</h1>
+    //             <p>This story would have a 'See More' link at the bottom and will open a URL in a new tab.</p>
+    //         </div>
+    //     </WithSeeMore>
+    // }
     storyCreate = (obj) => {
         this.test(obj);
         return obj.stories.map((item)=>{
             return {
-                url: item.image,
+                url: item.image.url,
                 header: {
                    profileImage: this.state.storyToShow.postedBy[0].avt,
                    heading: this.state.storyToShow.postedBy[0].userName,
                    subheading:  "12h"
-                }
+                },
+                seeMore: ({ close }) => {
+                    return <div onClick={close}>Hello, click to close this.</div>;
+                },
+                seeMoreCollapsed: this.customCollapsedComponent
             }
+            //  = ({ story, action }) => {
+            //     return <WithSeeMore
+            //         story={story}
+            //         action={action}
+            //         //customCollapsed={customCollapsedComponent}
+            //     >
+            //         <div>
+            //             <h1>Hello!</h1>
+            //             <p>This story would have a 'See More' link at the bottom and will open a URL in a new tab.</p>
+            //         </div>
+            //     </WithSeeMore>
+            // }
+            
+            // {
+            //     url: item.image.url,
+            //     header: {
+            //        profileImage: this.state.storyToShow.postedBy[0].avt,
+            //        heading: this.state.storyToShow.postedBy[0].userName,
+            //        subheading:  "12h"
+            //     },
+            //     seeMore: ({ close }) => {
+            //         return <div onClick={close}>Hello, click to close this.</div>;
+            //     },
+            // }
         })
     } 
 
     viewStory = (items,index) =>{
         if(index !== -1){
-            this.props.dispatch(viewStory(this.state.storyToShow.stories[index]._id))
+            viewStory(this.state.storyToShow.stories[index]._id)
         }
     }
 
@@ -155,7 +215,7 @@ class StoryPage extends Component {
                     </div>
                 </div>
                 <div className="current_story">
-                    <div className="story_wrapper" onClick={()=>{this.pauseStory()}}>
+                    <div className="story_wrapper">
                             <Stories
                                 stories={this.storyCreate(this.state.storyToShow)}
                                 defaultInterval={2000}
@@ -168,6 +228,7 @@ class StoryPage extends Component {
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
                     </div>
+                    {/* <button onClick={()=>{this.pauseStory()}}>Pause</button> */}
                 </div>
                 <div className="reply-wrapper">
                         <Reaction/>

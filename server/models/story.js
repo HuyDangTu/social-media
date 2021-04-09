@@ -3,11 +3,7 @@ const Schema = mongoose.Schema;
 
 const storySchema = mongoose.Schema({
     image: {
-        type: String,
-        required: true,
-    },
-    header: {
-        type: String,
+        type: Object,
         required: true,
     },
     postedBy: {
@@ -17,6 +13,7 @@ const storySchema = mongoose.Schema({
     viewedBy: [{
         type: Schema.Types.ObjectId,
         ref: "User",
+        default: []
     }]
 }, { timestamps: true });
 

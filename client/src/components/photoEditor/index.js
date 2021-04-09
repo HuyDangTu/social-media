@@ -1,50 +1,68 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import ImageEditor from '@toast-ui/react-image-editor';
 import './photoEditor.scss';
+import {createStory} from '../../actions/product_actions';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { useHistory } from "react-router-dom";
+import { useStore, useDispatch } from 'react-redux';
+
 const myTheme = {
   // Theme object to extends default dark theme.
 };
 // var pngUrl = canvas.toDataURL(); // PNG is the default
 
-const uploadImage = async (uri) => {
-    try{
-        await fetch('api/upload',{
-            method: 'POST',
-            body: JSON.stringify({data: uri}),
-            headers: {'Content-type': 'application/json'}
-        });
-    }catch (error){
-        console.log(error)
+const PhotoEditor = (props) => {
+    
+    let history = useHistory();
+    const store = useStore()
+    const state = store.getState();
+    const dispatch = useDispatch();
+
+    function handleClick() {
+        history.push("/newfeed");
     }
-}
 
-
-const PhotoEditor = () => {
+    const [isLoading,setIsLoading] = useState(props.isLoading);
+    // const [errors, setErrors] = useState(0);
+    
+    useEffect(() => {
+        setIsLoading(props.isLoading);
+    }, [props.isLoading]);
 
     return (
-        <div className="photoEditor">
-            <div class="header">
+        <div className={`photoEditor ${isLoading ? "disable" : ""}`} >
+            <div class="header" >
                 <div className="header-wrapper">
-                    <button className="btn btn-cancel" onClick={()=>{
-                            var list = document.getElementsByTagName("canvas")
-                            var dataURL = list[0].toDataURL('image/jpeg', 1.0);
-                            uploadImage(dataURL)
-                        }}>Cancel</button>
-                    <div className="header__logo" onClick={()=>{this.props.history.push('/newfeed')}}>
+                    <button className="btn btn-cancel" onClick={()=>props.close()}>Cancel</button>
+                    <div className="header__logo" onClick={handleClick}>
                         <img class="Logo_stunn"src={require('../../asset/logo/logo2x.png')} />
                         <img class="Logo_text" src={require('../../asset/logo/stunn2x.png')} />
                     </div>
-                    {/* <div className="close_button">
-                        <i class="fas fa-times"></i>
-                    </div> */}
                     <button className="btn btn-complete" onClick={()=>{
                         var list = document.getElementsByTagName("canvas")
                         var dataURL = list[0].toDataURL('image/jpeg', 1.0);
-                        uploadImage(dataURL)
+                        setIsLoading(true);
+                        dispatch(createStory(dataURL,state.user.userData._id)).then((response) => {
+                            console.log(response)
+                            if(response.payload.success)
+                            {   props.onSuccess()
+                                setIsLoading(false);
+                            }
+                            else{
+                                console.log("ERROR")
+                            }
+                        })
                     }}>Post to story</button>
                 </div>
+                {
+                    !isLoading ? ""
+                    :<div className="LinearProcess">
+                        <LinearProgress />
+                    </div>
+                }
             </div>
+            
             <ImageEditor
                 includeUI={{
                     loadImage: {
