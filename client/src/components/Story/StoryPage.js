@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import Stories from 'react-insta-stories';
 import { getStory, viewStory } from '../../actions/product_actions';
 import { withRouter } from 'react-router-dom';
-import {  Heart, Photo, Sticker, Send, Ghost } from 'tabler-icons-react'
+import {  Heart, Photo, Sticker, Send, Ghost, PlayerPlay, PlayerPause } from 'tabler-icons-react'
 import { Picker } from 'emoji-mart'
 import Reaction from '../Reaction/index';
 import { WithSeeMore } from 'react-insta-stories';
+import { sendMessage } from '../../../src/actions/message_action'
+
 
 class StoryPage extends Component {
 
@@ -19,30 +21,26 @@ class StoryPage extends Component {
         currentIndex: 0,
         startIndex: 0,
         end: -1,
+        isStoryPlaying: true,
+        content: '',
+        mess: {
+            sentTo: '',
+            sentBy: '',
+            content: '',
+            type: 'replyStory',
+            attachment:'',
+        }
     }
-
     loadingStory = {
         url: "https://nguahanoi.vn/wp-content/themes/gv-coporation/images/default.jpg",
         header: ""
     }
-
-    pauseStory(){
-        const reply = document.querySelector(".reply-wrapper");
-        if (reply.classList.contains("displayed")){
-             reply.classList.remove("displayed")
-        }else{
-            reply.classList.add("displayed");
-        }
-    }
-
     componentDidMount(){
-        //const id = this.props.match.params.id;
         const id = this.props.location.state.id;
         this.setState({storiId:id});   
         this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
             const storyToShow = this.props.products.storyList.find(element => element._id === id);
             const index = this.props.products.storyList.indexOf(storyToShow);
-            
             let end = this.endPosition(this.props.products.storyList);
             let startIndex = this.startIndex(storyToShow.stories)
             console.log(startIndex);
@@ -55,18 +53,21 @@ class StoryPage extends Component {
                 currentDisplay: index,
                 nextStoryId: nextStoryId,
                 startIndex: startIndex,
-                end: end
+                end: end,
+                mess: {
+                    sentTo: this.props.products.storyList[index]._id,
+                    sentBy: this.props.user.userData._id,
+                    attachment: this.props.products.storyList[index].stories[this.state.startIndex]._id,
+                }
             });
             console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
         })
     }
-
     endPosition = (list) => {
         return list.findIndex(item => {
             return item.stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)}) == -1
         })
     }
-
     startIndex = (stories) => { 
         let index = stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)});
         if(index === -1){
@@ -75,7 +76,9 @@ class StoryPage extends Component {
             return index; 
         }
     }
-
+    handleChange = (event) => {
+        this.setState({ content: event.target.value });
+    }
     nextStory = () => {
         if(this.state.nextStoryId!=-1)
         {
@@ -96,13 +99,17 @@ class StoryPage extends Component {
                     currentDisplay: index,
                     startIndex: startIndex,
                     currentIndex: 0,
+                    mess: {
+                        sentTo: storyToShow._id,
+                        sentBy: this.props.user.userData._id,
+                        attachment: storyToShow.stories[startIndex]._id,
+                    }
                 });
             }
         }else{
             this.props.history.push(`/newfeed`);
         }
     }
-
     test = (obj) =>{
         console.log( "testttttttttttttttttt",
             obj.stories.map((item)=>{
@@ -117,40 +124,37 @@ class StoryPage extends Component {
             })
         )
     }
-
     close = () => {
         console.log("close")
     }
-
-    customCollapsedComponent = ({ toggleMore, action }) =>
-        <div>
-            <h5 onClick={() => {
-                action('pause');
-                this.pauseStory();
-            }}>
-                pause
-            </h5>
-            <h5 onClick={() => {
-                action('play');
-                this.pauseStory();
-            }}>
-                play
-            </h5>
+    pauseStory(){
+        const reply = document.querySelector(".reply-wrapper");
+        if (reply.classList.contains("displayed")){
+            reply.classList.remove("displayed")
+            this.setState({isStoryPlaying: true})
+        }else{
+            reply.classList.add("displayed");
+            this.setState({isStoryPlaying: false})
+        }
+    }
+    customCollapsedComponent = ({ toggleMore, action }) =>{
+        return <div>
+            {
+                this.state.isStoryPlaying ?
+                <PlayerPause onClick={() => {
+                    action('pause');
+                    this.pauseStory();
+                }} size={40} strokeWidth={2} color="white"/>
+                :
+                <PlayerPlay onClick={() => {
+                    action('play');
+                    this.pauseStory();
+                }} size={40} strokeWidth={2} color="white"/>
+            }
         </div>
-    // CustomStoryContent = ({ story, action }) => {
-    //     return <WithSeeMore
-    //         story={story}
-    //         action={action}
-    //         customCollapsed={this.customCollapsedComponent}
-    //     >
-    //         <div>
-    //             <h1>Hello!</h1>
-    //             <p>This story would have a 'See More' link at the bottom and will open a URL in a new tab.</p>
-    //         </div>
-    //     </WithSeeMore>
-    // }
+    }
     storyCreate = (obj) => {
-        this.test(obj);
+        
         return obj.stories.map((item)=>{
             return {
                 url: item.image.url,
@@ -164,41 +168,44 @@ class StoryPage extends Component {
                 },
                 seeMoreCollapsed: this.customCollapsedComponent
             }
-            //  = ({ story, action }) => {
-            //     return <WithSeeMore
-            //         story={story}
-            //         action={action}
-            //         //customCollapsed={customCollapsedComponent}
-            //     >
-            //         <div>
-            //             <h1>Hello!</h1>
-            //             <p>This story would have a 'See More' link at the bottom and will open a URL in a new tab.</p>
-            //         </div>
-            //     </WithSeeMore>
-            // }
-            
-            // {
-            //     url: item.image.url,
-            //     header: {
-            //        profileImage: this.state.storyToShow.postedBy[0].avt,
-            //        heading: this.state.storyToShow.postedBy[0].userName,
-            //        subheading:  "12h"
-            //     },
-            //     seeMore: ({ close }) => {
-            //         return <div onClick={close}>Hello, click to close this.</div>;
-            //     },
-            // }
         })
-    } 
+    }
 
     viewStory = (items,index) =>{
+        let nextId = ''
+        if(this.state.startIndex < this.state.storyToShow.stories.length)
+        {
+            nextId = this.state.storyToShow.stories[this.state.startIndex]._id
+        }else{
+            nextId = 0;
+        }
+        console.log("hgsdhsdgdfdfjsdfh",this.state.storyToShow.stories[this.state.startIndex]._id);
+        this.setState({
+            mess: {
+                attachment: nextId,
+            }
+        });
         if(index !== -1){
             viewStory(this.state.storyToShow.stories[index]._id)
         }
     }
 
     increaseStartIndex = () =>{
-        this.setState({startIndex: this.state.startIndex+1});
+        this.setState({
+            startIndex: this.state.startIndex+1,
+        });
+    }
+
+    submitForm = (event) => {
+        event.preventDefault();
+        if(this.state.content.trim()){
+            this.state.mess.content = this.state.content;
+            this.state.mess.type = 'text';
+            console.log("messsss",this.state.mess);
+            // let dataToSubmit = this.state.mess;
+            // this.props.dispatch(replyStory(dataToSubmit));
+            // this.setState({ content: '', sending: true }); 
+        }   
     }
 
     render() {
@@ -228,7 +235,6 @@ class StoryPage extends Component {
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
                     </div>
-                    {/* <button onClick={()=>{this.pauseStory()}}>Pause</button> */}
                 </div>
                 <div className="reply-wrapper">
                         <Reaction/>
@@ -236,20 +242,7 @@ class StoryPage extends Component {
                             <div className="chat_box">
                             <div className="chat_area">
                                 <input id="description_textarea" autoComplete="none" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
-                                {/* <div className="action_icon" onClick={this.sendHeartIcon}>
-                                    <Heart size={32} strokeWidth={1} color="black"></Heart>
-                                </div>
-                                <div className="action_icon" onClick={this.GifIconClick}>
-                                    <Ghost size={32} strokeWidth={1} color="black"> </Ghost>
-                                </div> */}
                             </div>
-                            {/* <div className="img_upload">
-                                <label className="custom-file-upload">
-                                    <input type="file" onChange={this.onFileChange} />
-                                    <Photo size={32} strokeWidth={1} color="black"></Photo>
-
-                                </label>
-                            </div> */}
                             <div className="emoji_icon">
                                 <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
                                 {

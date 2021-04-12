@@ -19,9 +19,13 @@ const messageSchema = mongoose.Schema({
         type: String,
         required: true,
         maxlength: 1000
-    }
-
-}, { timestamps: true });
+    },
+    attachment:[{
+        type: String,
+        required: false,
+        maxlength: 1000
+    }]
+},{ timestamps: true });
 
 const Message = mongoose.model('Message', messageSchema);
 module.exports = { Message }
