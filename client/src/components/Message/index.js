@@ -167,9 +167,7 @@ class Message extends Component {
     //     alert('Đã click',id);
     // }
     render() {
-
         console.log(this.props.messages)
-
         // console.log(this.props.messlist)
         const mess = this.props.messages
         const yourProfile = this.props.user.userData
@@ -312,21 +310,17 @@ class Message extends Component {
                                         : ''
                                 }
                                 <div className="message" ref={(el) => { this.messagesContainer = el; }} >
-
                                     {
                                         this.props.messages.messlist ? this.props.messages.messlist.messagelist ? this.props.messages.messlist.messagelist.map(mess => {
                                             return (
                                                 <Mess
                                                     mess={mess}
                                                     yourProfile={yourProfile}
-
                                                 />
-                                               
                                             )
                                         }
                                         ) : '' : ''
                                     }
-
                                     {
                                         this.props.messages.messlist ? this.props.messages.messlist.lastMess ? this.props.messages.messlist.lastMess.sentBy == yourProfile._id ?
                                             (this.props.messages.messlist ? this.props.messages.messlist.seenBy.includes(this.state._id) ?
@@ -350,22 +344,20 @@ class Message extends Component {
                                                 </div> : '') : '' : '' : ''
 
                                     }
-                                        {
-                                                this.state.gifToggle ?
+                                    {
+                                        this.state.gifToggle ?
                                         <div className="gif_picker" style={{position:'fixed', zIndex:100, top:"32%",left:"50%"}}> <GifPicker apiKey={"xRQzMksF1tPmqAvVPYlIGeJHZ2EBVXyh"} onSelected={(gif) => this.sendGif(gif.downsized.url)}></GifPicker></div>                          
                                                     : null
-                                            }
+                                    }
                                 </div>
                                 {
                                         
-                                        this.props.messages.messlist ? this.props.messages.messlist.messagelist ? 
-                                        <form onSubmit={(event) => this.submitForm(event)}>
-                                   
+                                    this.props.messages.messlist ? this.props.messages.messlist.messagelist ? 
+                                    <form onSubmit={(event) => this.submitForm(event)}>
                                     <div className="chat_box">
                                         <div className="chat_area">
-                                    
                                             {/* <input value={this.state.mess.sentTo} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input>
-                                          <input value={this.state.mess.sentBy} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input> */}
+                                            <input value={this.state.mess.sentBy} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input> */}
                                             <input id="description_textarea" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
                                             <div className="action_icon" onClick={this.sendHeartIcon}>
                                                 <Heart size={32} strokeWidth={1} color="black"></Heart>
@@ -383,14 +375,11 @@ class Message extends Component {
                                         </div>
                                         <div className="emoji_icon">
                                             <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
-
                                             {
                                                 this.state.emojiToggle ?
                                                     <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
                                                     : null
                                             }
-                                         
-
                                         </div>
                                         <div  id="sent_btn" className="send_icon" onClick={(event) => { this.submitForm(event) }}>
                                             <Send size={32} strokeWidth={1} color="white"></Send>
@@ -398,7 +387,6 @@ class Message extends Component {
                                     </div>
                                 </form>:'':''
                                 }
-                                
                             </div>
                         </div>
                     </div>

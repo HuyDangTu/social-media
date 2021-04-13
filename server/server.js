@@ -1077,10 +1077,10 @@ app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
             {
               isValidUserName = true;
             }
-          else{
-            message += "Username đã được sử dụng";
-            isValidUserName = false;
-          }
+            else{
+                message += "Username đã được sử dụng";
+                isValidUserName = false;
+            }
         } else {
             isValidUserName = true;
         }
@@ -1314,9 +1314,7 @@ app.post('/api/messages/save', jsonParser, (req, res) => {
                                 res.json(conver)
                             }
                         })
-
                     }
-
                 }
             })
         }

@@ -34,6 +34,13 @@ export function sendMessage(datatoSubmit){
         payload:request
     }
 }
+
+export function replyStory(datatoSubmit){
+    const request = axios.post(`${MESS_SERVER}/save`,datatoSubmit)
+    .then(response=>response.data);
+    return request
+}
+
 export function seenMessage(id) {
     const request = axios.get(`${MESS_SERVER}/seen/${id}`)
         .then(response => response.data);
@@ -42,6 +49,8 @@ export function seenMessage(id) {
         payload: request,
     }
 }
+
+
 export function sendimg(file) {
     let formData = new FormData();
     const config = {

@@ -39,7 +39,6 @@ class Mess extends Component {
                                     <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> : ''
 
                     }
-                
                 </div>
                 </ClickAwayListener>
 

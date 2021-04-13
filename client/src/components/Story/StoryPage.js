@@ -3,13 +3,17 @@ import './StoryPage.scss';
 import { connect } from 'react-redux';
 import Stories from 'react-insta-stories';
 import { getStory, viewStory } from '../../actions/product_actions';
+import { replyStory } from '../../../src/actions/message_action'
 import { withRouter } from 'react-router-dom';
-import {  Heart, Photo, Sticker, Send, Ghost, PlayerPlay, PlayerPause } from 'tabler-icons-react'
+import { Sticker, Send, PlayerPlay, PlayerPause } from 'tabler-icons-react'
 import { Picker } from 'emoji-mart'
 import Reaction from '../Reaction/index';
-import { WithSeeMore } from 'react-insta-stories';
-import { sendMessage } from '../../../src/actions/message_action'
-
+import Slide from '@material-ui/core/Slide';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert'
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 class StoryPage extends Component {
 
@@ -29,7 +33,9 @@ class StoryPage extends Component {
             content: '',
             type: 'replyStory',
             attachment:'',
-        }
+        },
+        sendSucess: false,
+        message: "",
     }
     loadingStory = {
         url: "https://nguahanoi.vn/wp-content/themes/gv-coporation/images/default.jpg",
@@ -55,6 +61,7 @@ class StoryPage extends Component {
                 startIndex: startIndex,
                 end: end,
                 mess: {
+                    ...this.state.mess,
                     sentTo: this.props.products.storyList[index]._id,
                     sentBy: this.props.user.userData._id,
                     attachment: this.props.products.storyList[index].stories[this.state.startIndex]._id,
@@ -77,7 +84,7 @@ class StoryPage extends Component {
         }
     }
     handleChange = (event) => {
-        this.setState({ content: event.target.value });
+        this.setState({mess: {...this.state.mess,content: event.target.value}});
     }
     nextStory = () => {
         if(this.state.nextStoryId!=-1)
@@ -100,6 +107,7 @@ class StoryPage extends Component {
                     startIndex: startIndex,
                     currentIndex: 0,
                     mess: {
+                        ...this.state.mess,
                         sentTo: storyToShow._id,
                         sentBy: this.props.user.userData._id,
                         attachment: storyToShow.stories[startIndex]._id,
@@ -179,12 +187,14 @@ class StoryPage extends Component {
         }else{
             nextId = 0;
         }
-        console.log("hgsdhsdgdfdfjsdfh",this.state.storyToShow.stories[this.state.startIndex]._id);
+        // console.log("hereeeeee",this.state.mess)
+        // console.log("hgsdhsdgdfdfjsdfh",this.state.storyToShow.stories[this.state.startIndex]._id);
         this.setState({
             mess: {
+                ...this.state.mess,
                 attachment: nextId,
             }
-        });
+        },()=>{console.log("hereeeeeeeeeeee",this.state.mess)});
         if(index !== -1){
             viewStory(this.state.storyToShow.stories[index]._id)
         }
@@ -198,13 +208,31 @@ class StoryPage extends Component {
 
     submitForm = (event) => {
         event.preventDefault();
-        if(this.state.content.trim()){
-            this.state.mess.content = this.state.content;
-            this.state.mess.type = 'text';
-            console.log("messsss",this.state.mess);
-            // let dataToSubmit = this.state.mess;
-            // this.props.dispatch(replyStory(dataToSubmit));
-            // this.setState({ content: '', sending: true }); 
+        console.log("sjdgfdshgfsjdfkjsdhjfgdfh",this.state.mess.content);
+        if(this.state.mess.content.trim()){
+            console.log("sjdgfdshgfsjdfkjsdhjfgdfh");
+            let dataToSubmit = this.state.mess;
+            replyStory(dataToSubmit).then(response=>{
+                console.log(response);
+                //document.getElementById('messageBox').reset();
+                if(response.messagelist){
+                    this.setState({
+                    sendSucess: true,
+                    message: "success",
+                    mess:{
+                        ...this.state.mess,
+                        content: '',
+                    }
+                })
+                }else{
+                    this.setState({
+                        sendSucess: true, 
+                        message: "error",  
+                    })
+                }
+            });
+        }else{
+            console.log("sjdgfdshgfsjdfkjsdhjfgdfh");
         }   
     }
 
@@ -236,27 +264,51 @@ class StoryPage extends Component {
                             />
                     </div>
                 </div>
-                <div className="reply-wrapper">
-                        <Reaction/>
-                        <form onSubmit={(event) => this.submitForm(event)}>
-                            <div className="chat_box">
-                            <div className="chat_area">
-                                <input id="description_textarea" autoComplete="none" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
-                            </div>
-                            <div className="emoji_icon">
-                                <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
-                                {
-                                    this.state.emojiToggle ?
-                                        <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
-                                        : null
-                                }
-                            </div>
-                            <div  id="sent_btn" className="send_icon" onClick={(event) => { this.submitForm(event) }}>
-                                <Send size={32} strokeWidth={1} color="white"></Send>
-                            </div>
+                    <div className="reply-wrapper">
+                        <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "display" : "hiden"}>
+                            <button class="btn">Delete</button>
                         </div>
+                        <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "hiden" : "display"}>
+                            <Reaction/>
+                            <form  onSubmit={(event) => this.submitForm(event)}>
+                            <div className="chat_box">
+                                <div className="chat_area">
+                                    <input id="description_textarea" autoComplete="none" type="text" value={this.state.mess.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
+                                </div>
+                                <div className="emoji_icon">
+                                    <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
+                                    {
+                                        this.state.emojiToggle ?
+                                            <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
+                                            : null
+                                    }
+                                </div>
+                                <div  id="sent_btn" className="send_icon" onClick={(event) => { this.submitForm(event) }}>
+                                    <Send size={32} strokeWidth={1} color="white"></Send>
+                                </div>
+                            </div>
                         </form>
                     </div>
+                </div>
+                 {
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.sendSucess}
+                    onClose={() => this.setState({ sendSucess: false })}
+                    autoHideDuration={1000}
+                >
+                    <MuiAlert elevation={6} variant="filled" severity={this.state.message} >
+                        {
+                            this.state.message == "success" ?
+                            "Đã gửi tin nhắn"
+                            : "Xin thử lại"
+                        }
+                    </MuiAlert>
+                </Snackbar>
+                }
             </div>
             : <div>loading</div>
         );

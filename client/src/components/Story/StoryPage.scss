@@ -139,6 +139,14 @@
         //     position: absolute;
         //     bottom: 0;
         // }
+        .display{
+            visibility: visible;
+            opacity: 1;
+        }
+        .hiden{
+            visibility: hidden;
+            opacity: 0;
+        }
         .chat_box{
            
             padding: 16px;
