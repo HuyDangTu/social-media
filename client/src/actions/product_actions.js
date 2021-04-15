@@ -31,7 +31,7 @@ import {
     SAVE_POST,
     VIEW_STORY,
     CREATE_STORY,
-
+    DELETE_STORY
 } from './types';
 
 export function getPostDetail(id){
@@ -423,6 +423,21 @@ export function viewStory(id){
     return {
         type: VIEW_STORY,
         payload: request,
+    }
+}
+
+
+export function deleteStory(storyId){
+    console.log("idddddddddddđ",storyId)
+    let data={storyId}
+    const request = axios.post(`/api/story/delete`, data)
+    .then(response => {
+        console.log("delete story",response.data)
+        return response.data
+    });
+    return {
+        type: DELETE_STORY,
+        payload: request
     }
 }
 

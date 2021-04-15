@@ -1620,7 +1620,10 @@ app.post('/api/users/reset_user', (req, res) => {
 app.get('/api/story/getAll', auth, (req, res) => {
     Story.aggregate([
         {
-            $match: { "postedBy": { "$in": [...req.user.followings, req.user._id] } }
+            $match: { "postedBy": { "$in": [...req.user.followings, req.user._id] }}
+        },
+        {
+            $match: { "disabled": false }
         },
         // {
         //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
@@ -1668,7 +1671,10 @@ app.get('/api/story/getAll', auth, (req, res) => {
 app.get('/api/story/get', auth, (req, res) => {
     Story.aggregate([
         {
-            $match: { "postedBy": { "$in": [...req.user.followings, req.user._id] } }
+            $match: { "postedBy": { "$in": [...req.user.followings, req.user._id] }, "disabled": false }
+        },
+        {
+            $match: { "disabled": false }
         },
         // {
         //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
@@ -1716,7 +1722,10 @@ app.get('/api/story/get', auth, (req, res) => {
 function getStories(followings,id) {
     const list = Story.aggregate([
         {
-            $match: { "postedBy": { "$in": [...followings,id] } }
+            $match: { "postedBy": { "$in": [...followings,id] }, "disabled": false }
+        },
+        {
+            $match: { "disabled": false }
         },
         // {
         //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
@@ -1788,6 +1797,29 @@ app.post('/api/story/create', auth, async (req, res) => {
     }
 })
 
+app.put('/api/story/view', auth, (req, res) => {
+    Story.findByIdAndUpdate(req.body.id, {
+        $addToSet: { viewedBy: req.user._id }
+    }).exec((err, story) => {
+        if (err) res.status(400).json(err);
+        res.status(200).json({story});
+    })
+})
+
+app.post('/api/story/delete', auth, (req, res) => {
+    console.log(req.body.storyId);
+    Story.findByIdAndUpdate(req.body.storyId, {
+        $set: { disabled: true }
+    },{
+        new: true
+    }).exec((err, story) => {
+        console.log(story)
+        if (err) res.status(400).json(err);
+        getStories([],req.user._id).then((storyList)=>{
+            res.status(200).json({success: true, storyList})
+        })
+    })
+})
 
 //=======================
 //  ADMIN
@@ -1978,7 +2010,6 @@ findComment = (id) => {
 }
 
 app.post('/api/reports/getDetail', auth, admin, (req, res) => {
-
     Report.aggregate([
         {
             $match: { "_id": ObjectId(req.body.id) }
@@ -2182,14 +2213,7 @@ app.post('/api/users/changePassword', auth, (req, res) => {
     })
 })
 
-app.put('/api/story/view', auth, (req, res) => {
-    Story.findByIdAndUpdate(req.body.id, {
-        $addToSet: { viewedBy: req.user._id }
-    }).exec((err, story) => {
-        if (err) res.status(400).json(err);
-        res.status(200).json({story});
-    })
-})
+
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {

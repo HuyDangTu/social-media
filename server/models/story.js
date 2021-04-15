@@ -14,7 +14,11 @@ const storySchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
         default: []
-    }]
+    }],
+    disabled: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 const Story = mongoose.model('Story', storySchema);

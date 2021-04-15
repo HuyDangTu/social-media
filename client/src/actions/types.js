@@ -136,3 +136,6 @@ export const SAVE_POST = 'SAVE_POST';
 export const VIEW_STORY = "VIEW_STORY";
 
 export const CREATE_STORY = "CREATE_STORY";
+
+
+export const DELETE_STORY ="DELETE_STORY";

@@ -27,6 +27,7 @@ import {
     UPDATE_POST_DETAIL,
     VIEW_STORY,
     CREATE_STORY,
+    DELETE_STORY
 } from '../actions/types';
 
 
@@ -218,6 +219,25 @@ export default function (state = {}, action) {
              return {
                 ...state,
                 storyList: action.payload.stories, 
+            }
+        }
+        case DELETE_STORY:{
+            console.log(action.payload);
+            let newStoryList = [...state.storyList]
+            if(action.payload.storyList[0].length !=0){
+                newStoryList = newStoryList.map(item => {
+                    if (item._id == action.payload.storyList[0]._id) {
+                        return action.payload.storyList[0]
+                    } else {
+                        return item
+                    }
+                })
+            }else{
+                newStoryList = []
+            }
+            console.log("data", newStoryList);
+            return {...state,
+                storyList: newStoryList
             }
         }
         default: return state;

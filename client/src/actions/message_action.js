@@ -6,7 +6,8 @@ import {
     GET_MESS,
     SEND_MESS,
     SEEN_MESS,
-    UPLOAD_IMG
+    UPLOAD_IMG,
+    DELETE_STORY,
 } from './types';
 export function getMessage(id) {
     const request = axios.get(`${MESS_SERVER}/get/${id}`)
@@ -61,6 +62,18 @@ export function sendimg(file) {
         .then(response => response.data);
     return {
         type: UPLOAD_IMG,
+        payload: request
+    }
+}
+
+export function deleteStory(storyId){
+    const request = axios.post(`${MESS_SERVER}/delete`, storyId)
+    .then(response => {
+        console.log("delete story",response.data)
+        return response.data
+    });
+    return {
+        type: DELETE_STORY,
         payload: request
     }
 }

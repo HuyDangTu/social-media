@@ -2,7 +2,7 @@ import React, { Component}  from 'react';
 import './StoryPage.scss';
 import { connect } from 'react-redux';
 import Stories from 'react-insta-stories';
-import { getStory, viewStory } from '../../actions/product_actions';
+import { getStory, viewStory, deleteStory} from '../../actions/product_actions';
 import { replyStory } from '../../../src/actions/message_action'
 import { withRouter } from 'react-router-dom';
 import { Sticker, Send, PlayerPlay, PlayerPause } from 'tabler-icons-react'
@@ -180,15 +180,14 @@ class StoryPage extends Component {
     }
 
     viewStory = (items,index) =>{
-        let nextId = ''
+        let nextId = '';
         if(this.state.startIndex < this.state.storyToShow.stories.length)
         {
             nextId = this.state.storyToShow.stories[this.state.startIndex]._id
         }else{
             nextId = 0;
         }
-        // console.log("hereeeeee",this.state.mess)
-        // console.log("hgsdhsdgdfdfjsdfh",this.state.storyToShow.stories[this.state.startIndex]._id);
+        console.log("hereeeeee",nextId)
         this.setState({
             mess: {
                 ...this.state.mess,
@@ -206,6 +205,33 @@ class StoryPage extends Component {
         });
     }
 
+    deleteStory = () =>{
+        this.props.dispatch(deleteStory(this.state.mess.attachment)).then(response => {
+            console.log("delete storiesssss",response)
+            if(response.payload.success){
+                //Update story to show
+                //Update start index
+                //story will rerender
+                const storyToShow = {...response.payload.storyList[0]}
+                if(response.payload.storyList[0].stories.length == 0)
+                {
+                    this.props.history.push('/newfeed')
+                }else{
+                    if(this.state.startIndex == response.payload.storyList[0].stories.length){
+                        this.setState({ 
+                            storyToShow: response.payload.storyList[0],
+                            startIndex: this.state.startIndex -1
+                        });
+                    }else{
+                        this.setState({ 
+                            storyToShow: response.payload.storyList[0],
+                        });
+                    }
+                }
+            }
+        })
+    }
+
     submitForm = (event) => {
         event.preventDefault();
         console.log("sjdgfdshgfsjdfkjsdhjfgdfh",this.state.mess.content);
@@ -214,7 +240,6 @@ class StoryPage extends Component {
             let dataToSubmit = this.state.mess;
             replyStory(dataToSubmit).then(response=>{
                 console.log(response);
-                //document.getElementById('messageBox').reset();
                 if(response.messagelist){
                     this.setState({
                     sendSucess: true,
@@ -266,7 +291,7 @@ class StoryPage extends Component {
                 </div>
                     <div className="reply-wrapper">
                         <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "display" : "hiden"}>
-                            <button class="btn">Delete</button>
+                            <button onClick={this.deleteStory} class="btn">Delete</button>
                         </div>
                         <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "hiden" : "display"}>
                             <Reaction/>
