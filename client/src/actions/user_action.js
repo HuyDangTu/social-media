@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {USER_SERVER} from '../components/ultils/mise';
+import {STORY_SERVER} from '../components/ultils/mise';
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -13,7 +14,8 @@ import {
     GET_TYPE,
     FOLLOW_USER,
     CHANGE_PRO,
-    CHANGE_IMG
+    CHANGE_IMG,
+    GET_HIGHLIGHT_STORY
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -206,6 +208,18 @@ export function findSaved(id) {
         .then(response => { console.log(response.data.posts); return response.data.posts})
     return {
         type: GET_TYPE,
+        payload: request
+    }
+}
+
+export function getHighLightStory(){
+    const request = axios.get(`${STORY_SERVER}/getHighlightStory`)
+    .then(response =>{
+        console.log(response)
+        return response.data
+    })
+    return {
+        type: GET_HIGHLIGHT_STORY, 
         payload: request
     }
 }

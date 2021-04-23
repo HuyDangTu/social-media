@@ -1,19 +1,16 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
-import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth, updateprofile } from '../../../src/actions/user_action'
+import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth } from '../../../src/actions/user_action'
+import {getHighLightStory} from '../../actions/user_action';
 import './profile.scss';
-import { GridDots, LayoutList, Edit, Settings, LayoutGrid, Tag, Dots, CircleX, Heart, Message2,Bookmark } from 'tabler-icons-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import faBars from '@fortawesome/fontawesome-free-solid/faBars';
-import faTh from '@fortawesome/fontawesome-free-solid/faTh';
-import Story from '../Story/index';
-import { getAllTags } from '../../actions/tag_actions';
-import { Link, withRouter, useParams } from 'react-router-dom';
+import { GridDots, Tag, Dots, CircleX, Heart, Message2,Bookmark } from 'tabler-icons-react'
+import HighLightStory from './HighLightStory';
+import StoryDisplay from './StoryDisplay';
 import { Button, withTheme, Snackbar, SnackbarMessage, Dialog } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton'
 import MuiAlert from '@material-ui/lab/Alert';
-
+import { Link, withRouter } from 'react-router-dom';
 
 class Profile extends Component {
     state = {
@@ -26,13 +23,16 @@ class Profile extends Component {
         severity: '',
         followerslist: [],
         followings: [],
-        // followers:[],
-        // followings:0,
+
+        storyDialog: false,
+        storyIndex: -1,
+        storyUploading: false,
     }
     componentDidMount() {
         const userID = this.props.match.params.id
         this.props.dispatch(findProfile(userID))
         this.props.dispatch(findPosted(userID))
+        this.props.dispatch(getHighLightStory(userID));
     }
     componentDidUpdate (prevProps) {
         if (prevProps.location.key !== this.props.location.key) {
@@ -50,6 +50,17 @@ class Profile extends Component {
             })
         await this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
     }
+
+    setDisplayIndex = (index) => {
+        this.setState({
+            currentDisplay: index,
+            isStoryPageShow: true,
+        })
+    }
+    openEditor = () => {
+
+    }
+
     handleClickfollow = async (id) => {
         await this.props.dispatch(follow(id)).then(response=>{
             this.props.dispatch(findProfile(this.props.match.params.id))
@@ -82,6 +93,19 @@ class Profile extends Component {
         })
         return cnt;
     }
+    displayStory = () =>{
+        this.setState({
+            storyDialog: true,
+        })
+    }
+    setIndex = (index) =>{
+        this.setState({
+            storyIndex: index,
+        })
+    }
+    openDialog = () =>{
+        this.setState({ storyDialog: true })
+    }
     render() {
         const postlist = this.props.user.postlist
         const typelist = this.props.user.typelist
@@ -93,7 +117,6 @@ class Profile extends Component {
                 <div className="profile_container">
                     <div className="profile_wrapper">
                         <div className="row pro_header">
-                           
                             <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-sm-3 col-3 ">
                                 <div className="profile-img">
                                     {
@@ -103,7 +126,7 @@ class Profile extends Component {
                                     }
                                 </div>
                             </div>
-                                <div className="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-sm-1 col-1"></div>
+                            <div className="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-sm-1 col-1"></div>
                             <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-sm-8 col-8 action_contain">
                                 <div className="prolile_header">
                                     <div className="name">{userProfile ? userProfile.userName : <Skeleton variant="rect" width={100} height={36} /> }</div>
@@ -168,7 +191,25 @@ class Profile extends Component {
                                     {userProfile ? userProfile.bio : <Skeleton variant="text" />}
                                 </div>
                             </div>
-                            
+                        </div>
+                        <div className="row highlight-story">
+                            <HighLightStory 
+                                open={this.openEditor}
+                                list={this.props.user.highlightStory}
+                                setIndex={(index)=>{this.setIndex(index)}}
+                                openDialog={this.openDialog}
+                            />
+                            { 
+                                this.props.user.highlightStory ?
+                                <Dialog 
+                                    className="story-display-wrapper" 
+                                    onClose={() => this.setState({ storyDialog: false })} 
+                                    open={this.state.storyDialog} 
+                                >
+                                    <StoryDisplay story={this.props.user.highlightStory[this.state.storyIndex]}/>
+                                </Dialog>                                  
+                                : this.state.storyIndex 
+                            }
                         </div>
                         <div className="row divide_type">
                             <ul>
@@ -241,6 +282,7 @@ class Profile extends Component {
                     </div>
                 </div>
                 </div>
+                
                 <Dialog className="dialog_cont"  onClose={() => {this.setState({ setfollowerDiaglog: false }); this.props.dispatch(findProfile(this.props.match.params.id))}} open={this.state.setfollowerDiaglog} >
                     <div className="dialog_header">
                         <h5>Danh sách theo dõi</h5>
@@ -301,15 +343,16 @@ class Profile extends Component {
                         }) : '') : ''
                     }
                 </Dialog>
+                    
             </Layout>
         )
     }
 }
 
-
 const mapStateToProps = (state) => {
     return {
         user: state.user,
+        products: state.products,
     }
 }
 export default connect(mapStateToProps)(withRouter(Profile));

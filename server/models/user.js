@@ -61,6 +61,10 @@ const userSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Post"
     }],
+    highlight:[{
+        type: Schema.Types.ObjectId,
+        ref: "HighlightStory"
+    }],
     saved: [{
         type: Schema.Types.ObjectId,
         ref: "Post"

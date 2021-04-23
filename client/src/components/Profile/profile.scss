@@ -121,8 +121,7 @@
 
 
 .pro_header{
-    padding-bottom: 24px;
-    border-bottom: solid 0.1px rgba(0,0,0,0.1);
+   
     .profile-img{
         img{
             width: 100%;
@@ -130,6 +129,10 @@
     }
 }
 
+.highlight-story{
+    padding-bottom: 24px;
+    border-bottom: solid 0.1px rgba(0,0,0,0.1);
+}
 .Profile
 {
     .bio

@@ -79,7 +79,6 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET,
 })
 
-
 // ============== MODEL ===============
 const { User } = require("./models/user");
 const { Comment } = require('./models/comment');
@@ -88,9 +87,11 @@ const { Tag } = require('./models/tag');
 const { Report } = require('./models/report');
 const { Policy } = require('./models/policy');
 const { Story } = require('./models/story');
+const { HighlightStory } = require('./models/highlightStory');
 const { Message } = require('./models/message');
 const { Conversation } = require('./models/conversations');
 const { Notification } = require('./models/notification');
+
 //=============== MIDDLEWARE ===========
 const { auth } = require('./middleware/auth');
 const { admin } = require('./middleware/admin');
@@ -102,7 +103,6 @@ const { sendEmail } = require('./ultils/mail/index');
 const user = require("./models/user");
 
 // ============== API ===============
-
 //TEST
 app.post('/api/posts/add_new', (req, res) => {
     res.status(200).json({
@@ -995,7 +995,7 @@ app.put('/api/posts/unlike', auth, (req, res) => {
 })
 ///////////////////
 //Mới
-//////////////////////////////
+///////////////////
 app.get('/api/users/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
         .populate("followers", "_id userName avt")
@@ -1015,6 +1015,41 @@ app.get('/api/users/:id', auth, (req, res) => {
         }).catch(err => {
             return res.status(404).json({ error: "Users not found" })
         })
+})
+
+app.get('/api/story/getHighlightStory',auth,(req,res)=>{
+    HighlightStory.aggregate([
+        {
+            "$match": { "createdBy": req.user._id}
+        },
+        {
+            $lookup: { from: 'stories', localField: 'storyList', foreignField: '_id', as: 'storyList' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'createdBy', foreignField: '_id', as: 'createdBy' }
+        },
+        {
+            $project: {
+                name: 1,
+                storyList:{
+                    image: 1,
+                    postedBy: 1,
+                    viewedBy: 1,
+                    disabled: 1,
+                    createdAt: 1,
+                },
+                createdBy:{
+                    _id: 1,
+                    userName: 1,
+                    avt: 1,
+                },
+                disabled: 1,
+            }
+        }
+    ], function (err, highlightStory) {
+        if (err) return res.status(400).json(err);
+        res.status(200).json(highlightStory);
+    })
 })
 
 app.get('/api/users/profile/:id', auth, (req, res) => {
@@ -1066,7 +1101,6 @@ app.put('/api/users/updatepic', auth, (req, res) => {
             }
            
         })
-
 })
 app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
     let message = "", isValidUserName = false;
@@ -1821,6 +1855,19 @@ app.post('/api/story/delete', auth, (req, res) => {
     })
 })
 
+app.post('/api/story/createHighlightStory', auth ,(req,res)=>{
+    const highlightStory = new HighlightStory({
+        name: req.body.name,
+        storyList: [...req.body.storyList],
+        createdBy: req.user._id,
+        disabled: false,
+    });
+    highlightStory.save((err, highlightStory) => {
+        if(err) res.status(400).json({success: false})
+        res.status(200).json({success: true, highlightStory})
+    })
+})
+
 //=======================
 //  ADMIN
 //=======================
@@ -2212,8 +2259,6 @@ app.post('/api/users/changePassword', auth, (req, res) => {
         });
     })
 })
-
-
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {

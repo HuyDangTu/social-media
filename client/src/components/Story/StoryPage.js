@@ -266,7 +266,7 @@ class StoryPage extends Component {
             this.state.storyToShow ?
             <div className="storyPage">
                 <div className="storyPage__header">
-                     <div className="header__logo" onClick={()=>{this.props.history.push('/newfeed')}}>
+                    <div className="header__logo" onClick={()=>{this.props.history.push('/newfeed')}}>
                         <img class="Logo_stunn"src={require('../../asset/logo/logoIcon2x.png')} />
                         <img class="Logo_text" src={require('../../asset/logo/whiteLogo2x.png')} />
                     </div>

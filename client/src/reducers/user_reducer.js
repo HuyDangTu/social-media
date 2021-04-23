@@ -13,7 +13,8 @@ import {
     CHANGE_PRO,
     CHANGE_IMG, 
     SAVE_DETAIL,
-    SAVE_POST
+    SAVE_POST,
+    GET_HIGHLIGHT_STORY
 } from '../actions/types';
 
 export default function(state={},action){
@@ -104,6 +105,12 @@ export default function(state={},action){
             return {
                 ...state,
                 updateimginfo: action.payload
+            }
+        }
+        case GET_HIGHLIGHT_STORY:{
+            return {
+                ...state,
+                highlightStory: action.payload
             }
         }
         default: return state;
