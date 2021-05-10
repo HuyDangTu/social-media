@@ -26,6 +26,9 @@ import Profile from './components/Profile/index';
 import UserProfile from './components/Profile/userProfile';
 import ProfileSettings from './components/ProfileSettings/index';
 import Message from './components/Message/index';
+import Explore from './components/Explore/index';
+import NotFoundPage from './components/notFoundPage';
+
 
 // import photoEditor from './components/photoEditor/index';
 
@@ -50,6 +53,10 @@ const Routes = () =>{
         <Route path="/profile" exact component={Auth(UserProfile, true)}></Route>
         <Route path="/profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
+        <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
+        <Route path="/explore" component={Auth(Explore, true)}></Route>
+        <Route path="/notfound" component={Auth(NotFoundPage, true)}></Route>
+
 
         {/* <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route> */}
 

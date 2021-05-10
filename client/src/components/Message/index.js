@@ -166,6 +166,15 @@ class Message extends Component {
     // handleSeen = (id)=> {
     //     alert('Đã click',id);
     // }
+
+    isUserBlocked(){
+        if(this.props.user.userData._id == this.props.messages.messlist.user1._id){
+            return this.props.user.userData.blockedUsers.includes(this.props.messages.messlist.user2._id) 
+        }else{
+            return this.props.user.userData.blockedUsers.includes(this.props.messages.messlist.user1._id) 
+        }
+    }
+
     render() {
         console.log(this.props.messages)
         // console.log(this.props.messlist)
@@ -205,7 +214,6 @@ class Message extends Component {
                                                     return (
                                                         <div>
                                                             {
-
                                                                 //Nếu user đã xem
                                                                 con.seenBy.includes(yourProfile._id) ?
                                                                     con.user1._id != yourProfile._id ?
@@ -215,12 +223,16 @@ class Message extends Component {
                                                                                     <img src={con.user1.avt}></img>
                                                                                 </div>
                                                                                 <div className="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-12 message">
-                                                                                    <h2>{con.user1.userName}</h2>
-                                                                                    <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}   {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
+                                                                                    {
+                                                                                        this.props.user.userData.blockedUsers.includes(con.user1._id)?
+                                                                                            <h2>{con.user1.userName}</h2>
+                                                                                        : <h2>Người dùng Stunning</h2>
+                                                                                    }
+                                                                                    <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}{con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
                                                                                 </div>
                                                                                 {/* <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
-                                                                               
+                        
                                                                                     <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)}</h6>
                                                                                 </div> */}
                                                                             </div>
@@ -229,20 +241,20 @@ class Message extends Component {
                                                                         <Link className="link" to={`/message/inbox/${con.user2._id}`}>
                                                                             <div className="row no-gutters message_contain">
                                                                                 <div className="col-xl-2 col-lg-3 col-md-3 col-sm-3 col-12 avt">
-
                                                                                     <img src={con.user2.avt}></img>
                                                                                 </div>
                                                                                 <div className="col-xl-10 col-lg-9 col-md-9 col-sm-9 col-12  message">
-                                                                                    <h2 >{con.user2.userName}</h2>
+                                                                                    {
+                                                                                        this.props.user.userData.blockedUsers.includes(con.user1._id)?
+                                                                                                <h2>{con.user1.userName}</h2>:
+                                                                                        <h2 >{con.user2.userName}</h2>
+                                                                                    }
                                                                                     <h6>{con.lastMess ? con.lastMess.sentBy == yourProfile._id ? 'Bạn: ' : '' : ''}
                                                                                         {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
-
                                                                                 </div>
                                                                                 {/* <div className="col-xl-3 col-sm-3 col-3  info">
                                                                                     <h6><Point visibility="hidden" size={24} strokeWidth={0} fill="#7166F9"></Point></h6>
-                                                                                
                                                                                     <h6>{moment(con.lastMess ? con.lastMess.createdAt:'').fromNow(true)} </h6>
-                                                                                   
                                                                                 </div> */}
                                                                             </div>
                                                                         </Link>
@@ -295,15 +307,11 @@ class Message extends Component {
                             </div>
                             <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-10 right_contain">
                                 <div className="top_info">
-
                                     <div className="user_info">
-
                                         <img src={this.state.avt}></img>
                                         <h2><StyleLink to={`/user/${this.state._id}`}>{this.state.userName}</StyleLink></h2>
                                     </div>
                                     <Dots size={24} strokeWidth={0} fill="black"></Dots>
-
-
                                 </div>
                                 {
                                     this.state.sending == true ? <LinearProgress />
@@ -350,9 +358,12 @@ class Message extends Component {
                                                     : null
                                     }
                                 </div>
-                                {
-                                        
+                                { 
+                                    // mình là u1 hay u2
+                                    
+                                   
                                     this.props.messages.messlist ? this.props.messages.messlist.messagelist ? 
+                                    !this.isUserBlocked() ?
                                     <form onSubmit={(event) => this.submitForm(event)}>
                                     <div className="chat_box">
                                         <div className="chat_area">
@@ -385,7 +396,10 @@ class Message extends Component {
                                             <Send size={32} strokeWidth={1} color="white"></Send>
                                         </div>
                                     </div>
-                                </form>:'':''
+                                </form>
+                                :'Bạn không thể trả lời người dùng này'
+                                    :''
+                                        :''
                                 }
                             </div>
                         </div>

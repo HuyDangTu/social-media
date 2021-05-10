@@ -79,9 +79,15 @@ export default function (state = {}, action) {
         }
         case GET_POST_DETAIL:{
             console.log(action.payload);
-            return {
-                ...state, 
-                postDetail: action.payload
+            if(!action.payload.NotFound)
+                return {
+                    ...state,         
+                    postDetail: action.payload
+                }
+            else{
+                return {
+                    ...state,
+                }
             }
         }
         case CLEAR_POST_DETAIL: {

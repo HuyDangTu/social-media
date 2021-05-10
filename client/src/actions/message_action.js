@@ -65,15 +65,3 @@ export function sendimg(file) {
         payload: request
     }
 }
-
-export function deleteStory(storyId){
-    const request = axios.post(`${MESS_SERVER}/delete`, storyId)
-    .then(response => {
-        console.log("delete story",response.data)
-        return response.data
-    });
-    return {
-        type: DELETE_STORY,
-        payload: request
-    }
-}

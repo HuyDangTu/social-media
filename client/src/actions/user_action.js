@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {USER_SERVER} from '../components/ultils/mise';
 import {STORY_SERVER} from '../components/ultils/mise';
+
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -15,7 +16,13 @@ import {
     FOLLOW_USER,
     CHANGE_PRO,
     CHANGE_IMG,
-    GET_HIGHLIGHT_STORY
+    GET_HIGHLIGHT_STORY,
+    GET_ALL_STORY,
+    CREATE_HIGHLIGHT_STORY,
+    DELETE_HIGHLIGHT_STORY,
+    EDIT_HIGHLIGHT_STORY,
+    GET_RECOMMEND_POST,
+    BLOCK_USER,
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -108,7 +115,8 @@ export function findProfile(_id) {
         .then(response => {
             return {
                 userProfile: response.data.user,
-                posts: response.data.posts
+                posts: response.data.posts,
+                NotFound: response.data.NotFound,
             }
         });
 
@@ -163,6 +171,7 @@ export function updateprofileimgfile(file) {
         payload: request
     }
 }
+
 export function changeProfile(id, dataToSubmit) {
     const request = axios.put(`${USER_SERVER}/update/${id}`, dataToSubmit)
         .then(response => response.data);
@@ -185,6 +194,7 @@ export function updateprofileimg(url) {
         payload: request
     }
 }
+
 export function updateprofile(id) {
     const request = axios.get(`${USER_SERVER}/profile/${id}`)
         .then(response => response.data)
@@ -212,8 +222,8 @@ export function findSaved(id) {
     }
 }
 
-export function getHighLightStory(){
-    const request = axios.get(`${STORY_SERVER}/getHighlightStory`)
+export function getHighLightStory(id){
+    const request = axios.get(`${STORY_SERVER}/getHighlightStory/${id}`)
     .then(response =>{
         console.log(response)
         return response.data
@@ -222,4 +232,80 @@ export function getHighLightStory(){
         type: GET_HIGHLIGHT_STORY, 
         payload: request
     }
+}
+
+export function createHighLightStory(dataToSubmit){
+    const request = axios.post(`${STORY_SERVER}/createHighlightStory`,dataToSubmit)
+    .then(response =>{
+        console.log(response)
+        return response.data
+    })
+    return {
+        type: CREATE_HIGHLIGHT_STORY, 
+        payload: request
+    }
+}
+
+export function getAllStories(){
+    const request = axios.get(`${STORY_SERVER}/getAllStories`)
+    .then(response =>{
+        return response.data
+    })
+
+    return {
+        type: GET_ALL_STORY,
+        payload: request
+    }
+}
+
+export function deleteHighLightStory(storyId){
+    const data = {storyId}
+    const request = axios.post(`${STORY_SERVER}/deleteHighLightStory`,data)
+    .then(response =>{
+        return response.data
+    })
+    return {
+        type: DELETE_HIGHLIGHT_STORY,
+        payload: request
+    }
+}
+
+export function editHighLightStory(dataToSubmit){
+   
+    const request = axios.post(`${STORY_SERVER}/editHighLightStory`,dataToSubmit)
+    .then(response =>{
+        return response.data
+    })
+    return {
+        type: EDIT_HIGHLIGHT_STORY,
+        payload: request
+    }
+}
+
+export function getRecommendPost(limit,skip, previousState = []){
+    const data={limit,skip}
+    const request = axios.post(`${USER_SERVER}/getRecommendPost`,data)
+        .then(response => {
+            let newState = [
+                ...previousState,
+                ...response.data.posts
+            ]
+            return {
+                size: response.data.size,
+                posts: newState
+            }
+        })
+    return {
+        type: GET_RECOMMEND_POST,
+        payload: request,
+    }
+}
+export function blockUser(id){
+
+    const request = axios.put(`${USER_SERVER}/block/${id}`)
+        .then(response => {
+            return response.data
+        })
+    
+    return request
 }

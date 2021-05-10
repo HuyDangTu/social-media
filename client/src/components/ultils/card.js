@@ -141,10 +141,12 @@ class  Card extends Component {
         await this.props.dispatch(unfollow(id))
         this.props.handleSnackBar("Đã bỏ theo dõi");
     }
+
     handleClickfollow = async (id) => {
         await this.props.dispatch(follow(id))
         this.props.handleSnackBar("Đã theo dõi");
     }
+
     defaultLink = (item, i) => {
         switch(item.name){
             case 'Like':
@@ -247,7 +249,8 @@ class  Card extends Component {
              description = description + "<b>- cùng với </b>"
         }
         userTag.forEach((item) =>{
-            description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
+            if(!this.props.user.userData.blockedUsers.includes(item._id))
+                description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
         })
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }
@@ -261,7 +264,7 @@ class  Card extends Component {
 
     confirmDialog(type) {
         switch (type) {
-            case "report":{
+            case "report": {
                 return <Report
                     isReportFormShow={this.state.DialogShowing}
                     reportData={this.state.reportData}
@@ -293,7 +296,8 @@ class  Card extends Component {
                                 })}>Xóa</p>
                         </div>
                     </div>
-                    </Dialog> }
+                    </Dialog> 
+                }
             default:{
                 return <div></div>
             }

@@ -14,7 +14,12 @@ import {
     CHANGE_IMG, 
     SAVE_DETAIL,
     SAVE_POST,
-    GET_HIGHLIGHT_STORY
+    GET_HIGHLIGHT_STORY,
+    GET_ALL_STORY,
+    CREATE_HIGHLIGHT_STORY,
+    DELETE_HIGHLIGHT_STORY,
+    EDIT_HIGHLIGHT_STORY,
+    GET_RECOMMEND_POST,
 } from '../actions/types';
 
 export default function(state={},action){
@@ -111,6 +116,56 @@ export default function(state={},action){
             return {
                 ...state,
                 highlightStory: action.payload
+            }
+        }
+        case GET_ALL_STORY:{
+            return {
+                ...state,
+                storylist: action.payload
+            }
+        }
+        case CREATE_HIGHLIGHT_STORY:{
+            if(action.payload.success)
+            {
+                return {
+                    ...state,
+                    highlightStory: [...state.highlightStory,
+                    action.payload.highlightStory[0]]
+                }
+            }else{
+                return state
+            }
+        }
+        case DELETE_HIGHLIGHT_STORY:{
+            let updatedHighlightStory = [...state.highlightStory]
+        
+            updatedHighlightStory = updatedHighlightStory.filter(item =>
+                item._id !== action.payload.storyId
+            );
+            console.log("data", updatedHighlightStory);
+            return {
+                ...state,
+                highlightStory: updatedHighlightStory
+            }
+        }
+        case EDIT_HIGHLIGHT_STORY:{
+            let updatedHighlightStory = [...state.highlightStory]
+            updatedHighlightStory = updatedHighlightStory.map(item => {
+                if (item._id == action.payload.highlightStory[0]._id) {
+                    return action.payload.highlightStory[0]
+                } else {
+                    return item
+                }
+            })
+            return {
+                ...state,
+                highlightStory: updatedHighlightStory
+            }
+        }
+        case GET_RECOMMEND_POST:{
+            return {...state, 
+                recommendedPost: action.payload.posts,
+                recommendedPostSize: action.payload.size
             }
         }
         default: return state;

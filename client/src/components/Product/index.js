@@ -10,14 +10,24 @@ class PostDetail extends Component {
     componentDidMount(){
         const id = this.props.match.params.id;
         console.log(id);
-        this.props.dispatch(getPostDetail(id));
+        this.props.dispatch(getPostDetail(id)).then(response => {
+            console.log(response)
+            if(response.payload.NotFound){
+                this.props.history.push('/notfound')
+            }
+        });
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.location.key !== this.props.location.key) {
             const id = this.props.match.params.id;
             console.log(id);
-            this.props.dispatch(getPostDetail(id));
+            this.props.dispatch(getPostDetail(id)).then(response => {
+                console.log(response)
+                if(response.payload.NotFound){
+                    this.props.history.push('/notfound')
+                }
+            });
         }
     }
 

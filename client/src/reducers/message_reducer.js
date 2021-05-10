@@ -4,7 +4,8 @@ import {
   GET_MESS,
   SEND_MESS,
   SEEN_MESS,
-  UPLOAD_IMG
+  UPLOAD_IMG,
+  DELETE_STORY
 } from '../actions/types';
 
 export default function(state={},action){

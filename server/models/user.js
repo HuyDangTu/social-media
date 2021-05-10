@@ -61,6 +61,10 @@ const userSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Post"
     }],
+    blockedUsers:[{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }],
     highlight:[{
         type: Schema.Types.ObjectId,
         ref: "HighlightStory"

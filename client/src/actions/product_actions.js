@@ -31,15 +31,16 @@ import {
     SAVE_POST,
     VIEW_STORY,
     CREATE_STORY,
-    DELETE_STORY
+    DELETE_STORY,
+    GET_RECOMMEND_POST,
 } from './types';
 
 export function getPostDetail(id){
     const request = axios.get(`${POST_SERVER}/postDetail?id=${id}&type=single`)
     .then(response=>{
+        console.log(request);
        return response.data
     })
-    console.log(request);
     return {
         type: GET_POST_DETAIL,
         payload: request,
@@ -426,7 +427,6 @@ export function viewStory(id){
     }
 }
 
-
 export function deleteStory(storyId){
     console.log("idddddddddddđ",storyId)
     let data={storyId}
@@ -488,5 +488,4 @@ function sortStory(stories,id){
     })
     return stories;
 }
-
 

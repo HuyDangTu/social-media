@@ -113,6 +113,8 @@ export const CLEAR = "CLEAR";
 
 export const GET_POST = 'GET_POST';
 export const GET_TYPE = 'GET_TYPE';
+export const SAVE_DETAIL = 'SAVE_DETAIL';
+export const SAVE_POST = 'SAVE_POST';
 export const UPDATE_IMG = 'UPDATE_IMG';
 export const PROFILE_IMG = 'PROFILE_IMG';
 export const UPDATE_PRO = 'UPDATE_PRO';
@@ -123,20 +125,26 @@ export const CHANGE_USER = 'CHANGE_USER';
 export const GET_CONVERSATION = 'GET_CONVERSATION';
 export const GET_MESS = 'GET_MESS';
 export const SEND_MESS = 'SEND_MESS';
+export const SEEN_MESS = 'SEEN_MESS';
+
 export const GET_NOTIFICATION = 'GET_NOTIFICATION';
 export const NOTIFICATION_DETAIL = 'NOTIFICATION_DETAIL';
 export const NOTIFICATION_SEENALL = 'NOTIFICATION_SEENALL';
-export const SEEN_MESS = 'SEEN_MESS';
+
 export const UPLOAD_IMG = 'UPLOAD_IMG';
 export const CHANGE_PRO = 'CHANGE_PRO';
 export const CHANGE_IMG = 'CHANGE_IMG';
-export const SAVE_DETAIL = 'SAVE_DETAIL';
-export const SAVE_POST = 'SAVE_POST';
+
 
 export const VIEW_STORY = "VIEW_STORY";
-
 export const CREATE_STORY = "CREATE_STORY";
-
-
 export const DELETE_STORY ="DELETE_STORY";
 export const GET_HIGHLIGHT_STORY = "GET_HIGHLIGHT_STORY";
+export const GET_ALL_STORY = "GET_ALL_STORY";
+export const CREATE_HIGHLIGHT_STORY = "CREATE_HIGHLIGHT_STORY";
+export const DELETE_HIGHLIGHT_STORY = "DELETE_HIGHLIGHT_STORY";
+export const EDIT_HIGHLIGHT_STORY = "EDIT_HIGHLIGHT_STORY";
+export const GET_RECOMMEND_POST = "GET_RECOMMEND_POST";
+export const BLOCK_USER = "BLOCK_USER";
+
+

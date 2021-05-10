@@ -22,7 +22,7 @@ class Header extends Component {
         user:[
             {
                 name: 'Explore',
-                linkTo: '/',
+                linkTo: '/explore',
             },
             {
                 name:'Direct',
@@ -110,8 +110,11 @@ class Header extends Component {
         }else if (item.name === 'Explore'){
             return (
                 <div>
-                    <BrandSafari size={30} color="grey" strokeWidth={1} />
-                </div>)
+                    <Link to="/explore">
+                        <BrandSafari size={30} color="grey" strokeWidth={1} />
+                    </Link>
+                </div>
+            )
         } else if (item.name === 'Notification') {
             var notinumber = 0;
             return (

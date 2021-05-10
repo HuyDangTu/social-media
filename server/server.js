@@ -10,12 +10,12 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 // app.use(bodyParser.urlencoded({ extended: true }));
 // // app.use(express.bodyParser({ limit: '50mb' }));
 // // app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// const SHA1 = require("cryto-js/sha1");
 
 const mailer = require('nodemailer');
 const moment = require("moment");
 const formidable = require('express-formidable');
 const cloudinary = require('cloudinary');
-// const SHA1 = require("cryto-js/sha1");
 const multer = require('multer');
 const fs = require('fs');
 var jsonParser = bodyParser.json();
@@ -44,6 +44,7 @@ const pusher = new Pusher({
     cluster: "mt1",
     useTLS: true
 });
+
 mongoose.connection.once('connected', async () => {
     console.log("mongoose is ready")
     const db = await mongoose.connection.collection('messages')
@@ -127,6 +128,7 @@ app.get('/api/users/auth', auth, (req, res) => {
         userName: req.user.userName,
         saved: req.user.saved,
         hiddenPost: req.user.hiddenPost,
+        blockedUsers: req.user.blockedUsers,
     });
 });
 
@@ -215,7 +217,6 @@ app.post('/api/users/loginByFaceGoogle', jsonParser, (req, res) => {
         });
     });
 })
-
 //LOGOUT
 app.get('/api/users/logout', auth, (req, res) => {
     User.findOneAndUpdate(
@@ -293,6 +294,7 @@ app.post('/api/users/uploadimage', auth, formidable(), (req, res) => {
         resource_type: `auto`
     })
 })
+
 app.post('/api/upload', async (req,res)=>{
     try{
         const fileStr = req.body.data;
@@ -415,7 +417,7 @@ app.post('/api/posts/update_post', auth, (req, res) => {
                     if (err) res.send(err)
                     findPost(post._id, req.user.hiddenPost).then((post) => {
                         console.log(post);
-                        res.status(200).json({ success: true, post });
+                        return res.status(200).json({ success: true, post });
                     })
                 })
         })
@@ -457,7 +459,7 @@ app.post('/api/posts/delete_post', auth, (req, res) => {
 // Get lastest post for new feed 
 // newfeed?sortBy=createdAt&order=desc&limit=6
 
-function findPost(postId, userHiddenPost) {
+function findPost(postId, userHiddenPost, blockedUsers) {
     console.log(userHiddenPost);
     const post = Post.aggregate([
         {
@@ -544,7 +546,7 @@ function findPost(postId, userHiddenPost) {
                 }
             }
         }], function (err, post) {
-            if (err) return {}
+            if (err) return {} 
             return post[0];
         }
     )
@@ -586,9 +588,12 @@ app.get('/api/posts/postDetail', auth, (req, res) => {
         })
     }
 
-    findPost(items, req.user.hiddenPost).then((post) => {
-        console.log(post);
-        res.status(200).json(post[0]);
+    findPost(items, req.user.hiddenPost, req.user.blockedUsers).then((post) => {
+        if(req.user.blockedUsers.includes(post[0].postedBy[0]._id)){
+            return res.status(200).json({ NotFound: true });
+        }else{
+            res.status(200).json(post[0]);
+        }
     })
 })
 
@@ -708,10 +713,8 @@ app.post('/api/users/postsIncludedTags', auth, (req, res) => {
         { "$limit": limit },
     ], function (err, posts) {
         list = [...posts]
-
     }
     )
-
 })
 
 app.post('/api/users/newfeed', auth, (req, res) => {
@@ -816,9 +819,134 @@ app.post('/api/users/newfeed', auth, (req, res) => {
             topNewFeed: posts,
             size: posts.length
         });
-    }
-    )
+    })
+})
 
+app.post('/api/users/getRecommendPost',auth,(req,res)=>{
+
+    let limit = req.body.limit ? parseInt(req.body.limit) : 3;
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+
+    Tag.aggregate([
+        {
+            "$match": { "followers": { $elemMatch: { $eq: req.user._id } }}
+        }
+        ], function (err, tags) {
+        if (err) return res.status(400).send(err);
+        let posts = [];
+        // lấy danh sách bài viết
+        tags.map(item=>{
+            posts=[...posts,...item.posts]
+        })
+        // Xóa id bị trùng
+        const removedDuplicate = new Set(posts)
+        const backToArray = [...removedDuplicate]
+        // Lấy bài viết 
+        Post.aggregate([
+        {
+            "$match": { "_id": { "$in": backToArray } }
+        },
+        {
+            "$match": { "postedBy": { "$nin": req.user.blockedUsers } }
+        },
+        {
+            "$match": { "postedBy": { "$nin": req.user.blockedUsers } }
+        },
+        {
+            "$match": { "hidden": false }
+        },
+        {
+            "$match": { "_id": { "$nin": req.user.hiddenPost } }
+        },
+        {
+            $lookup: { from: 'users', localField: 'postedBy', foreignField: '_id', as: 'postedBy' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'likes', foreignField: '_id', as: 'likes' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'userTag', foreignField: '_id', as: 'userTag' }
+        },
+        {
+            $lookup: { from: 'comments', localField: 'comments', foreignField: '_id', as: 'comments' },
+        },
+        {
+            $unwind: {
+                path: "$comments",
+                preserveNullAndEmptyArrays: true,
+            }
+        },
+        {
+            $lookup: { from: 'users', localField: 'comments.postedBy', foreignField: '_id', as: 'comments.postedBy' },
+        },
+        {
+            "$project": {
+                "_id": 1,
+                "dateDifference": { $trunc: { $divide: [{ $subtract: [new Date(), "$createdAt"] }, 1000 * 60 * 60 * 24] } },
+                "images": 1,
+                "comments": {
+                    "content": 1,
+                    "likes": 1,
+                    "postedBy": {
+                        "_id": 1,
+                        "userName": 1,
+                    },
+                    "hiden": 1,
+                    "createdAt": 1,
+                    "updatedAt": 1,
+                },
+                "likes":
+                {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,
+                },
+                "userTag": {
+                    "_id": 1,
+                    "userName": 1,
+                },
+                "hidden": 1,
+                "description": 1,
+                "postedBy": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,
+                },
+                "createdAt": 1,
+                "updatedAt": 1,
+            }
+        },
+        {
+            "$sort": { "comments.createdAt": -1 }
+        },
+        {
+            "$group": {
+                _id: '$_id',
+                description: { $first: '$description' },
+                dateDifference: { $first: '$dateDifference' },
+                images: { $first: '$images' },
+                createdAt: { $first: '$createdAt' },
+                updatedAt: { $first: '$updatedAt' },
+                likes: { $first: '$likes' },
+                userTag: { $first: '$userTag' },
+                hidden: { $first: '$hidden' },
+                postedBy: { $first: '$postedBy' },
+                comments: {
+                    $push: '$comments'
+                }
+            }
+        },
+        { "$sort": { createdAt: -1 } },
+        { "$skip": skip },
+        { "$limit": limit },
+        ], function (err, posts) {
+            if (err) return res.status(400).send(err);
+            res.status(200).json({
+                posts,
+                size: posts.length
+            });
+        })
+    })
 })
 
 // Get user's posts 
@@ -876,6 +1004,7 @@ app.get('/api/tags/getAllTags', (req, res) => {
 });
 
 //tag?id=5f90e95460842c39900e3ffb&sortBy=createdAt&order=desc&limit=6
+
 app.post('/api/tags/getTag', auth, (req, res) => {
 
     let id = req.body.id ? req.body.id : '';
@@ -887,7 +1016,7 @@ app.post('/api/tags/getTag', auth, (req, res) => {
     Tag.findOne({ _id: id })
         .exec((err, tag) => {
             if (err) return res.status(400).send(err);
-            Post.find({ "_id": { "$in": [...tag.posts]},hidden: {$eq: false}})
+            Post.find({ "_id": { "$in": [...tag.posts]},hidden: {$eq: false},postedBy: {"$nin": req.body.blockedUsers}})
                 .populate("postedBy", "_id userName")
                 .sort([[sortBy, order]])
                 .exec((err, posts) => {
@@ -958,7 +1087,6 @@ app.put('/api/posts/unSave', auth, (req, res) => {
 })
 
 app.put('/api/posts/like', auth, (req, res) => {
-
     Post.findByIdAndUpdate(req.body.postId, {
         $push: { likes: req.user._id }
     }, {
@@ -993,16 +1121,19 @@ app.put('/api/posts/unlike', auth, (req, res) => {
         })
     })
 })
+
 ///////////////////
 //Mới
 ///////////////////
+
 app.get('/api/users/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
         .populate("followers", "_id userName avt")
         .populate("followings", "_id userName avt")
         .select("-password")
         .then(user => {
-            Post.find({ 
+            if(!req.user.blockedUsers.includes(user._id)){
+                Post.find({ 
                     postedBy: req.params.id
                 })
                 .populate("postedBy", "_id userName")
@@ -1012,51 +1143,21 @@ app.get('/api/users/:id', auth, (req, res) => {
                     }
                     res.json({ user, posts })
                 })
+            }else{
+                return res.status(200).json({NotFound: true})
+            }
         }).catch(err => {
             return res.status(404).json({ error: "Users not found" })
         })
 })
 
-app.get('/api/story/getHighlightStory',auth,(req,res)=>{
-    HighlightStory.aggregate([
-        {
-            "$match": { "createdBy": req.user._id}
-        },
-        {
-            $lookup: { from: 'stories', localField: 'storyList', foreignField: '_id', as: 'storyList' }
-        },
-        {
-            $lookup: { from: 'users', localField: 'createdBy', foreignField: '_id', as: 'createdBy' }
-        },
-        {
-            $project: {
-                name: 1,
-                storyList:{
-                    image: 1,
-                    postedBy: 1,
-                    viewedBy: 1,
-                    disabled: 1,
-                    createdAt: 1,
-                },
-                createdBy:{
-                    _id: 1,
-                    userName: 1,
-                    avt: 1,
-                },
-                disabled: 1,
-            }
-        }
-    ], function (err, highlightStory) {
-        if (err) return res.status(400).json(err);
-        res.status(200).json(highlightStory);
-    })
-})
-
 app.get('/api/users/profile/:id', auth, (req, res) => {
-    User.findOne({ _id: req.params.id })
+    User.findOne({ _id: req.params.id, _id: {$nin: req.user.blookedUsers} })
         .select('-password')
-        .then((user) => {
-            res.json(user)
+        .then((err,user) => {
+            if(err) return res.status(400).json({success: false})
+            else if(user) return res.status(200).json(user);
+            else return res.status(200).json({success: false})
         })
 })
 app.get('/api/users/tagged/:id', auth, (req, res) => {
@@ -1099,7 +1200,6 @@ app.put('/api/users/updatepic', auth, (req, res) => {
             else{
                 return res.json({ success: true, message: "Đã đổi thành công ảnh đại diện" })
             }
-           
         })
 })
 app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
@@ -1144,6 +1244,7 @@ app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
         }
     })
 })
+
 app.put('/api/users/follow/:followId', auth, (req, res) => {
     User.findByIdAndUpdate(req.params.followId, {
         $push: { followers: req.user._id }
@@ -1171,6 +1272,35 @@ app.put('/api/users/follow/:followId', auth, (req, res) => {
                 })
         })
 })
+
+app.put('/api/users/block/:id', auth,(req,res)=>{
+    User.findOneAndUpdate(
+        {"_id": req.user.id}, 
+        {$pull: { followings: req.params.id, followers: req.params.id}, $push: { blockedUsers: req.params.id}},
+        {new: true},
+        (err, user) => {
+            if (err) return res.status(400).json({success: false});
+            User.findOneAndUpdate(
+                {"_id": req.params.id}, 
+                {$pull: { followers: req.user._id,followings: req.user._id }},
+                { new: true}, (err, results) => {
+                if (err) return res.status(400).json({success: false});
+                return res.status(200).json({ success: true })
+            })
+        })
+})
+
+// app.put('/api/users/unBlock/:id', auth,(req,res)=>{
+//     User.findByIdAndUpdate(req.user.id, {
+//         $pull: { blockedUsers: req.params._id }
+//     }, {
+//         new: true
+//     }).then((err,user) => {
+//         if(err) res.status(400).json({success: false});
+//         res.status(200).json({success: true});
+//     })
+// })
+
 app.put('/api/users/unfollow/:unfollowId', auth, (req, res) => {
     User.findByIdAndUpdate(req.params.unfollowId, {
         $pull: { followers: req.user._id }
@@ -1561,7 +1691,7 @@ app.post('/api/users/search', auth, (req, res) => {
 
     const matchRegex = new RegExp(req.body.keyword);
     console.log(matchRegex)
-    User.find({ userName: { $regex: matchRegex } })
+    User.find({ userName: { $regex: matchRegex }, _id: {$nin: req.user.blockedUsers} })
         .skip(skip)
         .limit(limit)
         .select("_id avt userName")
@@ -1584,7 +1714,7 @@ app.post('/api/users/searchUser', auth, (req, res) => {
 
     const matchRegex = new RegExp(req.body.keyword);
     console.log(matchRegex)
-    User.find({ userName: { $regex: matchRegex } })
+    User.find({ userName: { $regex: matchRegex }, _id: {$nin: req.body.blockedUsers}  })
         .skip(skip)
         .limit(limit)
         .select("_id avt userName")
@@ -1610,7 +1740,6 @@ app.post('/api/users/searchTag', auth, (req, res) => {
             res.status(200).json({ tags });
     })
 })
-
 
 app.post('/api/users/reset_pass', (req, res) => {
     var today = moment().startOf('day').valueOf();
@@ -1855,19 +1984,156 @@ app.post('/api/story/delete', auth, (req, res) => {
     })
 })
 
+app.get('/api/story/getHighlightStory/:id',auth,(req,res)=>{
+    HighlightStory.aggregate([
+        {
+            "$match": { "createdBy": ObjectId(req.params.id)}
+        },
+        {
+            "$match": { "disabled": false}
+        },
+        {
+            $lookup: { from: 'stories', localField: 'storyList', foreignField: '_id', as: 'storyList' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'createdBy', foreignField: '_id', as: 'createdBy' }
+        },
+        {
+            $project: {
+                name: 1,
+                storyList:{
+                    _id: 1,
+                    image: 1,
+                    postedBy: 1,
+                    viewedBy: 1,
+                    disabled: 1,
+                    createdAt: 1,
+                },
+                createdBy:{
+                    _id: 1,
+                    userName: 1,
+                    avt: 1,
+                },
+                disabled: 1,
+            }
+        }
+    ], function (err, highlightStory) {
+        if (err) return res.status(400).json(err);
+        res.status(200).json(highlightStory);
+    })
+})
+
+app.post('/api/story/deleteHighLightStory', auth, (req, res) => {
+    console.log(req.body.storyId);
+    HighlightStory.findByIdAndUpdate(req.body.storyId, {
+        $set: { disabled: true }
+    },{
+        new: true
+    }).exec((err, story) => {
+        console.log(story)
+        if (err) res.status(400).json(err);
+        res.status(200).json({success: true, storyId: req.body.storyId})
+    })
+})
+
+function getHighLightStory(id){
+    const story = HighlightStory.aggregate([
+        {
+            "$match": { "_id": id}
+        },
+        {
+            $lookup: { from: 'stories', localField: 'storyList', foreignField: '_id', as: 'storyList' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'createdBy', foreignField: '_id', as: 'createdBy' }
+        },
+        {
+            $project: {
+                name: 1,
+                storyList:{
+                    _id: 1,
+                    image: 1,
+                    postedBy: 1,
+                    viewedBy: 1,
+                    disabled: 1,
+                    createdAt: 1,
+                },
+                createdBy:{
+                    _id: 1,
+                    userName: 1,
+                    avt: 1,
+                },
+                disabled: 1,
+            }
+        }
+    ], function (err, highlightStory) {
+        if (err) return {};
+        return highlightStory;
+    })
+    return story
+}
+
 app.post('/api/story/createHighlightStory', auth ,(req,res)=>{
     const highlightStory = new HighlightStory({
         name: req.body.name,
-        storyList: [...req.body.storyList],
+        storyList: req.body.storyList,
         createdBy: req.user._id,
         disabled: false,
     });
     highlightStory.save((err, highlightStory) => {
         if(err) res.status(400).json({success: false})
-        res.status(200).json({success: true, highlightStory})
+        getHighLightStory(highlightStory._id).then((highlightStory) => {
+            console.log(highlightStory);
+            res.status(200).json({
+                success: true,
+                highlightStory
+            })
+        })
     })
 })
 
+app.get('/api/story/getAllStories',auth,(req,res)=>{
+    Story.aggregate([
+        {
+            $match: { "postedBy": req.user._id}
+        },
+        {
+            $match: { "disabled": false }
+        },
+        {
+            "$project": {
+                "_id": 1,
+                "header": 1,
+                "image": 1,
+                "viewedBy": 1,
+                "postedBy": 1,
+                "createdAt": 1,
+                "dateDifference": { $subtract: [new Date(), "$createdAt"] },
+            }
+        },{"$sort": {"createdAt": -1 }}], function (err, stories) {
+            if (err) return res.status(400).json(err);
+            res.status(200).json(stories);
+        }
+    )
+})
+
+app.post('/api/story/editHighlightStory',auth,(req,res)=>{
+    HighlightStory.findByIdAndUpdate(req.body.storyId,
+        {
+            $set: {
+                name: req.body.name,
+                storyList: req.body.storyList,
+            }
+        },
+        { new: true }, (err, highlightStory) => {
+            if (err) res.send(err)
+            getHighLightStory(highlightStory._id).then((highlightStory) => {
+                console.log(highlightStory);
+                res.status(200).json({ success: true, highlightStory });
+            })
+        }
+    )
+})
 //=======================
 //  ADMIN
 //=======================

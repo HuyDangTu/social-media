@@ -57,6 +57,7 @@
             }
         }
         .has-story{
+           
             .story_wrapper{
                 border-radius: 50%;
                 width: calc_height(100);
@@ -78,6 +79,7 @@
                 height: calc_height(100);
                 padding: 3px;
                 background: #bdbdbd;
+                cursor: pointer;
                 img{
                     padding: 4px;
                     background:currentColor;
@@ -96,6 +98,19 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
+        }
+        .adavnced-btn{
+            width: 1rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+        }
+        .btn-displayed{
+            visibility: visible;
+            opacity: 1;
+        }
+        .btn-hiden{
+            visibility: hidden;
+            opacity: 0;
         }
     }
 }::-webkit-scrollbar {

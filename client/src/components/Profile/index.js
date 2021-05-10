@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
-import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth } from '../../../src/actions/user_action'
-import {getHighLightStory} from '../../actions/user_action';
+import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth, blockUser } from '../../../src/actions/user_action'
+import {getHighLightStory,getAllStories,createHighLightStory} from '../../actions/user_action';
 import './profile.scss';
 import { GridDots, Tag, Dots, CircleX, Heart, Message2,Bookmark } from 'tabler-icons-react'
 import HighLightStory from './HighLightStory';
@@ -11,6 +11,14 @@ import { Button, withTheme, Snackbar, SnackbarMessage, Dialog } from '@material-
 import Skeleton from '@material-ui/lab/Skeleton'
 import MuiAlert from '@material-ui/lab/Alert';
 import { Link, withRouter } from 'react-router-dom';
+import FormField from '../ultils/Form/FormField';
+import { populateOptionFields, update, ifFormValid, generateData, resetFields } from '../ultils/Form/FormActions';
+import Slide from '@material-ui/core/Slide';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 class Profile extends Component {
     state = {
@@ -27,20 +35,63 @@ class Profile extends Component {
         storyDialog: false,
         storyIndex: -1,
         storyUploading: false,
+
+        createHighlightStoryDiaglog: false,
+        highLightStory: [],
+        
+        formSuccess: false,
+        formMessage: "",
+        formData: {
+            name: {
+                element: 'input',
+                value: '',
+                config: {
+                    placeholder: 'Tên',
+                    label: 'Tên',
+                    name: 'name',
+                    options: [],
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false
+            },
+        },
+
+        setSnack: false,
+        addStorySuccess: false,
     }
     componentDidMount() {
         const userID = this.props.match.params.id
-        this.props.dispatch(findProfile(userID))
+        this.props.dispatch(findProfile(userID)).then((response)=>{
+            console.log(response)
+            if(response.payload.NotFound){
+                this.props.history.push('/notfound');
+            }
+        });
         this.props.dispatch(findPosted(userID))
-        this.props.dispatch(getHighLightStory(userID));
+        this.props.dispatch(getHighLightStory(userID))
+        this.props.dispatch(getAllStories());
     }
     componentDidUpdate (prevProps) {
         if (prevProps.location.key !== this.props.location.key) {
-        const userID = this.props.match.params.id
-        this.props.dispatch(findProfile(userID))
-        this.props.dispatch(findPosted(userID))
-        this.setState({setfollowerDiaglog:false,  setType: 'posted',setfollowingDiaglog:false});
-         }
+            const userID = this.props.match.params.id
+            console.log(userID)
+            this.props.dispatch(findProfile(userID)).then((response)=>{
+                console.log(response)
+                
+                if(response.payload.NotFound){
+                    this.props.history.push('/notfound');
+                }
+            });
+            this.props.dispatch(findPosted(userID))
+            this.props.dispatch(getHighLightStory(userID));
+      
+            this.setState({setfollowerDiaglog:false,  setType: 'posted',setfollowingDiaglog:false});
+        }
     }
     handleClickunfollow = async (id) => {
         await this.props.dispatch(unfollow(id)).then(response=>
@@ -57,8 +108,11 @@ class Profile extends Component {
             isStoryPageShow: true,
         })
     }
-    openEditor = () => {
 
+    openCreateHighlightStoryDiaglog = () =>{
+        this.setState({createHighlightStoryDiaglog: true})
+    }
+    openEditor = () => {
     }
 
     handleClickfollow = async (id) => {
@@ -103,14 +157,47 @@ class Profile extends Component {
             storyIndex: index,
         })
     }
+    
     openDialog = () =>{
         this.setState({ storyDialog: true })
     }
+
+    pullStory(item){
+        let newhighLightStory = [...this.state.highLightStory]
+        newhighLightStory.splice(this.state.highLightStory.indexOf(item), 1);
+        console.log(newhighLightStory);
+        this.setState({ highLightStory: newhighLightStory })
+    }
+
+    pushStory(item){
+        let newhighLightStory = [...this.state.highLightStory]
+        newhighLightStory.push(item);
+        console.log(newhighLightStory);
+        this.setState({ highLightStory: newhighLightStory })
+    }
+
+    updateForm = (element) => {
+        const newFormdata = update(element, this.state.formData, 'story_name');
+        if(newFormdata.name.value.trim() != ""){
+            this.setState({
+                formSuccess: true,
+                formData: newFormdata
+            });
+        }else{
+            this.setState({
+                formSuccess: false,
+                formData: newFormdata
+            });
+        }
+    }
+
     render() {
         const postlist = this.props.user.postlist
         const typelist = this.props.user.typelist
         const userProfile = this.props.user.userProfile
         const yourProfile = this.props.user.userData
+        const storyList = this.props.user.storyList
+        
         return (
             <Layout>
                 <div className="Profile">
@@ -120,9 +207,9 @@ class Profile extends Component {
                             <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-sm-3 col-3 ">
                                 <div className="profile-img">
                                     {
-                                            userProfile ?
-                                            <img src={userProfile.avt}></img>:
-                                            <Skeleton variant="circle" width={160} height={160} />
+                                        userProfile ?
+                                        <img src={userProfile.avt}></img>:
+                                        <Skeleton variant="circle" width={160} height={160} />
                                     }
                                 </div>
                             </div>
@@ -131,26 +218,25 @@ class Profile extends Component {
                                 <div className="prolile_header">
                                     <div className="name">{userProfile ? userProfile.userName : <Skeleton variant="rect" width={100} height={36} /> }</div>
                                     {
-                                            yourProfile ? (yourProfile._id == this.props.match.params.id ?
+                                        yourProfile ? (yourProfile._id == this.props.match.params.id ?
                                             <div>
                                             <Button className="follow_options"><Link to={`/profilesettings`}>Chỉnh sửa thông tin cá nhân</Link></Button>
-
                                             </div>
-                                            :
+                                        :
                                             <div>
-                                            <Button className="follow_options"> <Link to={`/message/inbox/${this.props.match.params.id}`}>Nhắn tin</Link></Button>
-                                            {
-                                                yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
-                                                    <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}> Đang Theo dõi</Button>
-                                                    :
-                                                    <Button className="follow_options" onClick={() => this.handleClickfollow(userProfile ? userProfile._id : 0)}>Theo dõi</Button>
-                                                    : <Skeleton variant="rect" width={195} height={40} />
-                                                    : <Skeleton variant="rect" width={195} height={40} />
-                                                    
-                                            }
-                                            <Button onClick={this.showDialog}><Dots size={24} strokeWidth={1} color={'#7166F9'} /></Button>
+                                                <Button className="follow_options"> <Link to={`/message/inbox/${this.props.match.params.id}`}>Nhắn tin</Link></Button>
+                                                {
+                                                    yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
+                                                        <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}> Đang Theo dõi</Button>
+                                                        :
+                                                        <Button className="follow_options" onClick={() => this.handleClickfollow(userProfile ? userProfile._id : 0)}>Theo dõi</Button>
+                                                        : <Skeleton variant="rect" width={195} height={40} />
+                                                        : <Skeleton variant="rect" width={195} height={40} />
+                                                        
+                                                }
+                                                <Button onClick={this.showDialog}><Dots size={24} strokeWidth={1} color={'#7166F9'} /></Button>
                                             </div>
-                                            ):''
+                                        ):''
                                     }
                                     
                                     <Snackbar
@@ -167,10 +253,17 @@ class Profile extends Component {
                                     <MuiAlert elevation={6} variant="filled" severity={this.state.severity} message={this.state.setMessage}>{this.state.setMessage}</MuiAlert>
                                     </Snackbar>
                                     <Dialog className="dialog_wrapper" onClose={() => this.setState({ setDialog: false })} open={this.state.setDialog} >
-                                        <Button> Chặn </Button>
+                                        <Button onClick={()=>{
+                                            blockUser(userProfile._id).then(response =>{
+                                                if(response.success){
+                                                    this.props.history.push("/newfeed");
+                                                }else{
+                                                    console.log("failllllllllllllll");
+                                                }
+                                            })
+                                        }}> Chặn </Button>
                                         <Button> Báo cáo </Button>
                                     </Dialog>
-                                    
 
                                 </div>
                                 <div className="profile_number">
@@ -196,8 +289,11 @@ class Profile extends Component {
                             <HighLightStory 
                                 open={this.openEditor}
                                 list={this.props.user.highlightStory}
+                                storyList={this.props.user.storylist}
                                 setIndex={(index)=>{this.setIndex(index)}}
                                 openDialog={this.openDialog}
+                                openCreateHighlightStoryDiaglog={this.openCreateHighlightStoryDiaglog}
+                                createButton={ yourProfile._id == this.props.match.params.id ? true : false}
                             />
                             { 
                                 this.props.user.highlightStory ?
@@ -282,7 +378,6 @@ class Profile extends Component {
                     </div>
                 </div>
                 </div>
-                
                 <Dialog className="dialog_cont"  onClose={() => {this.setState({ setfollowerDiaglog: false }); this.props.dispatch(findProfile(this.props.match.params.id))}} open={this.state.setfollowerDiaglog} >
                     <div className="dialog_header">
                         <h5>Danh sách theo dõi</h5>
@@ -343,7 +438,88 @@ class Profile extends Component {
                         }) : '') : ''
                     }
                 </Dialog>
-                    
+                {/* Thêm story */}
+                {
+                    this.props.user.storylist?
+                        <Dialog
+                            fullWidth={true}
+                            maxWidth="lg"  
+                            className="createHighLightStoryForm"  
+                            onClose={() => {this.setState({ createHighlightStoryDiaglog: false })}} 
+                            open={this.state.createHighlightStoryDiaglog}
+                        >
+                        <div className="wrapper">
+                            <div className="row no-gutters">
+                                <div className="col-lg-3 no-gutters">
+                                    <div className="row no-gutters form-header">
+                                    <h5>Tin nổi bật</h5>
+                                    
+                                    <FormField
+                                        id={'name'}
+                                        formData={this.state.formData.name}
+                                        change={(element) => this.updateForm(element)}
+                                    />
+                                    <div className="header-feature">
+                                        <button className="btn btn-cancel">Hủy</button>
+                                        <button className="btn" 
+                                            onClick={()=>{
+                                                //console.log(this.state.formSuccess,this.state.highLightStory)
+                                                if(this.state.formSuccess && this.state.highLightStory.length != 0)
+                                                {
+                                                    let dataToSubmit = {
+                                                        name: this.state.formData.name.value,
+                                                        storyList: [...this.state.highLightStory]
+                                                    }
+                                                    console.log("dô",dataToSubmit);
+                                                    this.props.dispatch(createHighLightStory(dataToSubmit)).then(response=>{
+                                                        if(response.payload.success){
+                                                            this.setState({addStorySuccess: true,formMessage:"Thêm thành công",createHighlightStoryDiaglog: false,setSnack: true, })
+                                                        }else{
+                                                            this.setState({addStorySuccess: false,formMessage:"Lỗi! Vui lòng thử lại :(",setSnack: true})
+                                                        }
+                                                    })
+                                                }else{
+                                                    console.log(this.state.formError,this.state.highlightStory)
+                                                    this.setState({addStorySuccess: false,formMessage:"Vui lòng kiểm tra thông lại thông tin :(",setSnack: true})
+                                                }
+                                        }}>Thêm mới</button>      
+                                    </div>
+                                </div>
+                                </div>
+                                <div className="col-lg-9 no-gutters">
+                                    <div className="row no-gutters form-content">
+                                    {
+                                        this.props.user.storylist.map((item,index)=>{
+                                            return <div 
+                                            onClick={()=>{
+                                                this.state.highLightStory.includes(item._id) ?
+                                                    this.pullStory(item._id) : this.pushStory(item._id)
+                                            }} 
+                                            className={`col-lg-3 no-gutters image-wrapper` }>
+                                                <img className={`story-item ${this.state.highLightStory.includes(item._id) ? "story_selected":"unselected_story"}`} 
+                                                    src={item.image.url}/>
+                                            </div>
+                                        })
+                                    }
+                                </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </Dialog>
+                :"loading"
+                }
+                {/* Các Dialog xác nhận chỉnh sửa */}
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.setSnack}
+                    onClose={() => this.setState({ setSnack: false })}
+                    autoHideDuration={1000}
+                >
+                    <MuiAlert elevation={6} variant="filled" severity={`${this.state.addStorySuccess?"success":"warning"}`} >{this.state.formMessage}</MuiAlert>
+                </Snackbar>  
             </Layout>
         )
     }

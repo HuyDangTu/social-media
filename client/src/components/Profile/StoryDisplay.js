@@ -26,6 +26,7 @@ class StoryDisplay extends Component {
                     defaultInterval={2000}
                     width="26rem"
                     height="100%"
+                    
                 />
             </div>
         );
