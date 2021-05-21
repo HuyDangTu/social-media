@@ -33,12 +33,12 @@ import {
     CREATE_STORY,
     DELETE_STORY,
     GET_RECOMMEND_POST,
+    RESTRICTED
 } from './types';
 
 export function getPostDetail(id){
     const request = axios.get(`${POST_SERVER}/postDetail?id=${id}&type=single`)
     .then(response=>{
-        console.log(request);
        return response.data
     })
     return {
@@ -46,14 +46,6 @@ export function getPostDetail(id){
         payload: request,
     }
 }
-
-// export function clearPostDetail(){
-//     const request = {}
-//     return {
-//         type: CLEAR_POST_DETAIL,
-//         payload: request,
-//     }
-// }
 
 export function getProductsBySell(){
     
@@ -124,15 +116,21 @@ export function createPost(dataToSubmit){
 
     const request = axios.post(`${POST_SERVER}/create_post`,dataToSubmit)
     .then(response => {
-        return response.data
+        if(response.data.restricted){
+            return {
+                type: RESTRICTED,
+                payload:  response.data
+            }
+        }else{
+            return{
+                type: ADD_PRODUCT,
+                payload: response.data
+            }
+        }
     });
 
-    return{
-        type: ADD_PRODUCT,
-        payload: request
-    }
+    return request; 
 }
-
 
 export function updatePost(dataToSubmit,Actiontype) {
     const request = axios.post(`${POST_SERVER}/update_post`, dataToSubmit)
@@ -214,35 +212,49 @@ export function getTopTenTags(skip, limit, previousState = []) {
     }
 }
 
-
 export function savePost(postId) {
     const data = {
         postId
     }
     const request = axios.put(`${POST_SERVER}/save`, data)
         .then(response => {
-            console.log(response.data.user);
-            return response.data.user;
+            if(response.data.restricted){
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+            }else{
+                return {
+                    type: SAVE_POST,
+                    payload: response.data.user
+                }
+            }
         })
-    return {
-        type:SAVE_POST,
-        payload: request,
-    }
+        
+    return request
 }
 
 export function unSavePost(postId) {
     const data = {
         postId
     }
+
     const request = axios.put(`${POST_SERVER}/unSave`, data)
         .then(response => {
-            console.log(response.data.user);
-            return response.data.user;
+            if(response.data.restricted){
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+            }else{
+                return {
+                    type: SAVE_POST,
+                    payload: response.data.user
+                }
+            }
         })
-    return {
-        type: SAVE_POST,
-        payload: request
-    }
+
+    return request
 }
 
 export function likePost(postId, ActionType){
@@ -251,13 +263,21 @@ export function likePost(postId, ActionType){
     }
     const request = axios.put(`${POST_SERVER}/like`,data)
     .then( response =>{
-        console.log("Data", response.data[0]);
-        return response.data[0];
+       
+        if(response.data.restricted){
+            return {
+                type: RESTRICTED,
+                payload: response.data
+            }
+        }else{
+            return {
+                type: ActionType == "detail" ? LIKE_DETAIL : LIKE_POST,
+                payload: response.data[0],
+            }
+        }
     })
-    return {
-        type: ActionType == "detail" ? LIKE_DETAIL : LIKE_POST,
-        payload: request,
-    }
+
+    return request
 }
 
 export function unlikePost(postId, ActionType) {
@@ -266,13 +286,19 @@ export function unlikePost(postId, ActionType) {
     }
     const request = axios.put(`${POST_SERVER}/unlike`, data)
         .then(response => {
-            console.log(response.data[0]);
-            return response.data[0];
+        if(response.data.restricted){
+            return {
+                type: RESTRICTED,
+                payload: response.data
+            }
+        }else{
+            return {
+                type: ActionType == "detail" ? LIKE_DETAIL : LIKE_POST,
+                payload: response.data[0],
+            }
+        }
     })
-    return {
-        type: ActionType == "detail" ? LIKE_DETAIL : LIKE_POST,
-        payload: request,
-    }
+   return request
 }
 
 export function makeComment(postId, content, Actiontype) {
@@ -284,14 +310,22 @@ export function makeComment(postId, content, Actiontype) {
 
     const request = axios.post(`${POST_SERVER}/comment`, data)
         .then(response => {
-            console.log(response.data[0]);
-            return response.data[0];
+            if(response.data.restricted){
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+                
+            }else{
+                 let action =  {
+                    type: Actiontype == "detail" ? UPDATE_DETAIL : COMMENT_POST,
+                    payload: response.data[0],
+                }
+                return action;
+            }
         })
-    let action =  {
-        type: Actiontype == "detail" ? UPDATE_DETAIL : COMMENT_POST,
-        payload: request,
-    }
-    return action;
+
+    return request;
 }
 
 export function likeComment(postId,commentId,ActionType) {
@@ -301,14 +335,22 @@ export function likeComment(postId,commentId,ActionType) {
     }
     const request = axios.put(`${POST_SERVER}/likeComment`, data)
         .then(response => {
-            console.log(response.data[0]);
-            return response.data[0];
+            if(response.data.restricted){
+                
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+            }else{
+                return {
+                    type: LIKE_COMMENT,
+                    payload: response.data[0],
+                }
+            }
         })
-    return {
-        type: LIKE_COMMENT,
-        payload: request,
-    }
+    return request
 }
+
 export function unLikeComment(postId, commentId, ActionType) {
     const data = {
         commentId,
@@ -316,13 +358,21 @@ export function unLikeComment(postId, commentId, ActionType) {
     }
     const request = axios.put(`${POST_SERVER}/unLikeComment`, data)
         .then(response => {
-            console.log(response.data[0]);
-            return response.data[0];
+            if(response.data.restricted){
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+            }else{
+                return {
+                    type: LIKE_COMMENT,
+                    payload: response.data[0]
+                }
+            }
         })
-    return {
-        type: LIKE_COMMENT,
-        payload: request,
-    }
+    
+    return request
+    
 }
 
 export function hidePost(postId, ActionType){
@@ -374,23 +424,34 @@ export function deletePost(id) {
 }
 
 export function report(reportData, reportPolicy) {
+   
+    console.log(reportData);
     let data = {}
-    reportData.reportType == "post" ? 
-    data = {
-        reportType: reportData.reportType,
-        reportAbout: reportPolicy,
-        post: reportData.post 
-    }:
-    data = {
-        reportType: reportData.reportType,
-        reportAbout: reportPolicy,
-        comment: reportData.comment,
-        post: reportData.post 
-    } 
+
+    switch  (reportData.reportType){
+        case "post":
+            data = {
+                reportType: reportData.reportType,
+                reportAbout: reportPolicy,
+                post: reportData.post 
+            }
+        case "comment":
+            data = {
+                reportType: reportData.reportType,
+                reportAbout: reportPolicy,
+                comment: reportData.comment,
+                post: reportData.post 
+            }
+        case "user":
+            data = {
+                reportType: reportData.reportType,
+                reportAbout: reportPolicy,
+                userId:  reportData.userId,
+            }
+    }
 
     const request = axios.post(`${POST_SERVER}/report`,data)
     .then(response =>{
-        console.log(response.data);
         return response.data
     })
     

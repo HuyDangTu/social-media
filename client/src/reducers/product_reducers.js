@@ -27,7 +27,8 @@ import {
     UPDATE_POST_DETAIL,
     VIEW_STORY,
     CREATE_STORY,
-    DELETE_STORY
+    DELETE_STORY,
+    RESTRICTED
 } from '../actions/types';
 
 
@@ -244,6 +245,12 @@ export default function (state = {}, action) {
             console.log("data", newStoryList);
             return {...state,
                 storyList: newStoryList
+            }
+        }
+        case RESTRICTED:{
+            return {
+                ...state,
+                restricted: true
             }
         }
         default: return state;

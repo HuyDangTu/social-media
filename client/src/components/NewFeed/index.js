@@ -84,17 +84,14 @@ class Newfeed extends Component {
         this.setState({ isShow: false }) 
     }
 
-    //Tải thêm post
     LoadmoreCards = () => {
-        //tình số item đc skip qua bằng số skip hiện tại cộng với số limit
         let skip = this.state.skip + this.state.limit;
         this.props.dispatch(getProductsToShop(
             skip,
             this.state.limit,
             this.state.filters,
-            //truyền vào các item trước sau đó thêm vào các item tiếp theo 
             this.props.products.toShop
-        ))// Sau khi lấy ra danh sách mới thì phải set lại skip để load more tiếp tục
+        ))
         .then(() => {
             this.setState({
                 skip,
@@ -115,7 +112,7 @@ class Newfeed extends Component {
         const windowBottom = Math.ceil(windowHeight + window.pageYOffset);
        
         if (windowBottom >= docHeight) {
-            if (this.props.products.toShopSize == this.state.limit) {
+            if (this.props.products.toShopSize == this.state.limit){
                 console.log(this.props.products.toShopSize, this.state.limit)
                 this.setState({isloading: true},()=>{this.LoadmoreCards()});
                 //console.log('bottom reached');

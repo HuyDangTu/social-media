@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../Layout/index';
 import { withRouter } from 'react-router-dom';
-import { getReportDetail, updateReport, deletePost, clearDetail, deleteComment } from '../../../actions/report_actions';
+import { getReportDetail, updateReport, deletePost, clearDetail, deleteComment, restrictUser } from '../../../actions/report_actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './ReportDetail.scss';
 import Slide from '@material-ui/core/Slide';
@@ -10,6 +10,16 @@ import Dialog from '@material-ui/core/Dialog';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
 import moment from 'moment';
+
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -21,9 +31,21 @@ class ReportDetail extends Component {
         limit: 5,
         DialogShowing: false,
         dialogType: "",
+
+        userId: "",
+
         setSnack: false,
         severity: "",
-        message: ""
+        message: "",
+
+        restrictedFunctions: [{
+            func: "Like",
+            time: 7,
+        }],
+
+        err: false,
+        func: "",
+        time: "",
     }
 
     componentDidMount(){
@@ -31,7 +53,23 @@ class ReportDetail extends Component {
         this.setState({
             id: id
         })
-        this.props.dispatch(getReportDetail(id));    
+        this.props.dispatch(getReportDetail(id)).then(response=>{
+            console.log(response)
+            if(response.payload.reportDetail){
+                let detail = response.payload.reportDetail;
+                switch(detail.reportType){
+                    case "user":
+                        this.setState({userId: detail.userId[0]._id});
+                        break;
+                    case "comment":
+                        this.setState({userId: detail.post[0].postedBy[0]._id});
+                        break;
+                    case "post":
+                        this.setState({userId: detail.post[0].postedBy[0]._id});
+                        break;
+                }
+            }
+        });    
     }
 
     componentWillUnmount() {
@@ -39,39 +77,39 @@ class ReportDetail extends Component {
     }
 
     renderContent = (detail) => {
-        if(detail.reportType == "post"){
-        return (
-            <div className="content_wrapper">
-                <p> <b>Nội dung:</b></p>
-                <div className="user_info">
-                    <img src={detail.post[0].postedBy[0].avt}/>
-                    <div className="name">
-                        {detail.post[0].postedBy[0].userName}
+        switch(detail.reportType){
+            case "post": {
+                return (
+                    <div className="content_wrapper">
+                        <p><b>Nội dung:</b></p>
+                        <div className="user_info">
+                            <img src={detail.post[0].postedBy[0].avt}/>
+                            <div className="name">
+                                {detail.post[0].postedBy[0].userName}
+                            </div>
+                        </div>
+                        <p>{detail.post[0].description}</p>
+                        <div className="images">
+                            <img src={detail.post[0].images[0].url} />
+                        </div>
+                        <p className="likes">
+                            <img src={require('../../../asset/newfeed_page/active_like_icon2x.png')} />
+                            {detail.post[0].likes.length} lượt thích
+                        </p>
+                        <div className="comment_list">
+                        {
+                            this.showComments(detail.post[0].comments)
+                        }
+                        </div>
                     </div>
-                </div>
-                <p>{detail.post[0].description}</p>
-                <div className="images">
-                    <img src={detail.post[0].images[0].url} />
-                </div>
-                <p className="likes">
-                    <img src={require('../../../asset/newfeed_page/active_like_icon2x.png')} />
-                    {detail.post[0].likes.length} lượt thích
-                </p>
-                <div className="comment_list">
-                {
-                    this.showComments(detail.post[0].comments)
-                }
-                </div>
-            </div>
-        )}else{
-            const comment = detail.comment[0]; 
-            const post = detail.post[0]; 
-            return (
-            
-            <div className="content_wrapper">
-                
+                )
+            }
+            case "comment":{
+                const comment = detail.comment[0]; 
+                const post = detail.post[0]; 
+                return (
+                <div className="content_wrapper">
                     <p><b>Nội dung:</b></p>
-
                     <div className="comment_list">
                         <div className="comment">
                             <div className="user_avt">
@@ -85,9 +123,7 @@ class ReportDetail extends Component {
                             </div>
                         </div>
                     </div>
-
                     <p>trong bài viết: </p>
-
                     <div className="user_info">
                         <img src={post.postedBy[0].avt} />
                         <div className="name">
@@ -102,9 +138,14 @@ class ReportDetail extends Component {
                         <img src={require('../../../asset/newfeed_page/active_like_icon2x.png')} />
                         {post.likes.length} lượt thích
                     </p>
-
-                
-            </div>)
+                </div>)
+            }
+            case "user":{
+                return (
+                <div className="content_wrapper">
+                    <p><b>Nội dung:</b></p>                
+                </div>)
+            }
         }
     }
 
@@ -143,6 +184,34 @@ class ReportDetail extends Component {
         })
     }
 
+    AddRestrictedFunction = (func,time) =>{
+        if(func == "" || time == ""){
+            this.setState({err: true});
+        }else{
+            if(this.state.restrictedFunctions.some(item => item.func == func)){
+                console.log("shdghj");
+                let updatedRestrictedFunctions = [...this.state.restrictedFunctions]
+                updatedRestrictedFunctions.map(item => {
+                    if(item.func == func){
+                        item.time = time;
+                    }
+                })
+                this.setState({
+                    restrictedFunctions: updatedRestrictedFunctions,
+                    err: false,
+                })
+            }else{
+                console.log("tưyeyudghj");
+                let updatedRestrictedFunctions = [...this.state.restrictedFunctions]
+                updatedRestrictedFunctions.push({func,time})
+                this.setState({
+                    restrictedFunctions: updatedRestrictedFunctions,
+                    err: false,
+                })
+            }
+        }
+    }
+
     deleteContent = () => {
         if (this.props.reports.reportDetail.reportType == "post"){
             this.props.dispatch(deletePost(this.props.reports.reportDetail.post[0]._id, this.state.id))
@@ -162,6 +231,46 @@ class ReportDetail extends Component {
                     this.setState({ DialogShowing: false, setSnack: true, severity: "success", message: "Thành công" })
                 } else {
                     this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
+                }
+            })
+        }
+    }
+
+    handleClick = () =>{}
+
+    handleDelete = (func) =>{
+        let updatedRestrictedFunctions = [...this.state.restrictedFunctions]
+        updatedRestrictedFunctions = updatedRestrictedFunctions.filter(item => 
+            item.func != func
+        )
+        this.setState({
+            restrictedFunctions: updatedRestrictedFunctions
+        },()=>{console.log(this.state.restrictedFunctions)})
+    }
+    
+    selectFunc = (event) => {
+        // console.log(event);
+        this.setState({func: event.target.value})
+    }
+    selectTime = (event) => {
+        this.setState({time: event.target.value})
+        // console.log(event);
+    }
+
+    restrictUserFunction = () =>{
+        if(this.state.restrictedFunctions.length == 0){
+            this.setState({err: true})
+        }else{
+            console.log(this.state.userId)
+            this.props.dispatch(restrictUser(this.state.restrictedFunctions,this.state.userId,this.state.id)).then(response => {
+                console.log(response)
+                if(response.payload.success){
+                    this.setState({
+                        setSnack: true,
+                        severity: "success",
+                        message: "Thành công",
+                        DialogShowing: false,
+                    });
                 }
             })
         }
@@ -191,10 +300,68 @@ class ReportDetail extends Component {
             case "deleteConfirm":
                 template = (
                     <div className="deleteConfirm">
-                        <h5> Bạn chắc chắn muốn xóa nội dung này?</h5>
+                        <h5> Bạn có chắc chắn xóa nội dung này</h5>
                         <div className="btn_wrapper">
-                            <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
-                            <p className="confirm_btn" onClick={() => {this.deleteContent()}} >Xóa</p>
+                            <p className="confirm_btn" onClick={() => {this.deleteContent()}} >Xóa nội dung</p>
+                            <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
+                        </div>
+                    </div>)
+                break;
+            case "restrictFunctions":
+                template = (
+                    <div className="deleteConfirm">
+                        <h5> Hạn chế chức năng của người dùng vi phạm</h5>
+                        <div className="restricted-functions">
+                        {
+                            this.state.restrictedFunctions? 
+                                this.state.restrictedFunctions.map(item => {
+                                    return  <Chip
+                                        label={` ${item.func} | ${item.time} ngày `}
+                                        onClick={() => this.handleDelete(item.func)}
+                                        onDelete={() => this.handleDelete(item.func)}
+                                        variant="outlined"
+                                        />
+                                })
+                            :""
+                        }
+                        <p>{this.state.err?"Vui lòng chọn chức năng và thời gian":""}</p>
+                        </div>
+                        <div className="add-restricted-functions">
+                        <FormControl variant="outlined" className="select">
+                            <InputLabel id="demo-simple-select-outlined-label">Chức năng</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            onChange={(event) => {this.selectFunc(event)}}
+                            label="Chức năng"
+                            >
+                            <MenuItem value="Like">Thích</MenuItem>
+                            <MenuItem value="Post">Đăng bài</MenuItem>
+                            <MenuItem value="Comment">Bình luận</MenuItem>
+                            <MenuItem value="Follow">Theo dõi</MenuItem>
+                            </Select>
+                        </FormControl>
+                             <FormControl variant="outlined" className="select">
+                                <InputLabel id="demo-simple-select-outlined-label">Thời gian</InputLabel>
+                                <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                onChange={(event) => {this.selectTime(event)}}
+                                label="Thời gian"
+                                >
+                                <MenuItem value={7}>7</MenuItem>
+                                <MenuItem value={15}>15</MenuItem>
+                                <MenuItem value={30}>30</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <Button onClick={()=>{this.AddRestrictedFunction(this.state.func, this.state.time)}} variant="outlined" color="primary">
+                                Thêm
+                            </Button>
+                            {/* <button onClick={this.AddRestrictedFunction}>Add</button> */}
+                        </div>
+                        <div className="btn_wrapper">
+                            <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
+                            <p className="confirm_btn" onClick={() => {this.restrictUserFunction()}} >Xong</p>
                         </div>
                     </div>)
                 break;
@@ -252,13 +419,19 @@ class ReportDetail extends Component {
                                                         DialogShowing: true,
                                                         dialogType: "invalidReport",
                                                     })
-                                                }}>Không đồng ý</button>
+                                                }}>Nội dung không vi phạm</button>
                                                 <button className="btn_delete" onClick={() => {
                                                     this.setState({
                                                         DialogShowing: true,
                                                         dialogType: "deleteConfirm",
                                                     })
-                                                }}>Đồng ý</button>
+                                                }}>Xóa nội dung</button>
+                                                 <button className="btn_restrict" onClick={() => {
+                                                    this.setState({
+                                                        DialogShowing: true,
+                                                        dialogType: "restrictFunctions",
+                                                    })
+                                                }}>Hạn chế tài khoản</button>
                                         </div>
                                                 : <p>Đã xử lý ngày: <b>{moment(detail.updatedAt).fromNow()} </b></p>
                                     }
@@ -288,6 +461,7 @@ class ReportDetail extends Component {
         );
     }
 }
+
 function mapStateToProps(state) {
     return {
         reports: state.reports

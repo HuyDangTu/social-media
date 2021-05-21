@@ -7,7 +7,7 @@ import FormField from '../ultils/Form/FormField';
 import './profilesetting.scss';
 import { populateOptionFields, update, ifFormValid, generateData, resetFields } from '../ultils/Form/FormActions';
 import { GridDots, User, Lock } from 'tabler-icons-react'
-import { updateprofileimgfile, updateprofileimg, changeProfile, changePassword,auth} from '../../actions/user_action';
+import { updateprofileimgfile, updateprofileimg, changeProfile, changePassword,auth, getBlockedUsers, unBlockUser, blockUser } from '../../actions/user_action';
 import { Link, withRouter, useParams } from 'react-router-dom';
 import { Button, CircularProgress, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
@@ -242,6 +242,7 @@ class ProfileSettings extends Component {
 
     componentDidMount() {
         this.getUserForm();
+        this.props.dispatch(getBlockedUsers());
     }
 
     handleSetting = (type) => {
@@ -295,6 +296,215 @@ class ProfileSettings extends Component {
         });
         this.setState({ edited: true })
     }
+    unblock = (id) =>{
+        this.props.dispatch(unBlockUser(id))
+    }
+    renderCotent = (type) =>{
+        switch (type){
+            case 'profile':
+                return <form className="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail" onSubmit={(event) => this.submitForm(event)}>
+                            <div className="row setting_type">
+                                <div className="col-xl-3 col-md-3 col-sm-3 col-4 label">
+                                    {
+                                        this.state.loading ?
+                                            <div class="overlay"><CircularProgress style={{ color: '#5477D5' }} thickness={7} />
+                                            </div>
+
+                                            :
+                                            ''
+                                    }
+                                    <img src={this.props.user.userData.avt}></img>
+                                </div>
+                                <div className="col-xl-9 col-md-9 col-sm-9 col-8 field">
+                                    <h2>{this.props.user.userData.userName}</h2>
+                                    <label className="custom-file-upload">
+                                        <input type="file" onChange={this.onFileChange} />
+                                        <h6>Sửa ảnh đại diện</h6>
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3 label">
+                                    <h3>Riêng tư</h3>
+
+                                </div>
+                                <div className="col-xl-9 col-md-9  field">
+
+                                    <Switch checked={this.state.privateMode} onColor="#7166F9" onChange={() => this.setState({ privateMode: !this.state.privateMode })}>
+
+                                    </Switch>
+
+                                </div>
+                            </div>
+                            <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3 label">
+                                    <h3>Họ Tên</h3>
+                                </div>
+                                <div className="col-xl-9 col-md-9 field">
+                                    <FormField
+                                        //Có thể để trống phần description nên k cần xử lý event onChange,..
+                                        id={'name'}
+                                        formData={this.state.formData.name}
+                                        change={(element) => this.updateForm(element)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3  label">
+                                    <h3>User name</h3>
+                                </div>
+                                <div className="col-xl-9 col-md-9  field">
+                                    <FormField
+                                        //Có thể để trống phần description nên k cần xử lý event onChange,..
+                                        id={'userName'}
+                                        formData={this.state.formData.userName}
+                                        change={(element) => this.updateForm(element)}
+
+                                    />
+                                </div>
+                            </div>
+                            <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3  label">
+                                    <h3>Email</h3>
+                                </div>
+                                <div className="col-xl-9 col-md-9 field">
+                                    <FormField
+                                        //Có thể để trống phần description nên k cần xử lý event onChange,..
+                                        id={'email'}
+                                        formData={this.state.formData.email}
+                                        change={(element) => this.updateForm(element)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3 label">
+                                    <h3>Mô tả</h3>
+                                </div>
+                                <div className="col-xl-9 col-md-9 field">
+                                    <FormField
+                                        //Có thể để trống phần description nên k cần xử lý event onChange,..
+                                        id={'bio'}
+                                        formData={this.state.formData.bio}
+                                        change={(element) => this.updateForm(element)}
+                                    />
+                                </div>
+                            </div>
+                            {
+                                this.state.formError ?
+                                <div className="row setting_type">
+                                    <div className="ol-xl-3 col-md-3 label">
+                                    </div>
+                                    <div className="col-xl-9 col-md-9 field">
+                                        {this.state.formMessage}
+                                    </div>
+                                </div>
+                                : ""
+                            }
+                            <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3 label">
+                                </div>
+                                {
+                                this.state.edited?
+                                    <div className="col-xl-9 col-md-9 field">
+                                    <Button className="send_btn" onClick={(event) => { this.submitForm(event) }}>
+                                        Gửi
+                                        </Button>
+                                </div>
+                                :
+                                <div className="col-xl-9 col-md-9  field">
+                                    <Button className="send_btn disable" disabled="true" onClick={(event) => { this.submitForm(event) }}>
+                                        Gửi
+                                        </Button>
+                                </div>
+                                }
+                            </div>
+                        </form>
+            case 'password':
+                return <form className="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail" onSubmit={(event) => this.changePassword(event)}>                
+                    <div className="row setting_type">
+                        <div className="col-xl-3 col-md-3 label">
+                            <h3>Mật khẩu</h3>
+                        </div>
+                        <div className="col-xl-9 col-md-9 field">
+                            <FormField
+                                id={'currentPassword'}
+                                formData={this.state.passwordData.currentPassword}
+                                //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
+                                change={(element) => this.updatePasswordForm(element)} />
+                        </div>
+                    </div>
+                    <div className="row setting_type">
+                        <div className="ol-xl-3 col-md-3 label">
+                            <h3>Mật khẩu mới</h3>
+                        </div>
+                        <div className="col-xl-9 col-md-9 field">
+                            <FormField
+                                id={'password'}
+                                formData={this.state.passwordData.password}
+                                //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
+                                change={(element) => this.updatePasswordForm(element)}/>
+                        </div>
+                    </div>
+                    <div className="row setting_type">
+                        <div className="ol-xl-3 col-md-3 label">
+                            <h3>Nhập lại</h3>
+                        </div>
+                        <div className="col-xl-9 col-md-9 field">
+                            <FormField
+                                id={'confirmPassword'}
+                                formData={this.state.passwordData.confirmPassword}
+                                //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
+                                change={(element) => this.updatePasswordForm(element)}/>
+                        </div>
+                    </div>
+                    {this.state.formError ?
+                        <div className="row setting_type">
+                            <div className="ol-xl-3 col-md-3 label">
+                            </div>
+                            <div className="col-xl-9 col-md-9 field">
+                                {this.state.formMessage}
+                            </div>
+                        </div>
+                        : ""
+                    }
+                    <div className="row setting_type">
+                        <div className="ol-xl-3 col-md-3 label">
+                        </div>
+                        <div className="col-xl-9 col-md-9 field">
+                            <Button className="send_btn" onClick={(event) => { this.changePassword(event) }}>
+                                Gửi
+                            </Button>
+                        </div>
+                    </div>
+                </form>
+            case 'privacy':
+                return <div className=" col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail">
+                    <div className="wrapper">
+                        <h6 className="title">Người dùng bị chặn</h6>
+                        <ul className="blocked-user-list">
+                        {
+                            this.props.user.blockedUsers.map(item => {
+                                return  <li className="blocked-user-item" key={item._id}>
+                                    <div className="blocked-user-info">
+                                        <img src={item.avt} className="blocked-user-avt"/>
+                                        <h6 className="blocked-user-name" >{item.userName}</h6>
+                                    </div>
+                                    <div >
+                                    {
+                                        this.props.user.userData.blockedUsers.includes(item._id)?
+                                        <button onClick={()=>{this.unblock(item._id)}} className="bnt btn-block">Bỏ chặn</button>
+                                        :
+                                        <button onClick={()=>{this.props.dispatch(blockUser(item._id))}} className="bnt btn-unblock">Chặn</button>
+                                    }
+                                    </div>        
+                                </li>
+                            })
+                        }
+                        </ul>
+                    </div>
+                </div>
+        }
+    }
 
     render() {
         return (
@@ -315,186 +525,17 @@ class ProfileSettings extends Component {
                                         :
                                         <Button className="options disable" onClick={() => this.handleSetting('password')} ><Lock size={20} strokeWidth={1} color="black" /><p>Đổi mật khẩu</p></Button>
                                 }
+                                 {
+                                    this.state.settingState == 'Bảo mật' ?
+                                        <Button className="options" onClick={() => this.handleSetting('privacy')} ><Lock size={20} strokeWidth={1} color="black" /><p>Bảo mật</p></Button>
+                                        :
+                                        <Button className="options disable" onClick={() => this.handleSetting('privacy')} ><Lock size={20} strokeWidth={1} color="black" /><p>Bảo mật</p></Button>
+                                }
                             </div>
                             {
-                                this.state.settingState == 'profile' ?
-                                    <form className="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail" onSubmit={(event) => this.submitForm(event)}>
-                                        <div className="row setting_type">
-                                            <div className="col-xl-3 col-md-3 col-sm-3 col-4 label">
-                                                {
-                                                    this.state.loading ?
-                                                        <div class="overlay"><CircularProgress style={{ color: '#5477D5' }} thickness={7} />
-                                                        </div>
-
-                                                        :
-                                                        ''
-                                                }
-                                                <img src={this.props.user.userData.avt}></img>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 col-sm-9 col-8 field">
-                                                <h2>{this.props.user.userData.userName}</h2>
-                                                <label className="custom-file-upload">
-                                                    <input type="file" onChange={this.onFileChange} />
-                                                    <h6>Sửa ảnh đại diện</h6>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                                <h3>Riêng tư</h3>
-
-                                            </div>
-                                            <div className="col-xl-9 col-md-9  field">
-
-                                                <Switch checked={this.state.privateMode} onColor="#7166F9" onChange={() => this.setState({ privateMode: !this.state.privateMode })}>
-
-                                                </Switch>
-
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                                <h3>Họ Tên</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <FormField
-                                                    //Có thể để trống phần description nên k cần xử lý event onChange,..
-                                                    id={'name'}
-                                                    formData={this.state.formData.name}
-                                                    change={(element) => this.updateForm(element)}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3  label">
-                                                <h3>User name</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9  field">
-                                                <FormField
-                                                    //Có thể để trống phần description nên k cần xử lý event onChange,..
-                                                    id={'userName'}
-                                                    formData={this.state.formData.userName}
-                                                    change={(element) => this.updateForm(element)}
-
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3  label">
-                                                <h3>Email</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <FormField
-                                                    //Có thể để trống phần description nên k cần xử lý event onChange,..
-                                                    id={'email'}
-                                                    formData={this.state.formData.email}
-                                                    change={(element) => this.updateForm(element)}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                                <h3>Mô tả</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <FormField
-                                                    //Có thể để trống phần description nên k cần xử lý event onChange,..
-                                                    id={'bio'}
-                                                    formData={this.state.formData.bio}
-                                                    change={(element) => this.updateForm(element)}
-                                                />
-                                            </div>
-                                        </div>
-                                        {
-                                            this.state.formError ?
-                                            <div className="row setting_type">
-                                                <div className="ol-xl-3 col-md-3 label">
-                                                </div>
-                                                <div className="col-xl-9 col-md-9 field">
-                                                    {this.state.formMessage}
-                                                </div>
-                                            </div>
-                                            : ""
-                                        }
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                            </div>
-                                            {
-                                            this.state.edited?
-                                                <div className="col-xl-9 col-md-9 field">
-                                                <Button className="send_btn" onClick={(event) => { this.submitForm(event) }}>
-                                                    Gửi
-                                                 </Button>
-                                            </div>
-                                            :
-                                            <div className="col-xl-9 col-md-9  field">
-                                                <Button className="send_btn disable" disabled="true" onClick={(event) => { this.submitForm(event) }}>
-                                                    Gửi
-                                                 </Button>
-                                            </div>
-                                            }
-                                        </div>
-                                    </form>
-                                    :
-                                    <form className="col-xl-9 col-lg-9 col-md-9 col-sm-9 col-10 setting_detail" onSubmit={(event) => this.changePassword(event)}>
-                                       
-                                        <div className="row setting_type">
-                                            <div className="col-xl-3 col-md-3 label">
-                                                <h3>Mật khẩu</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <FormField
-                                                    id={'currentPassword'}
-                                                    formData={this.state.passwordData.currentPassword}
-                                                    //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
-                                                    change={(element) => this.updatePasswordForm(element)} />
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                                <h3>Mật khẩu mới</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <FormField
-                                                    id={'password'}
-                                                    formData={this.state.passwordData.password}
-                                                    //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
-                                                    change={(element) => this.updatePasswordForm(element)}/>
-                                            </div>
-                                        </div>
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                                <h3>Nhập lại</h3>
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <FormField
-                                                    id={'confirmPassword'}
-                                                    formData={this.state.passwordData.confirmPassword}
-                                                    //Hàm change nhận vào một element và gọi đến hàm updateForm(element) 
-                                                    change={(element) => this.updatePasswordForm(element)}/>
-                                            </div>
-                                        </div>
-                                        {this.state.formError ?
-                                            <div className="row setting_type">
-                                                <div className="ol-xl-3 col-md-3 label">
-                                                </div>
-                                                <div className="col-xl-9 col-md-9 field">
-                                                    {this.state.formMessage}
-                                                </div>
-                                             </div>
-                                            : ""
-                                        }
-                                        <div className="row setting_type">
-                                            <div className="ol-xl-3 col-md-3 label">
-                                            </div>
-                                            <div className="col-xl-9 col-md-9 field">
-                                                <Button className="send_btn" onClick={(event) => { this.changePassword(event) }}>
-                                                    Gửi
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </form>
+                               this.renderCotent(this.state.settingState)
                             }
+                            
                         </div>
                     </div>
                     <Snackbar

@@ -6,7 +6,8 @@ import {
     UPDATE_REPORT,
     DELETE_POST_REPORT,
     GET_REPORT_DETAIL,
-    CLEAR
+    CLEAR,
+    RESTRICT_USER
 } from './types';
 
 
@@ -107,8 +108,8 @@ export function updateReport(id){
     }
 }
 
-export function deletePost(postId,reportId){
-    const data = { postId, reportId }
+export function deletePost(postId,reportId, id){
+    const data = { postId, reportId, id }
     const request = axios.post(`${REPORT_SERVER}/delete_post`, data)
         .then(response => {
             console.log(response.data);
@@ -123,6 +124,20 @@ export function deletePost(postId,reportId){
 export function deleteComment(commentId, reportId) {
     const data = { commentId, reportId }
     const request = axios.post(`${REPORT_SERVER}/delete_comment`, data)
+        .then(response => {
+            console.log(response.data);
+            return response.data
+        })
+    return {
+        type: UPDATE_REPORT,
+        payload: request
+    }
+}
+
+export function restrictUser(func,userId,reportId){
+    const data = { funcList: func,_id: userId, reportId: reportId}
+    console.log(data);
+    const request = axios.put(`${REPORT_SERVER}/restrictUserFunction`, data)
         .then(response => {
             console.log(response.data);
             return response.data

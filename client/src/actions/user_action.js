@@ -23,6 +23,8 @@ import {
     EDIT_HIGHLIGHT_STORY,
     GET_RECOMMEND_POST,
     BLOCK_USER,
+    GET_BLOCKED_USERS,
+    UNBLOCKED_USERS,
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -142,6 +144,7 @@ export function findPosted(id) {
         payload: request
     }
 }
+
 export function follow(followId) {
     const request = axios.put(`${USER_SERVER}/follow/${followId}`)
         .then(response => response.data.followings);
@@ -150,6 +153,7 @@ export function follow(followId) {
         payload: request
     }
 }
+
 export function unfollow(unfollowId) {
     const request = axios.put(`${USER_SERVER}/unfollow/${unfollowId}`)
         .then(response => response.data.followings);
@@ -158,6 +162,7 @@ export function unfollow(unfollowId) {
         payload: request
     }
 }
+
 export function updateprofileimgfile(file) {
     let formData = new FormData();
     const config = {
@@ -300,12 +305,40 @@ export function getRecommendPost(limit,skip, previousState = []){
         payload: request,
     }
 }
+
 export function blockUser(id){
 
     const request = axios.put(`${USER_SERVER}/block/${id}`)
         .then(response => {
             return response.data
         })
-    
-    return request
+    return {
+        type: BLOCK_USER,
+        payload: request
+    }
 }
+
+export function unBlockUser(id){
+
+    const request = axios.put(`${USER_SERVER}/unblock/${id}`)
+        .then(response => {
+            return response.data
+        })
+    return {
+        type: UNBLOCKED_USERS,
+        payload: request
+    }
+}
+
+
+export function getBlockedUsers(){
+
+    const request = axios.get(`${USER_SERVER}/blockedUsers`)
+    .then(response =>{
+        return response.data
+    })
+    return {
+        type: GET_BLOCKED_USERS,
+        payload: request
+    }
+} 

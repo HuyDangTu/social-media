@@ -20,6 +20,9 @@ import {
     DELETE_HIGHLIGHT_STORY,
     EDIT_HIGHLIGHT_STORY,
     GET_RECOMMEND_POST,
+    GET_BLOCKED_USERS,
+    UNBLOCKED_USERS,
+    BLOCK_USER
 } from '../actions/types';
 
 export default function(state={},action){
@@ -166,6 +169,39 @@ export default function(state={},action){
             return {...state, 
                 recommendedPost: action.payload.posts,
                 recommendedPostSize: action.payload.size
+            }
+        }
+        case GET_BLOCKED_USERS:{
+            return {...state,
+                blockedUsers: action.payload
+            }
+        }
+        case BLOCK_USER:{
+
+            let updatedBlockedUsers = [...state.userData.blockedUsers, action.payload.userId]
+
+            return {
+                ...state,
+                userData:{
+                    ...state.userData,
+                    blockedUsers: updatedBlockedUsers
+                }
+            }
+        }
+        case UNBLOCKED_USERS: {
+            let updatedBlockedUsers = [...state.userData.blockedUsers]
+            console.log("data", updatedBlockedUsers);
+            console.log("data", action.payload);
+            updatedBlockedUsers = updatedBlockedUsers.filter(item =>
+                item != action.payload.userId
+            );
+            console.log("data", updatedBlockedUsers);
+            return {
+                ...state,
+                userData:{
+                    ...state.userData,
+                    blockedUsers: updatedBlockedUsers
+                }
             }
         }
         default: return state;

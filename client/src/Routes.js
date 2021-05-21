@@ -57,7 +57,6 @@ const Routes = () =>{
         <Route path="/explore" component={Auth(Explore, true)}></Route>
         <Route path="/notfound" component={Auth(NotFoundPage, true)}></Route>
 
-
         {/* <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route> */}
 
         {/* Admin route */}

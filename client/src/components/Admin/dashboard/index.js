@@ -34,7 +34,7 @@ class Dashboard extends Component {
             case "user":
                 return (
                     <p>
-                        <b>{item.sentBy[0].userName}</b> đã báo cáo người dùng  <b className="name" >{item.post.postedBy[0].userName}</b>
+                        <b>{item.sentBy[0].userName}</b> đã báo cáo người dùng  <b className="name" >{item.userId[0].userName}</b>
                     </p>
                 )
             case "comment":
@@ -220,7 +220,6 @@ class Dashboard extends Component {
                                 <button className="loadmore" onClick={()=>{this.loadmore()}}>Load more</button>
                                 : ""
                         }
-                       
                     </div>
                 </Layout>
             </div>

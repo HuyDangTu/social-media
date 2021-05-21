@@ -14,6 +14,8 @@ import { Link, withRouter } from 'react-router-dom';
 import FormField from '../ultils/Form/FormField';
 import { populateOptionFields, update, ifFormValid, generateData, resetFields } from '../ultils/Form/FormActions';
 import Slide from '@material-ui/core/Slide';
+import Report from '../Report/Report';
+import { getPolicy } from '../../actions/policy_actions';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -63,7 +65,15 @@ class Profile extends Component {
 
         setSnack: false,
         addStorySuccess: false,
+
+        reportStatus: false,
+        reportSuccess: false,
+        SnackMess: "",
+
+        isReportFormShow: false,
+        reportData: {}
     }
+    
     componentDidMount() {
         const userID = this.props.match.params.id
         this.props.dispatch(findProfile(userID)).then((response)=>{
@@ -75,7 +85,31 @@ class Profile extends Component {
         this.props.dispatch(findPosted(userID))
         this.props.dispatch(getHighLightStory(userID))
         this.props.dispatch(getAllStories());
+        this.props.dispatch(getPolicy());
     }
+
+    showReportForm(type){
+        return <Report 
+            isReportFormShow={this.state.isReportFormShow}
+            reportData = {this.state.reportData}
+            handleSnackBar={(mess,res) => { this.handleSnackBar(mess,res) }}
+            list={this.props.policies.policyList}
+            closeReportForm = {()=>this.closeReportForm()}
+        />
+    }
+
+    handleSnackBar = (mess,res) => {
+        console.log(mess,res);
+        this.setState({ reportStatus: true, SnackMess: mess, reportSuccess: res})
+    }
+
+    closeReportForm = () =>{
+        this.setState({
+            isReportFormShow: false,
+            reportData: {},
+        }) 
+    }
+
     componentDidUpdate (prevProps) {
         if (prevProps.location.key !== this.props.location.key) {
             const userID = this.props.match.params.id
@@ -93,6 +127,7 @@ class Profile extends Component {
             this.setState({setfollowerDiaglog:false,  setType: 'posted',setfollowingDiaglog:false});
         }
     }
+
     handleClickunfollow = async (id) => {
         await this.props.dispatch(unfollow(id)).then(response=>
             {
@@ -112,6 +147,7 @@ class Profile extends Component {
     openCreateHighlightStoryDiaglog = () =>{
         this.setState({createHighlightStoryDiaglog: true})
     }
+
     openEditor = () => {
     }
 
@@ -122,6 +158,7 @@ class Profile extends Component {
         })
         await this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
     }
+
     handleType = (type) => {
         if (type == 'tagged') {
             this.setState({ setType: type })
@@ -136,9 +173,11 @@ class Profile extends Component {
             this.props.dispatch(findSaved(this.props.user.userProfile ? this.props.user.userProfile._id : 0))
         }
     }
+
     showDialog = () => {
         this.setState({ setDialog: true })
     }
+
     countNumberOfPost = () => {
         const postlist = this.props.user.postlist;
         let cnt = 0;
@@ -147,11 +186,13 @@ class Profile extends Component {
         })
         return cnt;
     }
+
     displayStory = () =>{
         this.setState({
             storyDialog: true,
         })
     }
+
     setIndex = (index) =>{
         this.setState({
             storyIndex: index,
@@ -227,14 +268,14 @@ class Profile extends Component {
                                                 <Button className="follow_options"> <Link to={`/message/inbox/${this.props.match.params.id}`}>Nhắn tin</Link></Button>
                                                 {
                                                     yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
-                                                        <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}> Đang Theo dõi</Button>
+                                                        <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}>Đang Theo dõi</Button>
                                                         :
                                                         <Button className="follow_options" onClick={() => this.handleClickfollow(userProfile ? userProfile._id : 0)}>Theo dõi</Button>
                                                         : <Skeleton variant="rect" width={195} height={40} />
                                                         : <Skeleton variant="rect" width={195} height={40} />
                                                         
                                                 }
-                                                <Button onClick={this.showDialog}><Dots size={24} strokeWidth={1} color={'#7166F9'} /></Button>
+                                                <Button onClick={this.showDialog}><Dots size={24} strokeWidth={1} color={'#7166F9'}/></Button>
                                             </div>
                                         ):''
                                     }
@@ -247,24 +288,27 @@ class Profile extends Component {
                                         open={this.state.setSnack}
                                         onClose={() => this.setState({ setSnack: false })}
                                         autoHideDuration={1000}
-                                    // message=
-
                                     >
                                     <MuiAlert elevation={6} variant="filled" severity={this.state.severity} message={this.state.setMessage}>{this.state.setMessage}</MuiAlert>
                                     </Snackbar>
                                     <Dialog className="dialog_wrapper" onClose={() => this.setState({ setDialog: false })} open={this.state.setDialog} >
                                         <Button onClick={()=>{
-                                            blockUser(userProfile._id).then(response =>{
-                                                if(response.success){
+                                            this.props.dispatch(blockUser(userProfile._id)).then(response =>{
+                                                if(response.payload.success){
                                                     this.props.history.push("/newfeed");
                                                 }else{
                                                     console.log("failllllllllllllll");
                                                 }
                                             })
                                         }}> Chặn </Button>
-                                        <Button> Báo cáo </Button>
+                                        <Button onClick={()=>{this.setState({isReportFormShow: true,
+                                                setDialog: false, 
+                                                reportData: {
+                                                    reportType: "user",
+                                                    userId: this.props.match.params.id,
+                                                }
+                                            })}}> Báo cáo </Button>
                                     </Dialog>
-
                                 </div>
                                 <div className="profile_number">
                                     <div className="number_holder">
@@ -506,9 +550,9 @@ class Profile extends Component {
                             </div>
                         </div> 
                     </Dialog>
-                :"loading"
+                    :"loading"
                 }
-                {/* Các Dialog xác nhận chỉnh sửa */}
+                {/* Thông báo chỉnh sửa story nổi bật thành công */}
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -519,7 +563,21 @@ class Profile extends Component {
                     autoHideDuration={1000}
                 >
                     <MuiAlert elevation={6} variant="filled" severity={`${this.state.addStorySuccess?"success":"warning"}`} >{this.state.formMessage}</MuiAlert>
-                </Snackbar>  
+                </Snackbar>
+                {/* Thông báo báo cáo tài khoản thành công */}
+               <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.reportStatus}
+                    onClose={() => this.setState({ reportStatus: false })}
+                    autoHideDuration={3000}>
+                    <MuiAlert elevation={6} variant="filled" severity={this.state.reportSuccess?"success":"warning"} >{this.state.SnackMess}</MuiAlert>
+                </Snackbar>
+                {
+                    this.showReportForm()
+                }
             </Layout>
         )
     }
@@ -529,6 +587,7 @@ const mapStateToProps = (state) => {
     return {
         user: state.user,
         products: state.products,
+        policies: state.policies,
     }
 }
 export default connect(mapStateToProps)(withRouter(Profile));

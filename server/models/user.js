@@ -73,8 +73,13 @@ const userSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Post"
     }],
+    restrictedFunctions: [{
+        function: String,
+        amountOfTime: Number,
+        assignedAt: Date,
+    }],
     resetToken: {
-        type:String
+        type: String
     },
     resetTokenExp: {
         type: Number

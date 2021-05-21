@@ -332,7 +332,7 @@ app.get('/api/users/removeimage', auth, (req, res) => {
 
 //------- ADD NEW -----------//
 app.post('/api/posts/create_post', auth, (req, res) => {
-
+    if(!isRestricted(req.user.restrictedFunctions,"Post")){
     User.find({ userName: { $in: req.body.userTag } })
         .select("_id")
         .exec((err, users) => {
@@ -363,6 +363,9 @@ app.post('/api/posts/create_post', auth, (req, res) => {
                 res.status(200).json({ success: true });
             })
         })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.post('/api/posts/update_post', auth, (req, res) => {
@@ -531,7 +534,7 @@ function findPost(postId, userHiddenPost, blockedUsers) {
         },
         {
             "$group": {
-                _id: '$_id',
+                _id: '$_ id',
                 description: { $first: '$description' },
                 dateDifference: { $first: '$dateDifference' },
                 images: { $first: '$images' },
@@ -574,6 +577,23 @@ app.post('/api/posts/getpostFormtag', auth, (req, res) => {
     })
 });
 
+function findBlockedUsers(id){
+    console.log(id)
+    return result = User.aggregate([
+        {
+            "$match": { "_id": ObjectId(id) }
+        },
+        {
+            "$project": {
+                "blockedUsers": 1,
+            }
+        },
+    ], function (err,user){
+        if(err) return []
+        return user
+    })
+}
+
 app.get('/api/posts/postDetail', auth, (req, res) => {
 
     let type = req.query.type;
@@ -589,10 +609,24 @@ app.get('/api/posts/postDetail', auth, (req, res) => {
     }
 
     findPost(items, req.user.hiddenPost, req.user.blockedUsers).then((post) => {
-        if(req.user.blockedUsers.includes(post[0].postedBy[0]._id)){
-            return res.status(200).json({ NotFound: true });
+        console.log(post)
+        if(post.length == 0){
+            return res.status(200).json({ NotFound: true });   
         }else{
-            res.status(200).json(post[0]);
+            if(req.user.blockedUsers.includes(post[0].postedBy[0]._id)){
+                return res.status(200).json({ NotFound: true });   
+            } 
+            else{
+                findBlockedUsers(post[0].postedBy[0]._id).then((result) => {
+                    console.log("result", result);
+                    if(result[0].blockedUsers.includes(Object(req.user._id)) != -1){
+                        console.log("yessssssssssssss")
+                        return res.status(200).json({ NotFound: true });
+                    }else{
+                        return res.status(200).json(post[0]);
+                    }
+                })
+            }
         }
     })
 })
@@ -1031,12 +1065,23 @@ app.post('/api/tags/getTag', auth, (req, res) => {
 });
 
 app.get('/api/tags/getFollowers', auth, (req, res) => {
+    
     User.find({ "_id": { $in: req.user.followings } })
         .select('userName -_id')
         .limit(5)
         .exec((err, followings) => {
             if (err) return res.status(400).send(err);
             res.send(followings);
+        })
+});
+
+app.get('/api/users/blockedUsers', auth, (req, res) => {
+    
+    User.find({ "_id": { $in: req.user.blockedUsers } })
+        .select('userName _id avt')
+        .exec((err, users) => {
+            if (err) return res.status(400).send(err);
+            res.send(users);
         })
 });
 
@@ -1064,62 +1109,77 @@ app.post('/api/tags/getTop10Tags', auth, (req, res) => {
 })
 
 app.put('/api/posts/save', auth, (req, res) => {
-
-    User.findByIdAndUpdate(req.user._id, {
-        $push: { saved: req.body.postId }
-    }, {
-        new: true
-    }).exec((err, user) => {
-        if (err) res.status(400).json(err);
-        res.status(200).json({user});
-    })
+    if(!isRestricted(req.user.restrictedFunctions,"Save")){ 
+        User.findByIdAndUpdate(req.user._id, {
+            $push: { saved: req.body.postId }
+        }, {
+            new: true
+        }).exec((err, user) => {
+            if (err) res.status(400).json(err);
+            res.status(200).json({user});
+        })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.put('/api/posts/unSave', auth, (req, res) => {
-    User.findByIdAndUpdate(req.user._id, {
-        $pull: { saved: req.body.postId }
-    },{
-        new: true
-    }).exec((err, user) => {
-        if (err) res.status(400).json(err);
-        res.status(200).json({user});
-    })
+    if(!isRestricted(req.user.restrictedFunctions,"Save")){   
+        User.findByIdAndUpdate(req.user._id, {
+            $pull: { saved: req.body.postId }
+        },{
+            new: true
+        }).exec((err, user) => {
+            if (err) res.status(400).json(err);
+            res.status(200).json({user});
+        })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.put('/api/posts/like', auth, (req, res) => {
-    Post.findByIdAndUpdate(req.body.postId, {
-        $push: { likes: req.user._id }
-    }, {
-        new: true
-    }).exec((err, post) => {
-        if (err) res.status(400).json(err);
-        findPost(req.body.postId, req.user.hiddenPost).then((post) => {
-            console.log(post);
-            const notification = new Notification({
-                sentFrom: req.user._id,
-                sentTo: post[0].postedBy[0]._id,
-                type: "likepost",
-                link: req.body.postId,
-                "seenStatus": false
-            });
-            SaveNotification(notification);
-            res.status(200).json(post);
+    if(!isRestricted(req.user.restrictedFunctions,"Like")){
+        Post.findByIdAndUpdate(req.body.postId, {
+            $push: { likes: req.user._id }
+        }, {
+            new: true
+        }).exec((err, post) => {
+            if (err) res.status(400).json(err);
+            findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+                console.log(post);
+                const notification = new Notification({
+                    sentFrom: req.user._id,
+                    sentTo: post[0].postedBy[0]._id,
+                    type: "likepost",
+                    link: req.body.postId,
+                    "seenStatus": false
+                });
+                SaveNotification(notification);
+                res.status(200).json(post);
+            })
         })
-    })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.put('/api/posts/unlike', auth, (req, res) => {
-    Post.findByIdAndUpdate(req.body.postId, {
+    if(!isRestricted(req.user.restrictedFunctions,"Like")){
+        Post.findByIdAndUpdate(req.body.postId, {
         $pull: { likes: req.user._id }
-    }, {
-        new: true
-    }).exec((err, post) => {
-        if (err) res.status(400).json(err);
-        findPost(req.body.postId, req.user.hiddenPost).then((post) => {
-            console.log(post);
-            res.status(200).json(post);
+        }, {
+            new: true
+        }).exec((err, post) => {
+            if (err) res.status(400).json(err);
+            findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+                console.log(post);
+                res.status(200).json(post);
+            })
         })
-    })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 ///////////////////
@@ -1132,7 +1192,7 @@ app.get('/api/users/:id', auth, (req, res) => {
         .populate("followings", "_id userName avt")
         .select("-password")
         .then(user => {
-            if(!req.user.blockedUsers.includes(user._id)){
+            if(!req.user.blockedUsers.includes(user._id) && !user.blockedUsers.includes(req.user._id)){
                 Post.find({ 
                     postedBy: req.params.id
                 })
@@ -1141,13 +1201,13 @@ app.get('/api/users/:id', auth, (req, res) => {
                     if (err) {
                         return res.status(422).json({ error: err })
                     }
-                    res.json({ user, posts })
+                    return res.status(200).json({ user, posts })
                 })
             }else{
                 return res.status(200).json({NotFound: true})
             }
         }).catch(err => {
-            return res.status(404).json({ error: "Users not found" })
+            return res.status(404).json({ err })
         })
 })
 
@@ -1285,21 +1345,21 @@ app.put('/api/users/block/:id', auth,(req,res)=>{
                 {$pull: { followers: req.user._id,followings: req.user._id }},
                 { new: true}, (err, results) => {
                 if (err) return res.status(400).json({success: false});
-                return res.status(200).json({ success: true })
+                return res.status(200).json({ success: true, userId: req.params.id })
             })
         })
 })
 
-// app.put('/api/users/unBlock/:id', auth,(req,res)=>{
-//     User.findByIdAndUpdate(req.user.id, {
-//         $pull: { blockedUsers: req.params._id }
-//     }, {
-//         new: true
-//     }).then((err,user) => {
-//         if(err) res.status(400).json({success: false});
-//         res.status(200).json({success: true});
-//     })
-// })
+app.put('/api/users/unblock/:id', auth,(req,res)=>{
+    User.findOneAndUpdate(
+        {"_id": req.user.id}, 
+        {$pull: { blockedUsers: req.params.id}},
+        {new: true},
+        (err, user) => {
+            if (err) return res.status(400).json({success: false});
+            return res.status(200).json({ success: true, userId: req.params.id })
+        })
+})
 
 app.put('/api/users/unfollow/:unfollowId', auth, (req, res) => {
     User.findByIdAndUpdate(req.params.unfollowId, {
@@ -1489,35 +1549,69 @@ app.post('/api/messages/save', jsonParser, (req, res) => {
 //            COMMENT
 // ==============================
 
-app.post('/api/posts/comment', auth, (req, res) => {
-    const comment = Comment({
-        content: req.body.content,
-        responds: [],
-        postedBy: req.user._id
-    });
-    comment.save((err, cmt) => {
-        if (err) return res.json(err);
-        Post.findByIdAndUpdate(req.body.postId, {
-            $push: { comments: cmt._id }
-        }, {
-            new: true
-        }).exec((err, post) => {
-            if (err) res.status(400).json(err);
+function isRestricted(restrictedFunctions, func){
+    var today = moment().startOf('day').valueOf();
+    console.log(restrictedFunctions.some(item => (item.function == func) && (item.amountOfTime>today)))
+    if(restrictedFunctions.some(item => (item.function == func) && (item.amountOfTime>today))){
+        return true
+    }else{
+        return false
+    }
+}
 
-            findPost(req.body.postId, req.user.hiddenPost).then((post) => {
-                const notification = new Notification({
-                    sentFrom: req.user._id,
-                    sentTo: post[0].postedBy[0]._id,
-                    type: "comment",
-                    link: req.body.postId,
-                    "seenStatus": false
-                });
-                SaveNotification(notification)
-                console.log(post);
-                res.status(200).json(post);
+
+app.post('/api/posts/test', auth, (req, res) => {
+
+    var today = moment().startOf('day').valueOf();
+    var next7Day = moment().startOf('day').add(7,'days').valueOf();
+
+    var tomorow = moment(today).endOf('day').valueOf();
+    res.status(200).json({today,tomorow,next7Day});
+
+    var today = moment().startOf('day').valueOf();
+    if(restrictedFunctions.some(item => {
+        item.func == func && item.time > today
+    })){
+        return true
+    }else{
+        return false
+    }
+
+})
+
+app.post('/api/posts/comment', auth, (req, res) => {
+    if(!isRestricted(req.user.restrictedFunctions,"Comment")){
+        const comment = Comment({
+            content: req.body.content,
+            responds: [],
+            postedBy: req.user._id
+        });
+        comment.save((err, cmt) => {
+            if (err) return res.json(err);
+            Post.findByIdAndUpdate(req.body.postId, {
+                $push: { comments: cmt._id }
+            }, {
+                new: true
+            }).exec((err, post) => {
+                if (err) res.status(400).json(err);
+
+                findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+                    const notification = new Notification({
+                        sentFrom: req.user._id,
+                        sentTo: post[0].postedBy[0]._id,
+                        type: "comment",
+                        link: req.body.postId,
+                        "seenStatus": false
+                    });
+                    SaveNotification(notification)
+                    console.log(post);
+                    res.status(200).json(post);
+                })
             })
         })
-    })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.put('/api/posts/respond', auth, (req, res) => {
@@ -1556,40 +1650,49 @@ app.put('/api/posts/hidePost', auth, (req, res) => {
 })
 
 app.put('/api/posts/likeComment', auth, (req, res) => {
-    Comment.findByIdAndUpdate(req.body.commentId, {
-        $push: { likes: req.user._id }
-    }, {
-        new: true
-    }).exec((err, comment) => {
-        if (err) res.status(400).json(err);
-        findPost(req.body.postId, req.user.hiddenPost).then((post) => {
-            const notification = new Notification({
-                sentFrom: req.user._id,
-                sentTo: comment.postedBy._id,
-                type: "likecomment",
-                link: req.body.postId,
-                "seenStatus": false
-            });
-            SaveNotification(notification);
-            console.log(post);
+    if(!isRestricted(req.user.restrictedFunctions,"Like")){
+        Comment.findByIdAndUpdate(req.body.commentId, {
+            $push: { likes: req.user._id }
+        }, {
+            new: true
+        }).exec((err, comment) => {
+            if (err) res.status(400).json(err);
+            findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+                const notification = new Notification({
+                    sentFrom: req.user._id,
+                    sentTo: comment.postedBy._id,
+                    type: "likecomment",
+                    link: req.body.postId,
+                    "seenStatus": false
+                });
+                SaveNotification(notification);
+                console.log(post);
 
-            res.status(200).json(post);
+                res.status(200).json(post);
+            })
         })
-    })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.put('/api/posts/unLikeComment', auth, (req, res) => {
-    Comment.findByIdAndUpdate(req.body.commentId, {
-        $pull: { likes: req.user._id }
-    }, {
-        new: true
-    }).exec((err, comment) => {
-        if (err) res.status(400).json(err);
-        findPost(req.body.postId, req.user.hiddenPost).then((post) => {
-            console.log(post);
-            res.status(200).json(post);
+
+    if(!isRestricted(req.user.restrictedFunctions,"Like")){
+        Comment.findByIdAndUpdate(req.body.commentId, {
+            $pull: { likes: req.user._id }
+        }, {
+            new: true
+        }).exec((err, comment) => {
+            if (err) res.status(400).json(err);
+            findPost(req.body.postId, req.user.hiddenPost).then((post) => {
+                console.log(post);
+                res.status(200).json(post);
+            })
         })
-    })
+    }else{
+        res.status(200).json({restricted: true});
+    }
 })
 
 app.put('/api/posts/deleteComment', auth, (req, res) => {
@@ -1617,6 +1720,7 @@ app.post('/api/posts/report', auth, (req, res) => {
         reportAbout: req.body.reportAbout,
         post: req.body.post,
         comment: req.body.comment,
+        userId: req.body.userId,
         sentBy: req.user._id,
         status: false,
     })
@@ -1625,6 +1729,8 @@ app.post('/api/posts/report', auth, (req, res) => {
         res.status(200).json({ reportSuccess: true });
     })
 })
+
+
 
 app.post('/api/policies/create', auth, (req, res) => {
     let policy = new Policy({
@@ -1694,15 +1800,20 @@ app.post('/api/users/search', auth, (req, res) => {
     User.find({ userName: { $regex: matchRegex }, _id: {$nin: req.user.blockedUsers} })
         .skip(skip)
         .limit(limit)
-        .select("_id avt userName")
+        .select("_id avt userName blockedUsers")
         .exec((err, users) => {
+            let filteredUsers = [...users]
+            filteredUsers = filteredUsers.filter(item => 
+                !item.blockedUsers.includes(req.user._id)
+            )
+            console.log(filteredUsers)
             Tag.find({ name: { $regex: matchRegex } })
                 .skip(skip)
                 .limit(limit)
                 .select("_id name posts")
                 .exec((err, tags) => {
                     if (err) res.status(400).json(err);
-                    res.status(200).json({ users, tags });
+                    res.status(200).json({ users: filteredUsers, tags });
                 })
         })
 })
@@ -2227,7 +2338,7 @@ app.post('/api/reports/getAll', auth, admin, (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 6;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
-    let filter = req.body.filter[0] == "all" ? ["post", "comment"] : req.body.filter;
+    let filter = req.body.filter[0] == "all" ? ["post", "comment","user"] : req.body.filter;
 
     Report.aggregate([
         {
@@ -2241,6 +2352,9 @@ app.post('/api/reports/getAll', auth, admin, (req, res) => {
         },
         {
             $lookup: { from: 'users', localField: 'sentBy', foreignField: '_id', as: 'sentBy' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userId' }
         },
         {
             $lookup: { from: 'users', localField: 'post.postedBy', foreignField: '_id', as: 'post.postedBy' },
@@ -2261,6 +2375,7 @@ app.post('/api/reports/getAll', auth, admin, (req, res) => {
                         "avt": 1,
                     },
                 },
+                "userId": 1,
                 "comment": {
                     "_id": 1,
                     "postedBy": {
@@ -2331,6 +2446,9 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
             $lookup: { from: 'policies', localField: 'reportAbout', foreignField: '_id', as: 'reportAbout' }
         },
         {
+            $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'userId' }
+        },
+        {
             $lookup: { from: 'users', localField: 'sentBy', foreignField: '_id', as: 'sentBy' }
         },
         {
@@ -2341,6 +2459,9 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
                 "status": 1,
                 "post": 1,
                 "comment": 1,
+                "userId": {
+                    "_id": 1,
+                },
                 "reportAbout": {
                     "content": 1,
                 },
@@ -2356,28 +2477,40 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
             if (err) return res.status(400).send(err);
             //console.log(report[0]);
             const report = reports[0];
-            if (report.reportType == "post") {
+            if(report.reportType == "user") {
                 findPost(report.post, []).then((post) => {
-                    console.log(post);
-                    res.status(200).json({
-                        reportDetail: {
-                            ...report,
-                            post: post
-                        }
-                    });
-                })
-            } else {
-                findComment(report.comment).then((comment) => {
-                    findPost(report.post, []).then((post) => {
+                        console.log(post);
                         res.status(200).json({
                             reportDetail: {
                                 ...report,
-                                comment: comment,
                                 post: post
                             }
-                        })
-                    });
+                        });
                 })
+            }else{
+                if (report.reportType == "post") {
+                    findPost(report.post, []).then((post) => {
+                        console.log(post);
+                        res.status(200).json({
+                            reportDetail: {
+                                ...report,
+                                post: post
+                            }
+                        });
+                    })
+                } else {
+                    findComment(report.comment).then((comment) => {
+                        findPost(report.post, []).then((post) => {
+                            res.status(200).json({
+                                reportDetail: {
+                                    ...report,
+                                    comment: comment,
+                                    post: post
+                                }
+                            })
+                        });
+                    })
+                }
             }
         }
     )
@@ -2402,6 +2535,63 @@ app.put('/api/reports/updateReport', auth, admin, (req, res) => {
     })
 })
 
+app.put('/api/reports/restrictUserFunction', auth, admin, async (req, res) => {
+
+    const user = await User.findOne({_id: req.body._id})
+    
+    req.body.funcList.map(item=>{
+        if(!user.restrictedFunctions.some(ele => ele.function == item.func)){
+            user.restrictedFunctions.push({
+                function: item.func,
+                Exp: moment().startOf('day').add(item.time,'days').valueOf(),
+                assignedAt: Date.now(),
+            })
+        }
+    })
+
+    const updated = await user.save((err, doc) => {
+        if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
+        Report.findByIdAndUpdate(req.body.reportId, {
+            $set: { status: true }
+        }, {
+            new: true
+        }).exec((err, report) => {
+            if (err) res.status(400).json(err);
+            // const notification = new Notification({
+            //     sentFrom: req.user._id,
+            //     sentTo: post.postedBy,
+            //     type: "deletePost",
+            //     link: report.post,
+            //     "seenStatus": false
+            // });
+            // SaveNotification(notification);
+            return res.status(200).json({
+                success: true,
+                message: 'Thành công',
+                report
+            });
+        })
+    })
+    
+    console.log(updated);
+})
+
+app.put('/api/reports/deleteRestrictFunction', auth, admin, async (req, res) => {
+
+    const user = await User.findOne({_id: req.body._id})
+    user.restrictedFunctions.pull({
+        _id: req.body.funcId
+    })
+    const updated = await user.save((err, doc) => {
+        if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
+        return res.status(200).json({
+            success: true,
+            message: 'Thành công'
+        })
+    })
+    console.log(updated);
+})
+
 app.post('/api/reports/delete_post', auth, admin, (req, res) => {
     Post.findByIdAndUpdate(req.body.postId, {
         $set: { hidden: true } }, {new: true })
@@ -2412,7 +2602,6 @@ app.post('/api/reports/delete_post', auth, admin, (req, res) => {
         }, {
             new: true
         }).exec((err, report) => {
-
             if (err) res.status(400).json(err);
             const notification = new Notification({
                 sentFrom: req.user._id,
@@ -2525,6 +2714,9 @@ app.post('/api/users/changePassword', auth, (req, res) => {
         });
     })
 })
+
+
+
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {

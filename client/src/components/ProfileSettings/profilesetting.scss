@@ -21,6 +21,7 @@
     opacity: 0.6 !important;
     border: none !important;
 }
+
 .setting_options{
     border: solid 0.5px rgb(233, 233, 233);
     padding: 0px;
@@ -136,6 +137,62 @@
         } 
         
     }   
+}
+}
+.wrapper{
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+.title{
+    padding-top: 1.7rem;
+}
+.blocked-user-list{
+    list-style: none;
+    flex-grow: 1;
+    .blocked-user-item{
+        width: 100%;
+        list-style: none;
+        
+        display: flex;     
+        justify-content: space-between;
+        align-items: center;
+        
+        border-bottom: 1px solid $secondcolor;
+        padding: 1rem 0rem 1rem 0rem;
+        .blocked-user-info{
+            display: flex;
+            align-items: center;
+            .blocked-user-avt{
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+            .blocked-user-name{
+                padding-left: 1rem;
+                color: $linkColor;
+            }
+        }
+        .btn-unblock{
+            width: 7rem;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            background-color: $primaryColor;
+            color: white;
+        }
+        .btn-block{
+            width: 7rem;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            background-color: $blueColor;
+            color: black;
+        }
+        &:last-child{
+            
+        }
+    }
 }
 }
 

@@ -56,6 +56,7 @@ class  Card extends Component {
         setSnack: false,
 
         setfollowerDiaglog: false,
+        alertFunctionIsRestricted: false,
     }
 
     componentDidMount() {
@@ -154,10 +155,14 @@ class  Card extends Component {
                 return (
                     <div>
                         { 
-                        liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props._id))}
+                        liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props._id).then(response =>{
+                            this.setState({alertFunctionIsRestricted: true})
+                        }))}
                             src={require('../../asset/newfeed_page/active_like_icon2x.png')} /> 
                         : 
-                        <img onClick={() => this.props.dispatch(likePost(this.props._id))} 
+                        <img onClick={() => this.props.dispatch(likePost(this.props._id)).then(response =>{
+                            this.setState({alertFunctionIsRestricted: true})
+                        })} 
                             src={require('../../asset/newfeed_page/like_icon2x.png')} />  
                         }                      
                     </div>)
@@ -460,6 +465,15 @@ class  Card extends Component {
                         : ''
                     }
                 </Dialog>
+
+                <Dialog className="dialog_cont" 
+                        onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
+                        open={this.state.alertFunctionIsRestricted} >
+                    <div className="dialog_header">
+                        <h5>Bạn đã bị hạn chế chức năng này trong vòng ... ngày</h5>
+                    </div>
+                </Dialog>
+
                 {
                     this.state.lightbox ?
                         <ImageLightBox

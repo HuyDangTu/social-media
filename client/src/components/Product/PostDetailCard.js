@@ -73,6 +73,7 @@ class PostDetailCard extends Component {
         showEditor: false,
         setSnack: false,
         SnackMess: "",
+        reportSuccess: false,
 
         tags: [],
     }
@@ -400,8 +401,8 @@ class PostDetailCard extends Component {
         this.setState({ showEditor: !this.state.showEditor })
     }
 
-    handleSnackBar = (mess) => {
-        this.setState({ setSnack: true, SnackMess: mess})
+    handleSnackBar = (mess, res) => {
+        this.setState({ setSnack: true, SnackMess: mess, reportSuccess: res})
     }
 
     render() {
@@ -550,7 +551,7 @@ class PostDetailCard extends Component {
                     open={this.state.setSnack}
                     onClose={() => this.setState({ setSnack: false })}
                     autoHideDuration={3000}>
-                    <MuiAlert elevation={6} variant="filled" severity="success" message={this.state.SnackMess}>{this.state.SnackMess}</MuiAlert>
+                    <MuiAlert elevation={6} variant="filled" severity={this.state.handleSnackBar?"success":"warning"} message={this.state.SnackMess}>{this.state.SnackMess}</MuiAlert>
                 </Snackbar>
             </div>
         );

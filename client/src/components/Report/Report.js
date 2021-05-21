@@ -23,6 +23,7 @@ class Report extends Component {
         console.log(newreportPolicy);
         this.setState({ reportPolicy: newreportPolicy })
     }
+    
     pushPolicy(item){
         let newreportPolicy = [...this.state.reportPolicy]
         newreportPolicy.push(item._id);
@@ -75,10 +76,18 @@ class Report extends Component {
                             <p className="send_button" 
                                 onClick={() => {this.props.dispatch(report(this.props.reportData,this.state.reportPolicy))
                                 .then(response => {
-                                    this.setState({
-                                        reportPolicy: [],
-                                        reportCompleted: true,
-                                    }, () => { this.props.closeReportForm(); this.props.handleSnackBar("Đã gửi báo cáo")})
+                                    console.log(response)
+                                    if(response.payload.reportSuccess){
+                                        this.setState({
+                                            reportPolicy: [],
+                                            reportCompleted: true,
+                                        }, () => { this.props.closeReportForm(); this.props.handleSnackBar("Đã gửi báo cáo",true)})
+                                    }else{
+                                        this.setState({
+                                            reportPolicy: [],
+                                            reportCompleted: true,
+                                        }, () => { this.props.closeReportForm(); this.props.handleSnackBar("Đã xãy ra lỗi",false)})
+                                    }
                                 })}}>
                                 Báo cáo</p>
                         </div>

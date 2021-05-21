@@ -5,6 +5,7 @@
     width: 100%;
     height: 100vh;
     overflow: auto;
+
     .page_title{
         padding: 10px;
         border-bottom: 1px solid #cccccc;
@@ -46,7 +47,7 @@
                 padding: 10px;
                 box-sizing: border-box;
                 border-radius: 5px;
-                background: $darkBlueColor;
+                background: rgb(40, 153, 36);
                 margin-bottom: 20px;
                 color: white;
             }
@@ -56,6 +57,15 @@
                 box-sizing: border-box;
                 border-radius: 5px;
                 background: $redColor;
+                color: white;
+                margin-bottom: 20px;
+            }
+            .btn_restrict{
+                border: none;
+                padding: 10px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                background: rgb(252, 168, 42);
                 color: white;
             }
             
@@ -120,5 +130,27 @@
                     }
                 }
             }
+    }
+}
+
+.select{
+    width: 130px;
+}
+
+.deleteConfirm{
+    .restricted-functions{
+        margin-bottom: 20px;
+        margin-top: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+    }
+    .add-restricted-functions{
+        display: flex;
+        justify-content: space-between;
+        align-items: center; 
+        width: 100%;
+    }
+    .btn_wrapper{
+       
     }
 }

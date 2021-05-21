@@ -18,6 +18,10 @@ const reportSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "Comment"
     },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
     sentBy: {
         type: Schema.Types.ObjectId,
         ref: "User"
