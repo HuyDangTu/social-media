@@ -1,6 +1,7 @@
 @import '../ultils/initial.scss';
 .photoEditor{
     position: relative;
+    overflow-y: hidden;
     .CirclarProcess{
         position: absolute;
         z-index: 100;
@@ -11,11 +12,15 @@
     .header{
         z-index: 1000;
         position: absolute;
-        width: 100%;
+        width: 70%;
+        background-color: $blueColor;
+        border-radius: 0px 0px 100px 0px;
+        border: none;
         .header-wrapper{
             padding: 0.5rem;
             display: flex;
             justify-content: space-between;
+            border: none;
             .header__logo{
                 .Logo_stunn{
                         width: 3rem;
@@ -33,13 +38,12 @@
                 }
             }
             .btn-cancel{
-                // border: 2px solid $secondcolor;
-                // color: $secondcolor;
+               
             }
             .btn-complete{
-                //border: 2px solid $primaryColor;
-                background-color: $primaryColor;
-                color: white;
+                //background-color: $primaryColor;
+                color: black;
+                margin-right: 35px;
             }
         }
     }
@@ -47,7 +51,7 @@
 
 .tui-image-editor{
     &-header{
-        display: none;
+        // display: none;
     }
     &-main-container{
         background-color: white !important;
@@ -69,4 +73,14 @@
         }
         
     }
+}
+
+.tui-image-editor-align-wrap{
+    padding:0;
+}
+
+.tui-image-editor-download-btn{
+    background-color: $blueColor !important;
+    border: none !important;
+    color: black !important;
 }

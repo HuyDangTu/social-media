@@ -29,6 +29,7 @@ import { getPolicy } from '../../actions/policy_actions';
 import PostEdit from '../PostEdit/index';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import moment from 'moment';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -76,6 +77,11 @@ class PostDetailCard extends Component {
         reportSuccess: false,
 
         tags: [],
+
+        setfollowerDiaglog: false,
+        alertFunctionIsRestricted: false,
+
+        restrictedFunction: {}
     }
 
     componentDidMount() {
@@ -200,11 +206,25 @@ class PostDetailCard extends Component {
     }
 
     makeComment = (postId, event) => {
+
         event.preventDefault();
+        event.persist();
         console.log(postId, event.target[0].value);
-        this.props.dispatch(makeComment(postId, event.target[0].value, "detail")).then(
-            event.target[0].value = ""
-        )
+        this.props.dispatch(makeComment(postId, event.target[0].value, "detail")).then(response => {
+            if(response.payload.restricted){
+                console.log(response.payload);
+                this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+            }else{
+                console.log(event.target[0].value);
+                event.target[0].value = ""
+            }
+        })        
+        // event.preventDefault();
+        // event.persist();
+        // console.log(postId, event.target[0].value);
+        // this.props.dispatch(makeComment(postId, event.target[0].value,)).then(
+        //     event.target[0].value = ""
+        // )
     }
 
     defaultLink = (item, i) => {
@@ -214,10 +234,20 @@ class PostDetailCard extends Component {
                 return (
                     <div>
                         {
-                            liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props.post._id,"detail"))}
+                            liked[0] ? <img onClick={() => this.props.dispatch(unlikePost(this.props.post._id,"detail")).then(response =>{
+                                if(response.payload.restricted){
+                                    console.log(response.payload);
+                                    this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                                }
+                            })}
                             src={require('../../asset/newfeed_page/active_like_icon2x.png')} />
                             :
-                            <img onClick={() => this.props.dispatch(likePost(this.props.post._id, "detail"))}
+                            <img onClick={() => this.props.dispatch(likePost(this.props.post._id, "detail")).then(response =>{
+                                if(response.payload.restricted){
+                                    console.log(response.payload);
+                                    this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                                }
+                            })}
                             src={require('../../asset/newfeed_page/like_icon2x.png')} />
                         }
                     </div>
@@ -228,9 +258,19 @@ class PostDetailCard extends Component {
                     <div >
                         {
                             saved[0] ?
-                                <img onClick={() => this.props.dispatch(unSavePost(this.props.post._id))}
+                                <img onClick={() => this.props.dispatch(unSavePost(this.props.post._id)).then(response =>{
+                                    if(response.payload.restricted){
+                                        console.log(response.payload);
+                                        this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                                    }
+                                })}
                                     src={require('../../asset/newfeed_page/stored_icon2x.png')} />
-                                : <img onClick={() => this.props.dispatch(savePost(this.props.post._id))}
+                                : <img onClick={() => this.props.dispatch(savePost(this.props.post._id)).then(response =>{
+                                    if(response.payload.restricted){
+                                        console.log(response.payload);
+                                        this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                                    }
+                                })}
                                 src={require('../../asset/newfeed_page/store_icon2x.png')} />
                         }
                     </div>
@@ -542,6 +582,15 @@ class PostDetailCard extends Component {
                 }
                 {
                     this.showReportForm()
+                }
+                {
+                    <Dialog className="dialog_cont" 
+                        onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
+                        open={this.state.alertFunctionIsRestricted} >
+                        <div className="dialog_header">
+                            <h5>Bạn đã bị hạn chế chức năng này cho đến {moment(this.state.restrictedFunction.amountOfTime).format("L")}</h5>
+                        </div>
+                    </Dialog>
                 }
                 <Snackbar
                     anchorOrigin={{

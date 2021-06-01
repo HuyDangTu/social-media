@@ -16,7 +16,7 @@ import { populateOptionFields, update, ifFormValid, generateData, resetFields } 
 import Slide from '@material-ui/core/Slide';
 import Report from '../Report/Report';
 import { getPolicy } from '../../actions/policy_actions';
-
+import moment from 'moment';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -71,7 +71,12 @@ class Profile extends Component {
         SnackMess: "",
 
         isReportFormShow: false,
-        reportData: {}
+        reportData: {},
+
+        setfollowerDiaglog: false,
+        alertFunctionIsRestricted: false,
+
+        restrictedFunction: {}
     }
     
     componentDidMount() {
@@ -127,14 +132,31 @@ class Profile extends Component {
             this.setState({setfollowerDiaglog:false,  setType: 'posted',setfollowingDiaglog:false});
         }
     }
-
+    handleClickfollow = async (id) => {
+        await this.props.dispatch(follow(id)).then(response=>{
+            if(response.payload.restricted){
+                console.log(response.payload);
+                this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+            }else{
+                this.props.dispatch(findProfile(this.props.match.params.id))
+                this.props.dispatch(auth());
+                this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
+            }
+        })
+    }
+    
     handleClickunfollow = async (id) => {
         await this.props.dispatch(unfollow(id)).then(response=>
             {
-                this.props.dispatch(findProfile(this.props.match.params.id))
-                this.props.dispatch(auth());
+                if(response.payload.restricted){
+                    console.log(response.payload);
+                    this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                }else{
+                    this.props.dispatch(findProfile(this.props.match.params.id))
+                    this.props.dispatch(auth());
+                    this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
+                }
             })
-        await this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
     }
 
     setDisplayIndex = (index) => {
@@ -149,14 +171,6 @@ class Profile extends Component {
     }
 
     openEditor = () => {
-    }
-
-    handleClickfollow = async (id) => {
-        await this.props.dispatch(follow(id)).then(response=>{
-            this.props.dispatch(findProfile(this.props.match.params.id))
-            this.props.dispatch(auth());
-        })
-        await this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
     }
 
     handleType = (type) => {
@@ -578,6 +592,13 @@ class Profile extends Component {
                 {
                     this.showReportForm()
                 }
+                <Dialog className="dialog_cont" 
+                    onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
+                    open={this.state.alertFunctionIsRestricted} >
+                    <div className="dialog_header">
+                        <h5>Bạn đã bị hạn chế chức năng này cho đến {moment(this.state.restrictedFunction.amountOfTime).format("L")}</h5>
+                    </div>
+                </Dialog>
             </Layout>
         )
     }

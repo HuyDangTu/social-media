@@ -48,13 +48,17 @@ class UserProfile extends Component {
         }
     }
     handleClickunfollow = async (id) => {
-        await this.props.dispatch(unfollow(id))
-     //   await this.props.dispatch(findProfile(this.props.user.userData._id))
+        await this.props.dispatch(unfollow(id)).then(response => {
+
+        })
+        //await this.props.dispatch(findProfile(this.props.user.userData._id))
         this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
     }
     handleClickfollow = async (id) => {
-        await this.props.dispatch(follow(id))
-   //     await this.props.dispatch(findProfile(this.props.user.userData._id))
+        await this.props.dispatch(follow(id)).then(response => {
+            
+        })
+        //await this.props.dispatch(findProfile(this.props.user.userData._id))
         this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
     }
     render() {
@@ -207,9 +211,7 @@ class UserProfile extends Component {
                                     :null)
                                     :null
                                 }
-                               
-                            </div>
-                                       
+                            </div>        
                         )
                     }):''):''
                 }

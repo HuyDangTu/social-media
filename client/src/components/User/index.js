@@ -11,6 +11,13 @@ import { getAllTags, getUserTag } from '../../actions/tag_actions';
 import { clearProduct, createPost  } from '../../actions/product_actions';
 import SearchLocationInput from '../SearchLocationInput/SearchLocationInput'
 import { startSession } from 'mongoose';
+import moment from 'moment';
+import Slide from '@material-ui/core/Slide';
+import { Dialog } from '@material-ui/core';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 class UserDashboard extends Component {
 
@@ -82,6 +89,11 @@ class UserDashboard extends Component {
                 showlabel: false
             }
         },
+
+        setfollowerDiaglog: false,
+        alertFunctionIsRestricted: false,
+
+        restrictedFunction: {}
     }
 
     updateFields = (newFormData) => {
@@ -189,12 +201,17 @@ class UserDashboard extends Component {
         console.log(dataToSubmit);
         if (formIsValid) {
             console.log(dataToSubmit);
-            this.props.dispatch(createPost(dataToSubmit)).then(() => {
-                console.log(this.props.products);
-                if (this.props.products.addProduct.success) {
-                    this.props.history.push('/newfeed')
-                } else {
-                    this.setState({ formError: true })
+            this.props.dispatch(createPost(dataToSubmit)).then((response) => {
+                if(response.payload.restricted){
+                    console.log(response.payload);
+                    this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                }else{
+                    console.log(this.props.products);
+                    if (this.props.products.addProduct.success) {
+                        this.props.history.push('/newfeed')
+                    } else {
+                        this.setState({ formError: true })
+                    }
                 }
             })
         }else {
@@ -258,6 +275,13 @@ class UserDashboard extends Component {
                         <SearchLocationInput onChange={() => {}}/>
                     </div> */}
                 </div>
+                <Dialog className="dialog_cont" 
+                    onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
+                    open={this.state.alertFunctionIsRestricted} >
+                    <div className="dialog_header">
+                        <h5>Bạn đã bị hạn chế chức năng này cho đến {moment(this.state.restrictedFunction.amountOfTime).format("L")}</h5>
+                    </div>
+                </Dialog>
             </Layout>
         );
     }

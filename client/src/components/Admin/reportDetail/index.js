@@ -338,6 +338,7 @@ class ReportDetail extends Component {
                             <MenuItem value="Like">Thích</MenuItem>
                             <MenuItem value="Post">Đăng bài</MenuItem>
                             <MenuItem value="Comment">Bình luận</MenuItem>
+                            <MenuItem value="Save">Lưu</MenuItem>
                             <MenuItem value="Follow">Theo dõi</MenuItem>
                             </Select>
                         </FormControl>

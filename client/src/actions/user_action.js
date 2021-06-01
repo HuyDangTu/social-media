@@ -25,6 +25,7 @@ import {
     BLOCK_USER,
     GET_BLOCKED_USERS,
     UNBLOCKED_USERS,
+    RESTRICTED,
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -146,21 +147,41 @@ export function findPosted(id) {
 }
 
 export function follow(followId) {
+    
     const request = axios.put(`${USER_SERVER}/follow/${followId}`)
-        .then(response => response.data.followings);
-    return {
-        type: FOLLOW_USER,
-        payload: request
-    }
+        .then(response => {
+            if(response.data.restricted){
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+            }else{
+                return {
+                    type: FOLLOW_USER,
+                    payload: response.data.followings
+                }
+            }  
+    });
+   
+    return request
 }
 
 export function unfollow(unfollowId) {
     const request = axios.put(`${USER_SERVER}/unfollow/${unfollowId}`)
-        .then(response => response.data.followings);
-    return {
-        type: FOLLOW_USER,
-        payload: request
-    }
+        .then(response => {
+            if(response.data.restricted){
+                return {
+                    type: RESTRICTED,
+                    payload: response.data
+                }
+            }else{
+                return {
+                    type: FOLLOW_USER,
+                    payload: response.data.followings
+                }
+            }  
+    });
+    return request
 }
 
 export function updateprofileimgfile(file) {

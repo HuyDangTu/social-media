@@ -17,6 +17,7 @@ import ResetPass from './components/Resetpass/ResetPass';
 
 import AdminLogin from './components/Admin/login/index';
 import Dashboard from './components/Admin/dashboard/index';
+import AdminHome from './components/Admin/home/index';
 import ReportDetail from './components/Admin/reportDetail/index';
 import AccountPage from './components/Admin/Account/index';
 import AddAccount from './components/Admin/Account/AddAccount/index';
@@ -37,7 +38,7 @@ const Routes = () =>{
     <Switch> 
         {/* Client route */}  
         <Route path="/post/create_post" exact component={Auth(UserDashboard, true)} />
-        <Route path="/postDetail/:id" exact component={Auth(PostDetail, true)} /> 
+        <Route path="/postDetail/:id" exact component={Auth(PostDetail, true)}/> 
         <Route path="/story" exact component={Auth(StoryPage, true)} /> 
         <Route path="/" exact component={Auth(Home, true)} />
         <Route path="/register_login" exact component={Auth(RegisterLogin, false)} />
@@ -56,17 +57,15 @@ const Routes = () =>{
         <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
         <Route path="/explore" component={Auth(Explore, true)}></Route>
         <Route path="/notfound" component={Auth(NotFoundPage, true)}></Route>
-
         {/* <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route> */}
-
         {/* Admin route */}
         <Route path="/Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />
         <Route path="/Admin/Dashboard" exact component={Auth(Dashboard, true, "/Admin/login")} />
+        <Route path="/Admin/Home" exact component={Auth(AdminHome, true, "/Admin/login")} />
         <Route path="/Admin/ReportDetail/:id" exact component={Auth(ReportDetail, true, "/Admin/login")} />
         <Route path="/Admin/Account" exact component={Auth(AccountPage, true, "/Admin/login")} />
         <Route path="/Admin/Account/add_new" exact component={Auth(AddAccount, true, "/Admin/login")} />
         <Route path="/Admin/EditAccount" exact component={Auth(EditAccount, true, "/Admin/login")} />
-        
     </Switch>
   )
 }

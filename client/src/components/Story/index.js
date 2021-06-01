@@ -9,7 +9,7 @@ class Story extends Component {
         let res = true;
         console.log(item);
         item.stories.map(story=>{
-            if(!story.viewedBy.includes(this.props.user.userData._id)){
+            if(!story.viewedBy.some(item => item._id == this.props.user.userData._id)){
                 console.log("false")
                 res =  false;
             }

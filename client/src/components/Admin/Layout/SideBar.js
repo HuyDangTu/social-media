@@ -27,6 +27,10 @@ class SideBar extends Component {
                 </div>
                 <div className="tools">
                     <ul>
+                        <li className={this.props.page == "report" ? "active" : ""} onClick={() => this.props.history.push("/Admin/Home")}>
+                            <AlertOctagon size={20} strokeWidth={3} color="black" /> 
+                            <p>Trang chủ</p>
+                        </li>
                         <li className={this.props.page == "report" ? "active" : ""} onClick={() => this.props.history.push("/Admin/Dashboard")}>
                             <AlertOctagon size={20} strokeWidth={3} color="black" /> 
                             <p>Quản lý báo cáo </p>

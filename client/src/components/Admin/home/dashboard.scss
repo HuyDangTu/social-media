@@ -1,0 +1,97 @@
+@import '../../ultils/initial.scss';
+
+
+.title{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    .title-wrapper{
+        display: flex;
+        align-items: center;  
+        .title-icon{
+            border-radius: 5px;
+            padding: 0.5rem;
+            background-color: $primaryColor;
+        }  
+        p{
+            text-transform: uppercase;
+            color: black;
+            font-weight: 2rem;
+            margin:0;
+            margin-left: 0.5rem;
+        }
+    }
+}
+.metric-wrapper{
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    .metric{
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-right: 1rem;
+        padding: 1rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .content{
+            font-weight: bold;
+            color: $primaryColor;
+            font-size: 1.5rem;
+            margin-left: 1rem;
+            p{
+                color: rgb(145, 145, 145);
+                font-size: 1rem;
+                margin: 0;
+            }
+        }
+        .Difference{
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            font-size: 1.5rem;
+            color: rgb(250, 227, 25);
+            font-weight: 600;
+        }
+    }
+}
+.chart{
+    margin-left: 1rem;
+    display: flex;
+    .wrapper{
+        height:300px;
+        width: 50%;
+        border-radius: 5px;
+        margin-right: 1rem;
+        border: 1px solid #ddd;
+    }
+}
+
+
+@media screen and (max-width: 922px){
+ .report-list{
+     .table-header{
+            th{
+                 font-size: 0.6em;
+             }
+        }
+        .table-content{
+            td{
+                font-size: 0.8em;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px){
+    .report-list{
+            .table-content{
+                td{
+                    font-size: 0.68em;
+                }
+            }
+        }
+}

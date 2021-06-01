@@ -22,7 +22,8 @@ import {
     GET_RECOMMEND_POST,
     GET_BLOCKED_USERS,
     UNBLOCKED_USERS,
-    BLOCK_USER
+    BLOCK_USER,
+    RESTRICTED
 } from '../actions/types';
 
 export default function(state={},action){
@@ -202,6 +203,12 @@ export default function(state={},action){
                     ...state.userData,
                     blockedUsers: updatedBlockedUsers
                 }
+            }
+        }
+        case RESTRICTED:{
+            return {
+                ...state,
+                restricted: true
             }
         }
         default: return state;

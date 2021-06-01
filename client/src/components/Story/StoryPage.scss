@@ -90,7 +90,7 @@
     width: 100%;
     height: 100vh;
     margin: 0 auto;
-    background: rgba($color: #000000, $alpha: 0.7);
+    background: rgba($color: #000000, $alpha: 0.9);
     display: flex;
     justify-content: space-between;
     .storyPage__header{
@@ -118,6 +118,8 @@
         height: 100%;
         border-radius: 0px 0px 5px 5px;
         .story_wrapper{
+            display: flex;
+            align-items: center;
             height: 100%;
             box-sizing: border-box; 
             img{
@@ -125,7 +127,20 @@
                 height: 100%;
                 object-fit: cover;
             }
+            .story-overlay{
+
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+            }
         }
+    }
+    .space{
+      justify-content: space-between;
+    }
+    .end{
+      justify-content: flex-end;
     }
     .reply-wrapper{
         transform: translatex(100%);
@@ -134,7 +149,7 @@
         background: #fff;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+  
         // form{
         //     position: absolute;
         //     bottom: 0;
@@ -146,6 +161,49 @@
         .hiden{
             visibility: hidden;
             opacity: 0;
+            //display: none;
+        }
+        .main{
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            position: absolute;
+            z-index: 100;
+            .user-list{
+               
+                ul{
+                    padding:0;
+                    height: 20rem;
+                    overflow-y: auto;
+                }
+                .users-view-story{
+                    display: flex;
+                    align-items: center;
+                    p{
+                        font-weight: bold;
+                        margin: 0;
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+        .user_infor_wrapper{
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          img{
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+          p{
+            margin: 0;
+            color:black;
+            padding: 0px 10px;
+          }
         }
         .chat_box{
            

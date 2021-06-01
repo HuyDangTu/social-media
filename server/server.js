@@ -129,6 +129,7 @@ app.get('/api/users/auth', auth, (req, res) => {
         saved: req.user.saved,
         hiddenPost: req.user.hiddenPost,
         blockedUsers: req.user.blockedUsers,
+        restrictedFunctions: req.user.restrictedFunctions,
     });
 });
 
@@ -364,7 +365,7 @@ app.post('/api/posts/create_post', auth, (req, res) => {
             })
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true, restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Post")});
     }
 })
 
@@ -534,7 +535,7 @@ function findPost(postId, userHiddenPost, blockedUsers) {
         },
         {
             "$group": {
-                _id: '$_ id',
+                _id: '$_id',
                 description: { $first: '$description' },
                 dateDifference: { $first: '$dateDifference' },
                 images: { $first: '$images' },
@@ -611,18 +612,22 @@ app.get('/api/posts/postDetail', auth, (req, res) => {
     findPost(items, req.user.hiddenPost, req.user.blockedUsers).then((post) => {
         console.log(post)
         if(post.length == 0){
+            console.log("11111111111111111111")
             return res.status(200).json({ NotFound: true });   
         }else{
             if(req.user.blockedUsers.includes(post[0].postedBy[0]._id)){
+                console.log("22222222222222222")
+                
                 return res.status(200).json({ NotFound: true });   
             } 
             else{
                 findBlockedUsers(post[0].postedBy[0]._id).then((result) => {
                     console.log("result", result);
-                    if(result[0].blockedUsers.includes(Object(req.user._id)) != -1){
-                        console.log("yessssssssssssss")
+                    if(result[0].blockedUsers.includes(Object(req.user._id))){
+                        console.log("3333333333333333333")
                         return res.status(200).json({ NotFound: true });
                     }else{
+                        console.log("4444444444444444444444444")
                         return res.status(200).json(post[0]);
                     }
                 })
@@ -1119,7 +1124,7 @@ app.put('/api/posts/save', auth, (req, res) => {
             res.status(200).json({user});
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Save")});
     }
 })
 
@@ -1134,7 +1139,7 @@ app.put('/api/posts/unSave', auth, (req, res) => {
             res.status(200).json({user});
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Like")});
     }
 })
 
@@ -1160,7 +1165,7 @@ app.put('/api/posts/like', auth, (req, res) => {
             })
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Like")});
     }
 })
 
@@ -1178,7 +1183,7 @@ app.put('/api/posts/unlike', auth, (req, res) => {
             })
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Like")});
     }
 })
 
@@ -1220,6 +1225,7 @@ app.get('/api/users/profile/:id', auth, (req, res) => {
             else return res.status(200).json({success: false})
         })
 })
+
 app.get('/api/users/tagged/:id', auth, (req, res) => {
     Post.find({ userTag: req.params.id, hidden: {$eq: false}})
     .populate("userTag", "_id userName")
@@ -1231,6 +1237,7 @@ app.get('/api/users/tagged/:id', auth, (req, res) => {
         res.json({ posts })
     })
 })
+
 app.post('/api/users/getSavedPost', auth, (req, res) => {
 
     Post.find({_id:{$in: req.user.saved}})
@@ -1240,6 +1247,7 @@ app.post('/api/users/getSavedPost', auth, (req, res) => {
         res.status(200).json({posts})
     })
 })
+
 app.get('/api/users/posted/:id', auth, (req, res) => {
     Post.find({ postedBy: req.params.id })
     .populate("postedBy", "_id userName")
@@ -1251,6 +1259,7 @@ app.get('/api/users/posted/:id', auth, (req, res) => {
         res.json({ posts })
     })
 })
+
 app.put('/api/users/updatepic', auth, (req, res) => {
     User.findByIdAndUpdate(req.user._id, { $set: { avt: req.body.url } }, { new: true },
         (err, result) => {
@@ -1262,6 +1271,7 @@ app.put('/api/users/updatepic', auth, (req, res) => {
             }
         })
 })
+
 app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
     let message = "", isValidUserName = false;
     User.findOne({ userName: req.body.userName.trim() }, (err, user) => {
@@ -1306,31 +1316,35 @@ app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
 })
 
 app.put('/api/users/follow/:followId', auth, (req, res) => {
-    User.findByIdAndUpdate(req.params.followId, {
-        $push: { followers: req.user._id }
-    }, {
-        new: true
-    })
-        .populate("followers", "_id userName avt")
-        .populate("followings", "_id userName avt")
-        .then(results => {
-            User.findByIdAndUpdate(req.user._id, {
-                $push: { followings: req.params.followId }
-            }, { new: true })
-                .then(result => {
-                    res.json(result)
-                    const notification = new Notification({
-                        sentFrom: req.user._id,
-                        sentTo: req.params.followId,
-                        type: "follow",
-                        link: req.user._id,
-                        "seenStatus": false
-                    });
-                    SaveNotification(notification);
-                }).catch(err => {
-                    return res.status(422).json({ error: err })
-                })
+    if(!isRestricted(req.user.restrictedFunctions,"Follow")){
+        User.findByIdAndUpdate(req.params.followId, {
+            $push: { followers: req.user._id }
+        }, {
+            new: true
         })
+            .populate("followers", "_id userName avt")
+            .populate("followings", "_id userName avt")
+            .then(results => {
+                User.findByIdAndUpdate(req.user._id, {
+                    $push: { followings: req.params.followId }
+                }, { new: true })
+                    .then(result => {
+                        res.json(result)
+                        const notification = new Notification({
+                            sentFrom: req.user._id,
+                            sentTo: req.params.followId,
+                            type: "follow",
+                            link: req.user._id,
+                            "seenStatus": false
+                        });
+                        SaveNotification(notification);
+                    }).catch(err => {
+                        return res.status(422).json({ error: err })
+                    })
+            })
+    }else{
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Follow") });
+    }
 })
 
 app.put('/api/users/block/:id', auth,(req,res)=>{
@@ -1362,24 +1376,29 @@ app.put('/api/users/unblock/:id', auth,(req,res)=>{
 })
 
 app.put('/api/users/unfollow/:unfollowId', auth, (req, res) => {
-    User.findByIdAndUpdate(req.params.unfollowId, {
-        $pull: { followers: req.user._id }
-    }, {
-        new: true
-    }, (err, results) => {
-        if (err) {
-            return res.status(422).json({ error: err })
-        }
-        User.findByIdAndUpdate(req.user._id, {
-            $pull: { followings: req.params.unfollowId }
-        }, { new: true })
-            .then(result => {
-                res.json(result)
-            }).catch(err => {
+    if(!isRestricted(req.user.restrictedFunctions,"Follow")){
+        User.findByIdAndUpdate(req.params.unfollowId, {
+            $pull: { followers: req.user._id }
+        }, {
+            new: true
+        }, (err, results) => {
+            if (err) {
                 return res.status(422).json({ error: err })
-            })
-    })
+            }
+            User.findByIdAndUpdate(req.user._id, {
+                $pull: { followings: req.params.unfollowId }
+            }, { new: true })
+                .then(result => {
+                    res.json(result)
+                }).catch(err => {
+                    return res.status(422).json({ error: err })
+                })
+        })
+    }else{
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Follow") });
+    }
 })
+
 app.get('/api/messages/get/:id', auth, (req, res) => {
     const userlist = [(req.params.id), (req.user._id)]
     Conversation.findOne({ $and: [{ user1: { $in: userlist } }, { user2: { $in: userlist } }] })
@@ -1412,6 +1431,7 @@ app.get('/api/messages/get/:id', auth, (req, res) => {
             }
         })
 })
+
 app.get('/api/messages/seen/:id', auth, (req, res) => {
     const userlist = [(req.params.id), (req.user._id)]
     Conversation.findOneAndUpdate({ $and: [{ user1: { $in: userlist } }, { user2: { $in: userlist } }] }, { $push: { seenBy: req.user._id } })
@@ -1424,6 +1444,7 @@ app.get('/api/messages/seen/:id', auth, (req, res) => {
             }
         })
 })
+
 app.get('/api/messages/conversations', auth, (req, res) => {
     Conversation.find(
         {
@@ -1443,6 +1464,7 @@ app.get('/api/messages/conversations', auth, (req, res) => {
             }
         })
 })
+
 app.get('/api/notify/getall', auth, (req, res) => {
     Notification.find({ "sentTo": req.user._id }).
     populate("sentFrom", "_id userName avt role")
@@ -1456,6 +1478,7 @@ app.get('/api/notify/getall', auth, (req, res) => {
         }
     })
 })
+
 app.post('/api/notify/seen/:id', auth, (req, res) => {
     Notification.findByIdAndUpdate(req.params.id, {
         $set: { seenStatus: true }
@@ -1465,6 +1488,7 @@ app.post('/api/notify/seen/:id', auth, (req, res) => {
             res.json(noti);
     })
 })
+
 app.post('/api/notify/seenall', auth, (req, res) => {
     Notification.update({ "sentTo": req.user._id }, {
         $set: { seenStatus: true }
@@ -1480,6 +1504,7 @@ app.post('/api/notify/seenall', auth, (req, res) => {
             }
         })
 })
+
 function SaveNotification(notification) {
     if (JSON.stringify(notification.sentTo) != JSON.stringify(notification.sentFrom)) {
         Notification.create(notification, (err, data) => {
@@ -1493,6 +1518,7 @@ function SaveNotification(notification) {
     }
 
 }
+
 app.post('/api/messages/save', jsonParser, (req, res) => {
     const dbMess = req.body
     Message.create(dbMess, (err, data) => {
@@ -1559,7 +1585,6 @@ function isRestricted(restrictedFunctions, func){
     }
 }
 
-
 app.post('/api/posts/test', auth, (req, res) => {
 
     var today = moment().startOf('day').valueOf();
@@ -1610,7 +1635,7 @@ app.post('/api/posts/comment', auth, (req, res) => {
             })
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Comment") });
     }
 })
 
@@ -1691,7 +1716,7 @@ app.put('/api/posts/unLikeComment', auth, (req, res) => {
             })
         })
     }else{
-        res.status(200).json({restricted: true});
+        res.status(200).json({restricted: true,restrictedFunction: req.user.restrictedFunctions.find(item => item.function == "Like")});
     }
 })
 
@@ -1729,8 +1754,6 @@ app.post('/api/posts/report', auth, (req, res) => {
         res.status(200).json({ reportSuccess: true });
     })
 })
-
-
 
 app.post('/api/policies/create', auth, (req, res) => {
     let policy = new Policy({
@@ -1903,11 +1926,18 @@ app.get('/api/story/getAll', auth, (req, res) => {
         //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
         // },
         {
+            $lookup: { from: 'users', localField: 'viewedBy', foreignField: '_id', as: 'viewedBy' }
+        },
+        {
             "$project": {
                 "_id": 1,
                 "header": 1,
                 "image": 1,
-                "viewedBy": 1,
+                "viewedBy": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,  
+                },
                 "postedBy": 1,
                 "createdAt": 1,
                 "dateDifference": { $subtract: [new Date(), "$createdAt"] },
@@ -2061,7 +2091,6 @@ app.post('/api/story/create', auth, async (req, res) => {
             story.save((err) => {
                 if (err) return res.status(400).json({ err })
                 getStories(req.user.followings,req.user._id).then((stories)=>{
-                    
                     res.status(200).json({success: true,stories: stories})
                 })
             })
@@ -2543,7 +2572,7 @@ app.put('/api/reports/restrictUserFunction', auth, admin, async (req, res) => {
         if(!user.restrictedFunctions.some(ele => ele.function == item.func)){
             user.restrictedFunctions.push({
                 function: item.func,
-                Exp: moment().startOf('day').add(item.time,'days').valueOf(),
+                amountOfTime: moment().startOf('day').add(item.time,'days').valueOf(),
                 assignedAt: Date.now(),
             })
         }
@@ -2715,7 +2744,234 @@ app.post('/api/users/changePassword', auth, (req, res) => {
     })
 })
 
+///////////// statistical function //////////////////////////
 
+app.get('/api/statistics/newAccountThisMonth', auth, admin, async (req,res)=>{
+
+    let year = req.query.year ? req.query.year : new Date().getFullYear();
+    let month = req.query.month ? req.query.month : new Date().getMonth();
+
+    var firstDate = moment([year, month]);
+    var lastDate = moment(firstDate).endOf('month');
+
+    console.log(firstDate,lastDate)
+    const usersThisMonth = await User.find({ $and: [
+        { createdAt: { $gt: new Date(firstDate)}},
+        { createdAt: { $lt: new Date(lastDate)}},
+    ]  }).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        return cnt
+    })
+
+    var firstDate = moment([year, month-1]);
+    var lastDate = moment(firstDate).endOf('month');
+
+    console.log(firstDate,lastDate)
+    await User.find({ $and: [
+        { createdAt: { $gt: new Date(firstDate)}},
+        { createdAt: { $lt: new Date(lastDate)}},
+    ] }).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        return res.status(200).json({
+            usersThisMonth,   
+            usersLastMonth: cnt    
+        })
+    })
+
+})
+
+app.get('/api/statistics/newPostThisMonth', auth, admin, async (req,res)=>{
+    
+    let year = req.query.year ? req.query.year : new Date().getFullYear();
+    let month = req.query.month ? req.query.month : new Date().getMonth();
+
+    var firstDate = moment([year, month]);
+    var lastDate = moment(firstDate).endOf('month');
+
+    console.log(firstDate,lastDate)
+    const postsThisMonth = await  Post.find({ $and: [
+        { createdAt: { $gt: new Date(firstDate)}},
+        { createdAt: { $lt: new Date(lastDate)}},
+    ]}).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        return cnt
+    })
+
+    var firstDate = moment([year, month-1]);
+    var lastDate = moment(firstDate).endOf('month');
+
+    console.log(firstDate,lastDate)
+    await Post.find({ $and: [
+        { createdAt: { $gt: new Date(firstDate)}},
+        { createdAt: { $lt: new Date(lastDate)}},
+    ] }).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        return res.status(200).json({
+            postsThisMonth,   
+            postsLastMonth: cnt    
+        })
+    })
+
+})
+
+
+app.get('/api/statistics/numOfAccount', auth, admin, async(req,res)=>{  
+        
+    let year = req.query.year ? req.query.year : new Date().getFullYear();
+
+    var firstDate = moment([year, 0]);
+
+    var endDate = moment([year, 11]);
+    var lastDate = moment(endDate).endOf('month');
+    console.log(firstDate,lastDate)
+    const usersThisYear = await User.find({ $and: [
+        { createdAt: { $gt: new Date(firstDate)}},
+        { createdAt: { $lt: new Date(lastDate)}},
+    ]  }).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        return cnt
+    })
+    firstDate = moment([year-1, 0]);
+    endDate = moment([year-1, 11]);
+    lastDate = moment(endDate).endOf('month');
+    console.log(firstDate,lastDate)
+    const usersLastYear = await User.find({ $and: [
+        { createdAt: { $gt: new Date(firstDate)}},
+        { createdAt: { $lt: new Date(lastDate)}},
+    ] }).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        return cnt
+    })
+
+    User.count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        res.status(200).json({
+            cnt,
+            usersThisYear,
+            usersLastYear       
+        })
+    })
+})
+
+app.get('/api/statistics/unusedAccountSinceBeginOfThisYear', auth, admin, (req,res)=>{
+    const startOfYear = moment().clone().startOf('year').format('YYYY-MM-DD');
+    // const endOfMonth   = moment().clone().endOf('month').format('YYYY-MM-DD');
+    // console.log(startOfMonth, endOfMonth)
+    User.find(
+        { updatedAt: { $lt: new Date(startOfYear) }},
+    ).count().then((cnt, err)=>{
+        if(err) res.status(400).json(err)
+        res.status(200).json(cnt)
+    })
+})
+
+
+app.get('/api/tags/getTop10Users', auth, (req, res) => {
+
+    User.aggregate([
+        {
+            "$project": {
+                "userName": 1,
+                "_id": 1,
+                "avt": 1,
+                "length": { "$size": "$followers" },
+            }
+        },
+        { "$sort": { "length": -1 } },
+        { "$skip": 0 },
+        { "$limit": 10 }
+    ],
+        function (err, users) {
+            if (err) return res.status(400).send(err);
+            res.status(200).json(users);
+        }
+    )
+})
+
+// ?id=5f90e95460842c39900e3ffb&sortBy=createdAt&order=desc&limit=6
+app.get('/api/statistics/growthOfUser', auth, admin, async (req, res) => {
+    
+    let year = req.query.year ? req.query.year : new Date().getFullYear(); ;
+    let Data = [];
+    let month = 12;
+
+    console.log(moment().month());
+    if(year == moment().year()){
+        month = moment().month()
+    }
+
+    for(let i = 1;i<=month;i++){
+
+        var startDate = moment([year, i - 1]);
+        var endDate = moment(startDate).endOf('month');
+
+        const users = await User.find({ $and: [
+            { createdAt: { $gt: new Date(startDate) } },
+            { createdAt: { $lt: new Date(endDate) }},
+        ]  }).count().then((cnt, err)=>{
+            if(err) res.status(400).json(err)
+            return cnt
+        })
+
+        Data.push({
+            x: i,
+            y: users
+        })
+    }
+
+    return res.status(200).json(Data)
+})
+
+
+
+app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
+    
+    let year = req.query.year ? req.query.year : new Date().getFullYear();
+    let Data = [];
+    const arr = [0,15,18,30,50,120];
+    
+    var endDate = moment([year, 11]);
+    var lastDate = moment(endDate).endOf('month');
+
+    for(let i = 1;i<arr.length;i++){
+
+        const amountOfUsers = await User.aggregate([
+            {
+                "$match":{ createdAt: { $lt: new Date(lastDate)}}
+            },
+            {
+                "$project":{
+                    "_id": 1,
+                    "age": {$divide:[{$subtract: [ new Date(), "$dob" ]}, (365 * 24*60*60*1000)]},
+                    "userName": 1
+                }
+            },
+            {
+                "$match": { "age" : { "$gt": arr[i-1]}}
+            },
+            {
+                "$match": {  "age" : { "$lt": arr[i]}}
+            },
+        ],function(err, users){
+            if(err) return res.status(400).json(err)
+            return users;
+        })
+        
+        let id = `Dưới ${arr[i]}`;
+    
+        if(i == arr.length-1){
+            id = "Trên 50";
+        }
+
+        Data.push({
+            id:  id,
+            label : `${arr[i-1]} - ${arr[i]}`,
+            value: amountOfUsers.length, 
+        })
+    }
+
+    return res.status(200).json(Data)
+})
 
 
 const port = process.env.PORT || 3002;

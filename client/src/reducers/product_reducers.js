@@ -105,6 +105,7 @@ export default function (state = {}, action) {
             }
         }
         case LIKE_POST: {
+            console.log(action.payload)
             let updatedPosts = [...state.toShop]
             updatedPosts = updatedPosts.map(item => {
                 if (item._id == action.payload._id) {

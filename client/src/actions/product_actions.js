@@ -1,3 +1,4 @@
+import { ClickAwayListener } from '@material-ui/core';
 import axios from 'axios';
 import { PRODUCT_SERVER, USER_SERVER, TAG_SERVER, POST_SERVER, STORY_SERVER } from '../components/ultils/mise';
 
@@ -239,67 +240,92 @@ export function unSavePost(postId) {
         postId
     }
 
+    let type = SAVE_POST;
     const request = axios.put(`${POST_SERVER}/unSave`, data)
         .then(response => {
+            console.log(response.data)
             if(response.data.restricted){
-                return {
-                    type: RESTRICTED,
-                    payload: response.data
-                }
+                type = RESTRICTED
+                return response.data
             }else{
-                return {
-                    type: SAVE_POST,
-                    payload: response.data.user
-                }
+                console.log(response.data)
+                return response.data.user
             }
         })
 
-    return request
+    return {
+        type: type,
+        payload: request
+    }
 }
 
 export function likePost(postId, ActionType){
     const data ={
         postId
     }
+    let type = ActionType == "detail" ? LIKE_DETAIL : LIKE_POST;
     const request = axios.put(`${POST_SERVER}/like`,data)
     .then( response =>{
-       
+        console.log(response.data)
         if(response.data.restricted){
-            return {
-                type: RESTRICTED,
-                payload: response.data
-            }
+            type = RESTRICTED
+            return response.data
         }else{
-            return {
-                type: ActionType == "detail" ? LIKE_DETAIL : LIKE_POST,
-                payload: response.data[0],
-            }
+            return response.data[0]
         }
     })
 
-    return request
+    return {
+        type: type,
+        payload: request
+    }
 }
 
-export function unlikePost(postId, ActionType) {
-    const data = {
+export function unlikePost(postId, ActionType){
+    const data ={
         postId
     }
-    const request = axios.put(`${POST_SERVER}/unlike`, data)
-        .then(response => {
+    let type = ActionType == "detail" ? LIKE_DETAIL : LIKE_POST;
+    console.log(type)
+    const request = axios.put(`${POST_SERVER}/unlike`,data)
+    .then( response =>{
+        console.log(response.data)
         if(response.data.restricted){
-            return {
-                type: RESTRICTED,
-                payload: response.data
-            }
+            type = RESTRICTED
+            return response.data
         }else{
-            return {
-                type: ActionType == "detail" ? LIKE_DETAIL : LIKE_POST,
-                payload: response.data[0],
-            }
+            return response.data[0]
         }
     })
-   return request
+
+    return {
+        type: type,
+        payload: request
+    }
 }
+
+// export function unlikePost(postId, ActionType) {
+
+//     const data ={
+//         postId
+//     }
+//     let type = ActionType == "detail" ? LIKE_DETAIL : LIKE_POST;
+//     const request = axios.put(`${POST_SERVER}/unlike`,data)
+//     .then( response =>{
+//         console.log(response.data)
+//         if(response.data.restricted){
+//             type = RESTRICTED
+//             return response.data
+//         }else{
+//             return response.data[0]
+//         }
+//     })
+
+//     return {
+//         type: type,
+//         payload: request
+//     }
+// }
 
 export function makeComment(postId, content, Actiontype) {
 
@@ -315,7 +341,6 @@ export function makeComment(postId, content, Actiontype) {
                     type: RESTRICTED,
                     payload: response.data
                 }
-                
             }else{
                  let action =  {
                     type: Actiontype == "detail" ? UPDATE_DETAIL : COMMENT_POST,
@@ -372,7 +397,6 @@ export function unLikeComment(postId, commentId, ActionType) {
         })
     
     return request
-    
 }
 
 export function hidePost(postId, ActionType){

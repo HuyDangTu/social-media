@@ -8,6 +8,7 @@ import reports from './report_reducer';
 import accounts from './account_reducer';
 import messages from './message_reducer';
 import notification from './notification_reducer';
+import statistics from './statistics_reducer';
 
 const rootReducer = combineReducers({
     user,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     accounts,
     messages,
     notification,
+    statistics,
 });
 
 export default rootReducer;

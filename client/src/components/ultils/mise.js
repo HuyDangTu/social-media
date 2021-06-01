@@ -8,3 +8,4 @@ export const REPORT_SERVER = '/api/reports/';
 export const ACCOUNT_SERVER = '/api/accounts/';
 export const MESS_SERVER = '/api/messages/';
 export const NOTIFY_SERVER = '/api/notify/';
+export const STATISTICS_SERVER = '/api/statistics/';

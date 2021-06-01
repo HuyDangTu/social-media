@@ -24,6 +24,9 @@ const userSchema = mongoose.Schema({
         required: true,
         maxlength: 100
     },
+    dob:{
+        type: Date,
+    },
     avt:{
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ3F_4AEBUvIOQPFqcVFUsh5_eFIAHcdtExdA&usqp=CAU"
@@ -84,7 +87,7 @@ const userSchema = mongoose.Schema({
     resetTokenExp: {
         type: Number
     },
-});
+},{ timestamps: true });
 
 //callback function này được gọi trước phương thức save 
 //để mã hóa password
