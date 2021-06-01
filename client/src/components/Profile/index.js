@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
 import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth, blockUser } from '../../../src/actions/user_action'
+import {findPersonal} from '../../../src/actions/message_action'
 import {getHighLightStory,getAllStories,createHighLightStory} from '../../actions/user_action';
 import './profile.scss';
 import { GridDots, Tag, Dots, CircleX, Heart, Message2,Bookmark } from 'tabler-icons-react'
@@ -279,7 +280,7 @@ class Profile extends Component {
                                             </div>
                                         :
                                             <div>
-                                                <Button className="follow_options"> <Link to={`/message/inbox/${this.props.match.params.id}`}>Nhắn tin</Link></Button>
+                                                 <Button className="follow_options" onClick={async()=>{await this.props.dispatch(findPersonal(this.props.match.params.id)); await this.props.history.push(`/message/inbox/${this.props.messages.conversationinfo._id}`) }}>Nhắn tin</Button>
                                                 {
                                                     yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
                                                         <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}>Đang Theo dõi</Button>
@@ -609,6 +610,7 @@ const mapStateToProps = (state) => {
         user: state.user,
         products: state.products,
         policies: state.policies,
+        messages: state.messages
     }
 }
 export default connect(mapStateToProps)(withRouter(Profile));

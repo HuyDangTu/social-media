@@ -68,6 +68,13 @@ mongoose.connection.once('connected', async () => {
             "change": change
         });
     })
+    const grme = await mongoose.connection.collection('groups')
+    const addgrmess = grme.watch()
+    addgrmess.on('change', (change) => {
+        pusher.trigger("groups", "newGroupmess", {
+            "change": change
+        });
+    })
 })
 
 mongoose.connection.on('connected', () => {
@@ -92,7 +99,8 @@ const { HighlightStory } = require('./models/highlightStory');
 const { Message } = require('./models/message');
 const { Conversation } = require('./models/conversations');
 const { Notification } = require('./models/notification');
-
+const { Group } = require('./models/group');
+const { Groupmess} = require('./models/groupmess');
 //=============== MIDDLEWARE ===========
 const { auth } = require('./middleware/auth');
 const { admin } = require('./middleware/admin');
@@ -204,6 +212,474 @@ app.post('/api/users/login', jsonParser, (req, res) => {
         });
     });
 })
+/////////////GROUP
+app.post('/api/messages/group/create',auth,(req,res)=>{
+    const gr = new Group({
+        user: req.body.user,
+        seenBy: [(req.user._id)],
+    })
+    Group.create(gr, (err, group) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+        else {
+            res.json(group)
+            const mess = new Message({
+                sentBy: req.user._id,
+                sentTo: group._id,
+                seenBy: [req.user._id],
+                type: "event",
+                content: req.user.userName + " đã tạo cuộc trò chuyện"
+            });
+            Groupmess.create(mess, (err, data) => {
+                if (err) {
+                    res.status(500).send(err)
+                }
+                else {
+                    Group.findOneAndUpdate(
+                        {
+                            _id : { $eq : data.sentTo }
+                        }
+                        , {
+                            $push: {
+                                messagelist: data._id
+                            },
+                            $set: {
+                                lastMess: data._id,
+                                lastMessageTimestamp: data.updatedAt
+                            },
+                         
+                        }, {
+        
+                    }, (err, doc) => {
+                     
+                        if (err) {
+                            console.log(err)
+                        }
+                        else {
+                            console.log(data)
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
+app.post('/api/messages/group/seen/:id', auth, (req, res) => {
+    Group.findByIdAndUpdate(req.params.id, { $addToSet: { seenBy: req.user._id } })
+        .exec((err, data) => {
+            if (err) {
+                res.status(500).send(err)
+            }
+            else {
+                res.json(data)
+            }
+        })
+})
+app.post('/api/messages/group/addmember/:id',auth,(req,res)=>{
+    const  userlist  = [req.body.user]
+    const userlistid = [req.body.userid]
+    userlistid.map(uid=>{
+        Group.findByIdAndUpdate({_id:req.params.id}, 
+            {
+                $addToSet:{user:uid},
+                $set:{seenBy:[(req.user._id)]}
+            },
+            (err, group) => {
+            if (err) {
+                console.log(err)
+            }
+            if(group) {
+                User.findOne({ _id: uid })
+                    .select('-password')
+                    .then((user) => {
+                        const mess = new Message({
+                            sentBy: req.user._id,
+                            sentTo: req.params._id,
+                            type: "event",
+                            content: req.user.userName + " đã thêm "+ user.userName + " vào cuộc trò chuyện"
+                        })
+                        Groupmess.create(mess, (err, data) => {
+                            if (err) {
+                                res.status(500).send(err)
+                            }
+                            else {
+                                Group.findOneAndUpdate(
+                                    {
+                                        _id : { $eq : req.params.id }
+                                    }
+                                    , {
+                                        $push: {
+                                            messagelist: data._id
+                                        },
+                                        $set: {
+                                            lastMess: data._id,
+                                            lastMessageTimestamp: data.updatedAt
+                                        },
+                                     
+                                    }, {
+                    
+                                }, (err, doc) => {
+                                 
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    else {
+                                        console.log(doc)
+                                    }
+                                })
+                            }
+                        })
+                        
+                    })
+            }
+        })
+      
+    })
+        Group.findOne({_id:req.params.id}, 
+            (err, group) => {
+            if (err) {
+                res.status(500).send(err)
+            }
+            else {
+              res.json(group)
+            }
+        })
+})
+
+app.post('/api/messages/group/person/find/:id',auth,(req,res)=>{
+    Group.findOne( 
+        { $and: [{ user: { $in: req.user._id } }, { user: { $in: req.params.id }},{ type:{$eq:'personal'} }] }
+    )
+    .exec((err, data) => {
+        if (err) {
+            res.json(err)
+        }
+        else{
+            if (data == null)
+            {
+                const gr = new Group({
+                    user: [(req.user._id),(req.params.id)],
+                    seenBy: [(req.user._id)],
+                    type: "personal"
+                })
+                Group.create(gr, (err, group) => {
+                    if (err) {
+                        res.status(500).send(err)
+                    }
+                    else {
+                        res.json(group)
+                        const mess = new Message({
+                            sentBy: req.user._id,
+                            sentTo: group._id,
+                            seenBy: [req.user._id],
+                            type: "event",
+                            content: req.user.userName + " đã bắt đầu cuộc trò chuyện"
+                        });
+                        Groupmess.create(mess, (err, data) => {
+                            if (err) {
+                                res.status(500).send(err)
+                            }
+                            else {
+                                Group.findOneAndUpdate(
+                                    {
+                                        _id : { $eq : data.sentTo }
+                                    }
+                                    , {
+                                        $push: {
+                                            messagelist: data._id
+                                        },
+                                        $set: {
+                                            lastMess: data._id,
+                                            lastMessageTimestamp: data.updatedAt
+                                        },
+                                     
+                                    }, {
+                    
+                                }, (err, doc) => {
+                                 
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    else {
+                                        console.log(data)
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+            else{
+                res.json(data)
+            }
+        }
+    })
+    
+})
+
+app.post('/api/messages/group/remove/:id',auth,(req,res)=>{
+    let exit = ""
+        Group.findOneAndUpdate({_id:req.params.id}, 
+            {
+                $pull:{user : req.body.uid},
+                $set:{seenBy:[(req.user._id)]}
+            },
+            (err, group) => {
+            if (err) {
+                console.log(err)
+            }
+            if(group) {
+                User.findOne({ _id: req.body.uid })
+                    .select('-password')
+                    .then((result) => {
+                        if(req.user.id==req.body.uid)
+                        {
+                            exit = req.user.userName + " đã thoát khỏi cuộc trò chuyện"
+                        }
+                        else
+                        {
+                            exit = req.user.userName + " đã xóa "+ result.userName + " khỏi cuộc trò chuyện"
+                        }
+                        const mess = new Message({
+                            sentBy: req.user._id,
+                            sentTo: req.params._id,
+                            type: "event",
+                            content: exit
+                        })
+                        Groupmess.create(mess, (err, data) => {
+                            if (err) {
+                                res.status(500).send(err)
+                            }
+                            else {
+                                Group.findOneAndUpdate(
+                                    {
+                                        _id : { $eq : req.params.id }
+                                    }
+                                    , {
+                                        $push: {
+                                            messagelist: data._id
+                                        },
+                                        $set: {
+                                            lastMess: data._id,
+                                            lastMessageTimestamp: data.updatedAt
+                                        },
+                                     
+                                    }, {
+                    
+                                }, (err, doc) => {
+                                 
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    else {
+                                        console.log(doc)
+                                    }
+                                })
+                            }
+                        })
+                        
+                    })
+            
+            res.json(group)
+                }
+        })
+})
+
+app.post('/api/messages/group/save', auth,jsonParser, (req, res) => {
+    const dbMess = req.body
+    Groupmess.create(dbMess, (err, data) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+        else {
+            Group.findOneAndUpdate(
+                {
+                    _id : { $eq : data.sentTo }
+                }
+                , {
+                    $push: {
+                        messagelist: data._id
+                    },
+                    $set: {
+                        lastMess: data._id,
+                        seenBy:[(req.user._id)],
+                        lastMessageTimestamp: data.updatedAt
+                    },
+                
+                }, {
+
+            }, (err, doc) => {
+             
+                if (err) {
+                    console.log(err)
+                }
+                else {
+                    console.log(doc)
+                }
+            })
+        }
+    })
+})
+
+
+
+app.get('/api/messages/group/find',auth,(req,res)=>{
+    Group.find( { user : { $in : req.user._id } })
+    .populate("user", "_id userName avt")
+    .populate("lastMess")
+    .populate({ 
+        path: 'lastMess',
+        populate: {
+          path: 'sentBy',
+          model: 'User',
+          select: "_id userName avt"
+        } 
+     })
+
+    .sort([["lastMessageTimestamp",-1]])
+    .exec((err, data) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+        else{
+            res.json(data)
+        }
+    })
+})
+app.post('/api/messages/group/edittitle/:id',auth,(req,res)=>{
+    Group.findByIdAndUpdate({_id:req.params.id},
+        {
+            $set:{title:req.body.title}
+        }).exec((err, conversation) => {
+            if (err) res.status(400).json(err);
+            res.status(200).json({conversation});
+        })
+})
+app.get('/api/messages/group/get/:id', auth, (req, res) => {
+    Group.findOne( {_id: { $eq: req.params.id }})
+        .populate("messagelist")
+        .populate("user", "_id userName avt")
+        .populate("lastMess")
+        .populate({ 
+            path: 'messagelist',
+            populate: {
+              path: 'sentBy',
+              model: 'User',
+              select: "_id userName avt"
+            } 
+         })
+         .populate({ 
+            path: 'seenBy',
+              select: "_id userName avt"
+            })
+        .exec((err, data) => {
+            if (err) {
+                res.status(500).send(err)
+            }
+            else {
+                if (data == null) {
+                    // const conversation = new Conversation({
+                    //     user1: req.params.id,
+                    //     user2: req.user._id,
+                    //     seenBy: [(req.user._id)]
+                    // })
+                    // Conversation.create(conversation, (err, conver) => {
+                    //     if (err) {
+                    //         res.status(500).send(err)
+                    //     }
+                    //     else {
+                    //         res.json(conver)
+                    //     }
+                    // })
+                }
+                else (res.json(data))
+            }
+        })
+})
+app.post('/api/messages/group/updatepic', auth, (req, res) => {
+    Group.findByIdAndUpdate( req.body.id, { $set: { groupimg: req.body.url } }, { new: true },
+        (err, result) => {
+            if (err) {
+                return res.json({ success: false, message: "Đã xảy ra lỗi" ,err:err})
+            }
+            else{    
+                const mess = new Message({
+                    sentBy: req.user._id,
+                    sentTo: result._id,
+                    type: "event",
+                    content: req.user.userName + " đã đổi hình ảnh cuộc trò chuyện"
+                });
+                Groupmess.create(mess, (err, data) => {
+                    if (err) {
+                        res.status(500).send(err)
+                    }
+                    else {
+                        Group.findOneAndUpdate(
+                            {
+                                _id : { $eq : data.sentTo }
+                            }
+                            , {
+                                $push: {
+                                    messagelist: data._id
+                                },
+                                $set: {
+                                    lastMess: data._id
+                                },
+                             
+                            }, {
+            
+                        }, (err, doc) => {
+                         
+                            if (err) {
+                                console.log(err)
+                            }
+                            else {
+                                console.log(data)
+                            }
+                        })
+                    }
+                })
+                res.json({ success: true, message: "Đã đổi thành công ảnh đại diện",result:result })
+            }
+           
+        })
+    
+
+})
+//LOGIN
+app.post('/api/users/login', jsonParser, (req, res) => {
+    // find the email
+    User.findOne({ 'email': req.body.email }, (err, user) => {
+        if (!user) return res.json({ loginSuccess: false, message: 'Auth failes,email not found' });
+        //check password
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if (!isMatch) return res.json({ loginSuccess: false, message: 'wrongPassword' })
+            user.gennerateToken((err, user) => {
+                if (err) return res.status(400).send(err);
+                //gennerate Token
+                res.cookie('u_auth', user.token).status(200).json({
+                    loginSuccess: true
+                });
+            });
+        });
+    });
+})
+
+app.post('/api/users/loginByFaceGoogle', jsonParser, (req, res) => {
+    // find the email
+    User.findOne({ 'email': req.body.email }, (err, user) => {
+        if (!user) return res.json({ loginSuccess: false, message: 'Auth fail, No account found' });
+        user.gennerateToken((err, user) => {
+            if (err) return res.status(400).send(err);
+            //gennerate Token
+            res.cookie('u_auth', user.token).status(200).json({
+                loginSuccess: true
+            });
+        });
+    });
+})
+
 
 app.post('/api/users/loginByFaceGoogle', jsonParser, (req, res) => {
     // find the email

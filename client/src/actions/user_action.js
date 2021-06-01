@@ -190,7 +190,7 @@ export function updateprofileimgfile(file) {
         header: { 'content-type': 'multipart/form-data' }
     }
     formData.append("file", file)
-    const request = axios.post('${USER_SERVER}/uploadimage', formData, config)
+    const request = axios.post(`${USER_SERVER}/uploadimage`, formData, config)
         .then(response => response.data);
     return {
         type: UPDATE_IMG,
@@ -213,7 +213,7 @@ export function updateprofileimg(url) {
     {
         url
     }
-    const request = axios.put('${USER_SERVER}/updatepic', config)
+    const request = axios.put(`${USER_SERVER}/updatepic`, config)
         .then(response => response.data)
     return {
         type: CHANGE_IMG,

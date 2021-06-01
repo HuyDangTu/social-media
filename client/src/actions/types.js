@@ -163,3 +163,14 @@ export const GET_TOTAL_OF_NEW_POSTS = "GET_TOTAL_OF_NEW_POSTS";
 
 
 
+export const GET_GROUP = "GET_GROUP";
+export const GET_GROUPMESS = "GET_GROUPMESS";
+export const SEND_GROUP_MESS = "SEND_GROUP_MESS";
+export const CREATE_GROUP = "CREATE_GROUP";
+export const EDIT_TITLE = "EDIT_TITLE";
+export const ADD_MEMBER = "ADD_MEMBER";
+export const REMOVE_MEMBER = "REMOVE_MEMBER";
+export const UPLOAD_GROUPIMG = "UPLOAD_GROUPIMG";
+export const CHANGE_GROUPIMG = "CHANGE_GROUPIMG";
+export const SEEN_GROUP = "SEEN_GROUP";
+export const FIND_PERSONAL = "FIND_PERSONAL";
