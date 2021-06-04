@@ -1,9 +1,11 @@
+import { LetterB } from 'tabler-icons-react';
 import {
     DELETE_POST,
     GET_ALL_REPORTS,
     GET_REPORT_DETAIL,
     UPDATE_REPORT,
-    CLEAR
+    CLEAR,
+    DELETE_RESTRICTED_FUNCTION,
 } from '../actions/types';
 
 export default function (state = {}, action) {
@@ -21,12 +23,29 @@ export default function (state = {}, action) {
             }
         }
         case UPDATE_REPORT: {
-            const newDetail = {
-                ...state.reportDetail,
-                status: action.payload.report.status
+            if(action.payload.report.reportType == "user" ){
+                let newUserInfo = {
+                    ...state.reportDetail.userId[0]
+                }
+                console.log(newUserInfo)
+                newUserInfo.restrictedFunctions = action.payload.restrictedFunctions
+                console.log(newUserInfo)
+                return {
+                    reportDetail: {
+                        ...state.reportDetail,
+                        status: action.payload.report.status,
+                        userId: [newUserInfo]
+                    }
+                }
             }
-            return {
-                reportDetail: newDetail
+            else{
+                const newDetail = {
+                    ...state.reportDetail,
+                    status: action.payload.report.status
+                }
+                return {
+                    reportDetail: newDetail
+                }
             }
         }
         case DELETE_POST: {
@@ -36,6 +55,21 @@ export default function (state = {}, action) {
             }
             return {
                 reportDetail: newDetail
+            }
+        }
+        case DELETE_RESTRICTED_FUNCTION:{
+            let newUserInfo = {
+                ...state.reportDetail.userId[0]
+            }
+            console.log(newUserInfo)
+            newUserInfo.restrictedFunctions = newUserInfo.restrictedFunctions.filter(item =>
+                item._id != action.payload.funcId) 
+            console.log(newUserInfo)
+            return {
+                reportDetail: {
+                    ...state.reportDetail,
+                    userId: [newUserInfo]
+                }
             }
         }
         case CLEAR: {

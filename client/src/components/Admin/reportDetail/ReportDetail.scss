@@ -68,9 +68,7 @@
                 background: rgb(252, 168, 42);
                 color: white;
             }
-            
         }
-       
     }
     .content_wrapper{
         width: 100%;
@@ -93,43 +91,82 @@
             margin-right: 10px;
             }
         }
-         .comment_list{
+        .comment_list{
+            display: flex;
+            flex-direction: column; 
+            overflow-y: scroll;
+            .view_more_cmt{
+                text-decoration: underline;             
+                color: #7c7c7c;
+            }
+            .comment{
                 display: flex;
-                flex-direction: column; 
-                overflow-y: scroll;
-                .view_more_cmt{
-                    text-decoration: underline;             
-                    color: #7c7c7c;
+                justify-content: flex-start;
+                margin-bottom: 10px;
+                width: 100%;
+                .user_avt{
+                    img{
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        margin-right: 10px;
+                        object-fit: cover;
+                    }
                 }
-                .comment{
-                    display: flex;
-                    justify-content: flex-start;
-                    margin-bottom: 10px;
-                    width: 100%;
-                    .user_avt{
-                        img{
-                            width: 30px;
-                            height: 30px;
-                            border-radius: 50%;
-                            margin-right: 10px;
-                            object-fit: cover;
-                        }
+                .content{
+                    flex-grow: 2;
+                    p{
+                        font-size: 14px;;
+                        margin:0;
+                        color: #a5a5a5
                     }
-                    .content{
-                        flex-grow: 2;
-                        p{
-                            font-size: 14px;;
-                            margin:0;
-                            color: #a5a5a5
-                        }
-                    }
-                    .like_button{
-                        img{
-                            width: 20px;
-                        }
+                }
+                .like_button{
+                    img{
+                        width: 20px;
                     }
                 }
             }
+        }
+        .user-info{
+            .account-info{
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+                div{
+                    margin-left: 1rem;
+                    p{
+                        margin:0;
+                    }
+                }
+                img{
+                    width: 4rem;
+                    height: 4rem;
+                    object-fit: center;
+                    border-radius: 50%;
+                }
+                
+            }
+        }
+        .user-posts{      
+            .post{
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .user-resticted-functions{
+            .resticted-functions-list{
+                list-style: none;
+                .user-resticted-item{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    b{
+                        margin-right: 1rem;
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -49,7 +49,7 @@ export function sendMessage(datatoSubmit){
 }
 
 export function replyStory(datatoSubmit){
-    const request = axios.post(`${MESS_SERVER}/save`,datatoSubmit)
+    const request = axios.post(`${MESS_SERVER}/group/replyStory`,datatoSubmit)
     .then(response=>response.data);
     return request
 }
@@ -163,6 +163,7 @@ export function changegroupimg(id,url) {
         payload: request
     }
 }
+
 export function findPersonal(id) {
     const request = axios.post(`${MESS_SERVER}/group/person/find/${id}`)
     .then(response=> response.data);
@@ -171,6 +172,7 @@ export function findPersonal(id) {
         payload: request
     }
 }
+
 export function uploadgroupimg(file) {
     let formData = new FormData();
     const config = {

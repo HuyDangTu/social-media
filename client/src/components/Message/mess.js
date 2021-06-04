@@ -28,7 +28,7 @@ class Mess extends Component {
                 <ClickAwayListener onClickAway={this.handleClickAway}>
                 <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6  sent_mess">
                     {
-                        this.props.mess.type == 'text' ?
+                            this.props.mess.type == 'text' ?
 
                             <p onClick={()=>this.setState({show:true})}>
 
@@ -37,9 +37,13 @@ class Mess extends Component {
                             :
                             this.props.mess.type == 'img' ?
                                 <img onClick={this.handleMessClick} src={this.props.mess.content}></img> :
-                                this.props.mess.type == 'sticker' ?
-                            <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> : ''
-
+                            this.props.mess.type == 'sticker' ?
+                                <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> :
+                            this.props.mess.type == 'replyStory' ?
+                                <p onClick={()=>this.setState({show:true})}>
+                                    Đã trả lời tin của bạn: {this.props.mess.content}
+                                </p>
+                            :""
                     }
                     {
                         this.state.show?

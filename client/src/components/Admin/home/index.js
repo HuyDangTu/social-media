@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../Layout/index';
 import './dashboard.scss'
-import { getGrowthOfUsers, getPercentageOfAge, unusedAccountSinceBeginOfThisYear, newPostThisMonth, newAccountThisMonth, numOfAccount } from '../../../actions/statistics_action';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { 
+    getGrowthOfUsers, 
+    getPercentageOfAge, 
+    unusedAccountSinceBeginOfThisYear, 
+    newPostThisMonth, newAccountThisMonth,
+    numOfAccount,
+    getTop10Users,
+    getUserBehaviors 
+} from '../../../actions/statistics_action';
 import { withRouter } from 'react-router-dom';
-import moment from 'moment';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -13,13 +19,193 @@ import {
 } from '@material-ui/pickers';
 import { ResponsiveLine } from '@nivo/line';
 import { ResponsivePie } from '@nivo/pie';
-import { UserPlus, UserExclamation , Users ,Photo , Home2, TrendingUp,TrendingDown } from 'tabler-icons-react';
-
+import { ResponsiveChoropleth } from '@nivo/geo';
+import { UserPlus, UserExclamation , Users ,Photo , Home2, TrendingUp,TrendingDown,Award } from 'tabler-icons-react';
+import countries from './feature.json';
 class Home extends Component {
 
     state={
-        growthOfUserData: [],
-        percentageOfAge: [],
+        growthOfUserData: [{
+            "id": "Users",
+            "color": "hsl(276, 70%, 50%)",
+            "data": [
+            {
+                "x": "1",
+                "y": 0
+            },
+            {
+                "x": "2",
+                "y": 0
+            },
+            {
+                "x": "3",
+                "y": 0
+            },
+            {
+                "x": "4",
+                "y": 0
+            },
+            {
+                "x": "5",
+                "y": 0
+            },
+            {
+                "x": "6",
+                "y": 0
+            },
+            {
+                "x": "7",
+                "y": 0
+            },
+            {
+                "x": "8",
+                "y": 0
+            },
+            {
+                "x": "9",
+                "y": 0
+            },
+            {
+                "x": "10",
+                "y": 0
+            },
+            {
+                "x": "11",
+                "y": 0
+            },
+            {
+                "x": "12",
+                "y": 0
+            }
+            ]        
+        }],
+        percentageOfAge: [
+            {
+                "id": "Dưới 15",
+                "label": "0 - 15",
+                "value": 1
+            },
+            {
+                "id": "Dưới 18",
+                "label": "15 - 18",
+                "value": 1
+            },
+            {
+                "id": "Dưới 30",
+                "label": "18 - 30",
+                "value": 1
+            },
+            {
+                "id": "Dưới 50",
+                "label": "30 - 50",
+                "value": 1
+            },
+            {
+                "id": "Trên 50",
+                "label": "50 - 120",
+                "value": 1
+            }
+        ],
+        userBehaviors: [
+            {
+                "id": "posts",
+                "color": "hsl(167, 70%, 50%)",
+                "data": [
+                {
+                    "x": "plane",
+                    "y": 1
+                },
+                {
+                    "x": "helicopter",
+                    "y": 1
+                },
+                {
+                    "x": "boat",
+                    "y": 1
+                },
+                ]
+            },
+            {
+                "id": "comments",
+                "color": "hsl(67, 70%, 50%)",
+                "data": [
+                {
+                    "x": "plane",
+                    "y": 2
+                },
+                {
+                    "x": "helicopter",
+                    "y": 2
+                },
+                {
+                    "x": "boat",
+                    "y": 2
+                },
+                ]
+            },
+            {
+                "id": "stories",
+                "color": "hsl(162, 70%, 50%)",
+                "data": [
+                {
+                    "x": "plane",
+                    "y": 3
+                },
+                {
+                    "x": "helicopter",
+                    "y": 3
+                },
+                {
+                    "x": "boat",
+                    "y": 3
+                },
+                ]
+            },
+            {
+                "id": "reports",
+                "color": "hsl(103, 70%, 50%)",
+                "data": [
+                {
+                    "x": "plane",
+                    "y": 4
+                },
+                {
+                    "x": "helicopter",
+                    "y": 4
+                },
+                {
+                    "x": "boat",
+                    "y": 4
+                },
+                ]
+            },
+            ],
+        nationality: [
+  {
+    "id": "AFG",
+    "value": 985965
+  },
+  {
+    "id": "AGO",
+    "value": 200472
+  },
+  {
+    "id": "ALB",
+    "value": 3581
+  },
+  {
+    "id": "ARE",
+    "value": 430108
+  },
+  {
+    "id": "ARG",
+    "value": 900652
+  },
+  {
+    "id": "ARM",
+    "value": 266579
+  },
+        ],
         selectedDate: new Date(),
     }
 
@@ -35,6 +221,34 @@ class Home extends Component {
             })
         })
 
+        this.props.dispatch(getUserBehaviors(this.state.selectedDate.getFullYear())).then(response => {
+            console.log(response)
+            this.setState({
+                userBehaviors: [
+                    {
+                        id: "Posts",
+                        color: "hsl(280, 70%, 50%)",
+                        data: response.payload.postsData
+                    },
+                    {
+                        id: "stories",
+                        color: "hsl(280, 70%, 50%)",
+                        data: response.payload.storiesData
+                    },
+                     {
+                        id: "comment",
+                        color: "hsl(280, 70%, 50%)",
+                        data: response.payload.commentsData
+                    },
+                    {
+                        id: "reports",
+                        color: "hsl(280, 70%, 50%)",
+                        data: response.payload.reportsData
+                    },
+                ]
+            })
+        })
+
         this.props.dispatch(getPercentageOfAge(this.state.selectedDate.getFullYear())).then(response => {
             console.log(response)
             this.setState({
@@ -46,6 +260,7 @@ class Home extends Component {
         this.props.dispatch(newAccountThisMonth(this.state.selectedDate))
         this.props.dispatch(newPostThisMonth(this.state.selectedDate))
         this.props.dispatch(numOfAccount(this.state.selectedDate))
+        this.props.dispatch(getTop10Users());
     }
 
     handleDateChange = (date) =>{
@@ -84,7 +299,7 @@ class Home extends Component {
 
     render() {
         return (
-           <Layout page="home">
+        <Layout page="home">
             <div className="title">
                 <div className="title-wrapper">
                     <div className="title-icon">
@@ -110,7 +325,6 @@ class Home extends Component {
                     />
                 </MuiPickersUtilsProvider>
             </div>
-
             <div className="metric-wrapper">
                 <div className="row no-gutters">
                     <div className="col-xl-3 no-gutters">
@@ -239,7 +453,7 @@ class Home extends Component {
                     </div>
                 </div>
            </div>
-           <div className="chart">
+            <div className="chart">
                 <div className="wrapper">
                     <ResponsiveLine
                         data={this.state.growthOfUserData}
@@ -415,8 +629,156 @@ class Home extends Component {
                     ]}
                   /> 
                 </div>
+                <div className="wrapper">
+                    <ResponsiveChoropleth
+                        data={this.state.nationality}
+                        features={countries.features}
+                        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                        colors="nivo"
+                        domain={[ 0, 1000000 ]}
+                        unknownColor="#666666"
+                        label="properties.name"
+                        valueFormat=".2s"
+                        projectionTranslation={[ 0.5, 0.5 ]}
+                        projectionRotation={[ 0, 0, 0 ]}
+                        enableGraticule={true}
+                        graticuleLineColor="#dddddd"
+                        borderWidth={0.5}
+                        borderColor="#152538"
+                        legends={[
+                            {
+                                anchor: 'bottom-left',
+                                direction: 'column',
+                                justify: true,
+                                translateX: 20,
+                                translateY: -100,
+                                itemsSpacing: 0,
+                                itemWidth: 94,
+                                itemHeight: 18,
+                                itemDirection: 'left-to-right',
+                                itemTextColor: '#444444',
+                                itemOpacity: 0.85,
+                                symbolSize: 18,
+                                effects: [
+                                    {
+                                        on: 'hover',
+                                        style: {
+                                            itemTextColor: '#000000',
+                                            itemOpacity: 1
+                                        }
+                                    }
+                                ]
+                            }
+                        ]}
+                    />              
+                </div>
             </div>
-            </Layout>
+            <div className="top-ten-uesrs">
+                <div className="row no-gutters">
+                    <div className="col-xl-4 no-gutters">
+                        <ul className="user-list">
+                            {
+                                this.props.statistics.top10Users?
+                                    this.props.statistics.top10Users.map((item,i) => {
+                                        return <li className="user-item">
+                                            <img src={item.avt}/>
+                                            <div className="user-info">
+                                                <p>{item.userName}</p>
+                                                <p>{item.length} followers</p>
+                                            </div>
+                                            <div className="user-award">
+                                            {
+                                                i==0?
+                                                    <Award
+                                                        size={38}
+                                                        strokeWidth={2}
+                                                        color={'rgb(250, 227, 25)'}
+                                                    />
+                                                :i==1?
+                                                        <Award
+                                                            size={38}
+                                                            strokeWidth={2}
+                                                            color={'rgb(236, 114, 0)'}
+                                                        />
+                                                :i==2?
+                                                    <Award
+                                                        size={38}
+                                                        strokeWidth={2}
+                                                        color={' rgb(6, 211, 23)'}
+                                                    />
+                                                :""
+                                            }
+                                            </div>
+                                        </li>
+                                    })
+                                :""
+                            }
+                        </ul>
+                    </div>
+                    <div className="col-xl-8 no-gutters"> 
+                    <ResponsiveLine
+                        data={this.state.userBehaviors}
+                        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                        xScale={{ type: 'point' }}
+                        yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
+                        yFormat=" >-.2r"
+                        axisTop={null}
+                        axisRight={null}
+                        axisBottom={{
+                            orient: 'bottom',
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: 'Growth of users',
+                            legendOffset: 36,
+                            legendPosition: 'middle'
+                        }}
+                        axisLeft={{
+                            orient: 'left',
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: 'count',
+                            legendOffset: -40,
+                            legendPosition: 'middle'
+                        }}
+                        pointSize={10}
+                        pointColor={{ theme: 'background' }}
+                        pointBorderWidth={2}
+                        pointBorderColor={{ from: 'serieColor' }}
+                        pointLabelYOffset={-12}
+                        useMesh={true}
+                        legends={[
+                            {
+                                anchor: 'bottom-right',
+                                direction: 'column',
+                                justify: false,
+                                translateX: 100,
+                                translateY: 0,
+                                itemsSpacing: 0,
+                                itemDirection: 'left-to-right',
+                                itemWidth: 80,
+                                itemHeight: 20,
+                                itemOpacity: 0.75,
+                                symbolSize: 12,
+                                symbolShape: 'circle',
+                                symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                                effects: [
+                                    {
+                                        on: 'hover',
+                                        style: {
+                                            itemBackground: 'rgba(0, 0, 0, .03)',
+                                            itemOpacity: 1
+                                        }
+                                    }
+                                ]
+                            }
+                        ]}
+                    />
+                    </div>
+                </div>
+            </div>
+        </Layout>
         );
     }
 }

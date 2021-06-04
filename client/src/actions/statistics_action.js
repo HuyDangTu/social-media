@@ -8,6 +8,8 @@ import {
     GET_UNUSED_USERS,
     GET_NEW_USER,
     GET_TOTAL_OF_NEW_POSTS,
+    GET_TOP_TEN_USERS,
+    GET_USERS_BEHAVIORS,
 } from './types';
 
 export function getGrowthOfUsers(year) {
@@ -62,7 +64,6 @@ export function newPostThisMonth(date) {
     }
 }
 
-
 export function newAccountThisMonth(date) {
     const month = date.getMonth();
     const year = date.getFullYear();
@@ -78,7 +79,6 @@ export function newAccountThisMonth(date) {
     }
 }
 
-
 export function numOfAccount(year) {
     // console.log(year.getFullYear())
     const request = axios.get(`${STATISTICS_SERVER}/numOfAccount?year=${year.getFullYear()}`)
@@ -92,6 +92,29 @@ export function numOfAccount(year) {
     }
 }
 
+export function getUserBehaviors(year){
+    const request = axios.get(`${STATISTICS_SERVER}/userBehaviors?year=${year}`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+    return {
+        type:  GET_USERS_BEHAVIORS,
+        payload: request,
+    }
+}
+
+export function getTop10Users(){
+    const request = axios.get(`${STATISTICS_SERVER}/getTop10Users`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+    return {
+        type:  GET_TOP_TEN_USERS,
+        payload: request,
+    }
+}
 
 
 

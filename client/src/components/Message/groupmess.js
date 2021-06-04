@@ -35,22 +35,28 @@ class GroupMess extends Component {
             
                     {
                         this.props.mess.type == 'text' ?
-                    <div className="message_content">
-                        {
-                        this.state.show?
-                        <h6>{moment(this.props.mess.updatedAt).format("HH:MM A")}</h6>:
-                        ''}
-                    <p  onClick={()=>this.setState({show:!this.state.show})}>
-                        {this.props.mess.content}  
-                    </p>
-                   
-                    </div>
-                           
+                            <div className="message_content">
+                                {
+                                this.state.show?
+                                <h6>{moment(this.props.mess.updatedAt).format("HH:MM A")}</h6>:
+                                ''}
+                            <p  onClick={()=>this.setState({show:!this.state.show})}>
+                                {this.props.mess.content}  
+                            </p>
+                        
+                            </div>
                             :
                             this.props.mess.type == 'img' ?
                                 <img onClick={this.handleMessClick} src={this.props.mess.content}></img> :
-                                this.props.mess.type == 'sticker' ?
-                                    <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> : ''
+                            this.props.mess.type == 'sticker' ?
+                                <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> :
+                            this.props.mess.type == 'replyStory' ?
+                                <div className="message_content">
+                                    <p onClick={()=>{}}>
+                                        Đã trả lời tin của bạn: {this.props.mess.content}
+                                    </p>
+                                </div>
+                            :""
 
                     }
                     

@@ -265,6 +265,7 @@ app.post('/api/messages/group/create',auth,(req,res)=>{
         }
     })
 })
+
 app.post('/api/messages/group/seen/:id', auth, (req, res) => {
     Group.findByIdAndUpdate(req.params.id, { $addToSet: { seenBy: req.user._id } })
         .exec((err, data) => {
@@ -276,6 +277,7 @@ app.post('/api/messages/group/seen/:id', auth, (req, res) => {
             }
         })
 })
+
 app.post('/api/messages/group/addmember/:id',auth,(req,res)=>{
     const  userlist  = [req.body.user]
     const userlistid = [req.body.userid]
@@ -347,6 +349,112 @@ app.post('/api/messages/group/addmember/:id',auth,(req,res)=>{
         })
 })
 
+app.post('/api/messages/group/replyStory',auth,(req,res)=>{
+    Group.findOne( 
+        { $and: [{ user: { $in: req.user._id } }, { user: { $in: req.body.sentTo }},{ type:{$eq:'personal'} }] }
+    )
+    .exec((err, data) => {
+        if (err) {
+            res.json(err)
+        }
+        else{
+            if (data == null)
+            {
+                const gr = new Group({
+                    user: [(req.user._id),(req.body.sentTo)],
+                    seenBy: [(req.user._id)],
+                    type: "personal"
+                })
+                Group.create(gr, (err, group) => {
+                    if (err) {
+                        res.status(500).send(err)
+                    }
+                    else {
+                        const mess = new Message({
+                            sentBy: req.user._id,
+                            sentTo: group._id,
+                            seenBy: [req.user._id],
+                            type: req.body.type,
+                            attachment: req.body.attachment, 
+                            content: req.body.content
+                        });
+                        Groupmess.create(mess, (err, data) => {
+                            if (err) {
+                                res.status(500).send(err)
+                            }
+                            else {
+                                Group.findOneAndUpdate(
+                                    {
+                                        _id : { $eq : data.sentTo }
+                                    }, 
+                                    {
+                                        $push: {
+                                            messagelist: data._id
+                                        },
+                                        $set: {
+                                            lastMess: data._id,
+                                            lastMessageTimestamp: data.updatedAt
+                                        },
+                                     
+                                    }, {
+                                    new: true
+                                }, (err, doc) => {
+                                    if (err) {
+                                        console.log(err)
+                                    }
+                                    else {
+                                        return res.json(doc);
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+            else{
+                const mess = new Message({
+                    sentBy: req.user._id,
+                    sentTo: data._id,
+                    seenBy: [req.user._id],
+                    type: req.body.type,
+                    attachment: req.body.attachment, 
+                    content: req.body.content
+                });
+                Groupmess.create(mess, (err, data) => {
+                    if (err) {
+                        res.status(500).send(err)
+                    }
+                    else {
+                        Group.findOneAndUpdate(
+                            {
+                                _id : { $eq : data.sentTo }
+                            }
+                            , {
+                                $push: {
+                                    messagelist: data._id
+                                },
+                                $set: {
+                                    lastMess: data._id,
+                                    lastMessageTimestamp: data.updatedAt
+                                },
+                                
+                            }, {
+                            new: true
+                        }, (err, doc) => {
+                            if (err) {
+                                res.status(500).send(err)
+                            }
+                            else {
+                                res.status(200).json(doc);
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    })
+})
+
 app.post('/api/messages/group/person/find/:id',auth,(req,res)=>{
     Group.findOne( 
         { $and: [{ user: { $in: req.user._id } }, { user: { $in: req.params.id }},{ type:{$eq:'personal'} }] }
@@ -415,7 +523,6 @@ app.post('/api/messages/group/person/find/:id',auth,(req,res)=>{
             }
         }
     })
-    
 })
 
 app.post('/api/messages/group/remove/:id',auth,(req,res)=>{
@@ -488,11 +595,13 @@ app.post('/api/messages/group/remove/:id',auth,(req,res)=>{
 
 app.post('/api/messages/group/save', auth,jsonParser, (req, res) => {
     const dbMess = req.body
+    console.log(dbMess);
     Groupmess.create(dbMess, (err, data) => {
         if (err) {
             res.status(500).send(err)
         }
         else {
+            console.log(data)
             Group.findOneAndUpdate(
                 {
                     _id : { $eq : data.sentTo }
@@ -506,23 +615,19 @@ app.post('/api/messages/group/save', auth,jsonParser, (req, res) => {
                         seenBy:[(req.user._id)],
                         lastMessageTimestamp: data.updatedAt
                     },
-                
                 }, {
-
-            }, (err, doc) => {
-             
+            },(err, doc) => {
                 if (err) {
                     console.log(err)
                 }
                 else {
                     console.log(doc)
+                    res.status(200).json(doc);
                 }
             })
         }
     })
 })
-
-
 
 app.get('/api/messages/group/find',auth,(req,res)=>{
     Group.find( { user : { $in : req.user._id } })
@@ -2511,11 +2616,18 @@ function getStories(followings,id) {
         //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
         // },
         {
+            $lookup: { from: 'users', localField: 'viewedBy', foreignField: '_id', as: 'viewedBy' }
+        },
+        {
             "$project": {
                 "_id": 1,
                 "header": 1,
                 "image": 1,
-                "viewedBy": 1,
+                "viewedBy": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,  
+                },
                 "postedBy": 1,
                 "createdAt": 1,
                 "dateDifference": { $subtract: [new Date(), "$createdAt"] },
@@ -2966,6 +3078,16 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
                 "comment": 1,
                 "userId": {
                     "_id": 1,
+                    "userName": 1,
+                    "email": 1,
+                    "name": 1,
+                    "lastname": 1,
+                    "avt": 1,
+                    "bio": 1,
+                    "followers": 1,
+                    "followings": 1,
+                    "userName": 1,
+                    "restrictedFunctions": 1,
                 },
                 "reportAbout": {
                     "content": 1,
@@ -2983,12 +3105,15 @@ app.post('/api/reports/getDetail', auth, admin, (req, res) => {
             //console.log(report[0]);
             const report = reports[0];
             if(report.reportType == "user") {
-                findPost(report.post, []).then((post) => {
-                        console.log(post);
-                        res.status(200).json({
+                Post.find({ postedBy: reports[0].userId[0]._id })
+                .populate("postedBy", "_id userName")
+                .sort({ "createdAt": -1 })
+                .exec((err, posts) => {
+                    if (err) return res.status(422).json({ error: err })
+                    res.status(200).json({
                             reportDetail: {
                                 ...report,
-                                post: post
+                                posts
                             }
                         });
                 })
@@ -3054,7 +3179,7 @@ app.put('/api/reports/restrictUserFunction', auth, admin, async (req, res) => {
         }
     })
 
-    const updated = await user.save((err, doc) => {
+    const updated = await user.save((err, user) => {
         if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
         Report.findByIdAndUpdate(req.body.reportId, {
             $set: { status: true }
@@ -3073,6 +3198,7 @@ app.put('/api/reports/restrictUserFunction', auth, admin, async (req, res) => {
             return res.status(200).json({
                 success: true,
                 message: 'Thành công',
+                restrictedFunctions: user.restrictedFunctions,
                 report
             });
         })
@@ -3091,6 +3217,7 @@ app.put('/api/reports/deleteRestrictFunction', auth, admin, async (req, res) => 
         if (err) return res.json({ success: false, message: "Lỗi! Vui lòng thử lại" })
         return res.status(200).json({
             success: true,
+            funcId: req.body.funcId,
             message: 'Thành công'
         })
     })
@@ -3341,8 +3468,7 @@ app.get('/api/statistics/unusedAccountSinceBeginOfThisYear', auth, admin, (req,r
     })
 })
 
-
-app.get('/api/tags/getTop10Users', auth, (req, res) => {
+app.get('/api/statistics/getTop10Users', auth, admin,(req, res) => {
 
     User.aggregate([
         {
@@ -3355,7 +3481,7 @@ app.get('/api/tags/getTop10Users', auth, (req, res) => {
         },
         { "$sort": { "length": -1 } },
         { "$skip": 0 },
-        { "$limit": 10 }
+        { "$limit": 5 }
     ],
         function (err, users) {
             if (err) return res.status(400).send(err);
@@ -3396,6 +3522,105 @@ app.get('/api/statistics/growthOfUser', auth, admin, async (req, res) => {
     }
 
     return res.status(200).json(Data)
+})
+
+
+app.get('/api/statistics/userBehaviors', auth, admin, async (req, res) => {
+    
+    let year = req.query.year ? req.query.year : new Date().getFullYear(); ;
+    let postsData = [];
+    let storiesData = [];
+    let commentsData = [];
+    let reportsData = [];
+
+    let month = 12;
+
+    console.log(moment().month());
+    if(year == moment().year()){
+        month = moment().month()
+    }
+
+    for(let i = 1;i<=month;i++){
+
+        var startDate = moment([year, i - 1]);
+        var endDate = moment(startDate).endOf('month');
+
+        const posts = await Post.find({ $and: [
+            { createdAt: { $gt: new Date(startDate) } },
+            { createdAt: { $lt: new Date(endDate) }},
+        ]  }).count().then((cnt, err)=>{
+            if(err) res.status(400).json(err)
+            return cnt
+        })
+
+        postsData.push({
+            x: i,
+            y: posts
+        })
+    }
+
+    for(let i = 1;i<=month;i++){
+
+        var startDate = moment([year, i - 1]);
+        var endDate = moment(startDate).endOf('month');
+
+        const comments = await Comment.find({ $and: [
+            { createdAt: { $gt: new Date(startDate) } },
+            { createdAt: { $lt: new Date(endDate) }},
+        ]  }).count().then((cnt, err)=>{
+            if(err) res.status(400).json(err)
+            return cnt
+        })
+
+        commentsData.push({
+            x: i,
+            y: comments
+        })
+    }
+     for(let i = 1;i<=month;i++){
+
+        var startDate = moment([year, i - 1]);
+        var endDate = moment(startDate).endOf('month');
+
+        const stories = await Story.find({ $and: [
+            { createdAt: { $gt: new Date(startDate) } },
+            { createdAt: { $lt: new Date(endDate) }},
+        ]  }).count().then((cnt, err)=>{
+            if(err) res.status(400).json(err)
+            return cnt
+        })
+
+        storiesData.push({
+            x: i,
+            y: stories
+        })
+    }
+
+    for(let i = 1;i<=month;i++){
+
+        var startDate = moment([year, i - 1]);
+        var endDate = moment(startDate).endOf('month');
+
+        const reports = await Report.find({ $and: [
+            { createdAt: { $gt: new Date(startDate) } },
+            { createdAt: { $lt: new Date(endDate) }},
+        ]}).count().then((cnt, err)=>{
+            if(err) res.status(400).json(err)
+            return cnt
+        })
+        
+        reportsData.push({
+            x: i,
+            y: reports
+        })
+    }
+
+    return res.status(200).json({
+        postsData,
+        storiesData,
+        commentsData,
+        reportsData,
+    })
 })
 
 

@@ -7,7 +7,8 @@ import {
     DELETE_POST_REPORT,
     GET_REPORT_DETAIL,
     CLEAR,
-    RESTRICT_USER
+    RESTRICT_USER,
+    DELETE_RESTRICTED_FUNCTION
 } from './types';
 
 
@@ -130,6 +131,19 @@ export function deleteComment(commentId, reportId) {
         })
     return {
         type: UPDATE_REPORT,
+        payload: request
+    }
+}
+
+export function deleteRestrictedFunction(funcId, _id){
+    const data = { funcId, _id }
+    const request = axios.put(`${REPORT_SERVER}/deleteRestrictFunction`, data)
+        .then(response => {
+            console.log(response.data);
+            return response.data
+        })
+    return {
+        type: DELETE_RESTRICTED_FUNCTION,
         payload: request
     }
 }

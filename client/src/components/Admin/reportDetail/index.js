@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../Layout/index';
 import { withRouter } from 'react-router-dom';
-import { getReportDetail, updateReport, deletePost, clearDetail, deleteComment, restrictUser } from '../../../actions/report_actions';
+import { getReportDetail, updateReport, deletePost, clearDetail, deleteComment, restrictUser, deleteRestrictedFunction } from '../../../actions/report_actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './ReportDetail.scss';
 import Slide from '@material-ui/core/Slide';
@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
+import { Ban , User ,Photo } from 'tabler-icons-react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -141,9 +142,77 @@ class ReportDetail extends Component {
                 </div>)
             }
             case "user":{
+                const user = detail.userId[0];
+                const posts = detail.posts; 
                 return (
                 <div className="content_wrapper">
-                    <p><b>Nội dung:</b></p>                
+                    <p><b>Nội dung:</b></p> 
+                    <div className="user-info">
+                        <div className="account-info">
+                            <img src={user.avt}/>
+                            <div>
+                                <p><b>{user.userName}</b></p>
+                                <p><i>{user.bio}</i></p>
+                            </div>
+                        </div>
+                        <p> <User
+                                size={22}
+                                strokeWidth={3}
+                                color={'#7166F9'}
+                            /><b>Thông tin cá nhân</b></p>
+                        <p><b>Tên:</b> {user.lastname} {user.name}</p>
+                        <p><b>Ngày sinh:</b> {user.dob}</p>
+                        <p><b>Email:</b> {user.email}</p>
+                        <p><b>Đang theo dõi:</b> {user.followings.length}</p>
+                        <p><b>Người theo dõi:</b> {user.followers.length}</p>
+                    </div>
+                    <div className="user-resticted-functions">
+                        <p> <Ban
+                                size={22}
+                                strokeWidth={3}
+                                color={'#7166F9'}
+                            />
+                        <b>Chức năng bị hạn chế</b></p>
+                        <ul className="resticted-functions-list">
+                            {
+                                user.restrictedFunctions.map(item=>{
+                                    return this.isRestricted(item)?
+                                    <li className="user-resticted-item">
+                                        <div>
+                                            <b>{item.function}</b>
+                                            {moment(item.amountOfTime).format("L")}
+                                        </div>
+                                        <Button onClick={()=>{
+                                            this.setState({
+                                                DialogShowing: true,
+                                                dialogType: "deleteRestrictedFunctionConfirm",
+                                                funcId: item._id,
+                                            })
+                                        }} variant="outlined" color="primary">
+                                            Xóa
+                                        </Button>
+                                    </li>
+                                    : ""
+                                })
+                            }
+                        </ul>
+                    </div>
+                    <div className="user-posts">
+                       <p><Photo
+                                size={22}
+                                strokeWidth={3}
+                                color={'#7166F9'}
+                            /><b>Bài viết gần đây</b></p>
+                        <div className="row no-gutters">
+                            {
+                                posts.map(item=>{
+                                    return <div className="col-xl-3 no-gutters">
+                                        <img className="post" src={item.images[0].url}/>
+                                    </div>
+                                })
+                            }
+                        </div>
+                    </div>
                 </div>)
             }
         }
@@ -236,6 +305,18 @@ class ReportDetail extends Component {
         }
     }
 
+    deleteRestrictedFunction = () =>{
+        this.props.dispatch(deleteRestrictedFunction(this.state.funcId, this.props.reports.reportDetail.userId[0]._id))
+            .then((response) => {
+                console.log(response)
+                if (response.payload.success) {
+                    this.setState({ DialogShowing: false, setSnack: true, severity: "success", message: "Thành công" })
+                } else {
+                    this.setState({ DialogShowing: false, setSnack: true, severity: "error", message: "Đã xãy ra lỗi" })
+                }
+            })
+    }
+
     handleClick = () =>{}
 
     handleDelete = (func) =>{
@@ -303,6 +384,16 @@ class ReportDetail extends Component {
                         <h5> Bạn có chắc chắn xóa nội dung này</h5>
                         <div className="btn_wrapper">
                             <p className="confirm_btn" onClick={() => {this.deleteContent()}} >Xóa nội dung</p>
+                            <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
+                        </div>
+                    </div>)
+                break;
+             case "deleteRestrictedFunctionConfirm":
+                template = (
+                    <div className="deleteConfirm">
+                        <h5> Bạn có chắc chắn gỡ hạn chế cho tài khoản này?</h5>
+                        <div className="btn_wrapper">
+                            <p className="confirm_btn" onClick={() => {this.deleteRestrictedFunction()}} >Xóa nội dung</p>
                             <p className="cancel_btn" onClick={() => this.setState({ DialogShowing: false })}>Hủy</p>
                         </div>
                     </div>)
@@ -378,6 +469,15 @@ class ReportDetail extends Component {
             onClose={() => { this.setState({ DialogShowing: false }) }}>
             {template}
         </Dialog>
+    }
+
+    isRestricted(restrictedFunction){
+        var today = moment().startOf('day').valueOf();
+        if(restrictedFunction.amountOfTime>today){
+            return true
+        }else{
+            return false
+        }
     }
 
     render() {

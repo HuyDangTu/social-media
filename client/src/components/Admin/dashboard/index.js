@@ -145,6 +145,7 @@ class Dashboard extends Component {
             return (day * 24 * 60) + " phút";
         }
     }
+    
     toDetail = (item) => {
         this.props.history.push(`/Admin/ReportDetail/${item._id}`);
     }

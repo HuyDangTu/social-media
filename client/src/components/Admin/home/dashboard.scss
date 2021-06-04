@@ -70,6 +70,45 @@
     }
 }
 
+.top-ten-uesrs{
+    margin: 1rem;
+    .user-list{
+        list-style: none;
+        padding: 0;
+        .user-item{
+            padding: 0.25rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            img{
+                width: 2.5rem;
+                height: 2.5rem;
+                object-fit: cover;
+                margin-right: 1rem;
+
+                border-radius: 50%;
+            }
+            .user-info{
+                display: flex;
+                flex-direction: column;
+                p{
+                    font-weight: 600;
+                    color:rgb(145, 145, 145);
+                    margin-right: 1rem;
+                    margin: 0;
+                }:first-child{
+                    color: black;
+                }
+            }
+            .user-award{
+                margin-left: auto;
+            }
+        }
+    }
+}
+
 
 @media screen and (max-width: 922px){
  .report-list{

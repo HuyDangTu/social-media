@@ -306,22 +306,20 @@ class StoryPage extends Component {
     }
 
     submitForm = (event) => {
-        event.preventDefault();
-        // console.log("sjdgfdshgfsjdfkjsdhjfgdfh",this.state.mess.content);
+        event.preventDefault();;
         if(this.state.mess.content.trim()){
-            // console.log("sjdgfdshgfsjdfkjsdhjfgdfh");
             let dataToSubmit = this.state.mess;
+            console.log(dataToSubmit);
             replyStory(dataToSubmit).then(response=>{
-                // console.log(response);
                 if(response.messagelist){
                     this.setState({
-                    sendSucess: true,
-                    message: "success",
-                    mess:{
-                        ...this.state.mess,
-                        content: '',
-                    }
-                })
+                        sendSucess: true,
+                        message: "success",
+                        mess:{
+                            ...this.state.mess,
+                            content: '',
+                        }
+                    })
                 }else{
                     this.setState({
                         sendSucess: true, 
@@ -353,7 +351,7 @@ class StoryPage extends Component {
                                 if(this.state.startIndex != 0){ 
                                     this.setState({ 
                                         startIndex: this.state.startIndex-1
-                                    });
+                                    },()=>{this.viewStory(this.state.storyToShow, this.state.startIndex)}); 
                                 }else{
                                     this.previousStory();
                                 }
@@ -374,7 +372,7 @@ class StoryPage extends Component {
                                 if(this.state.startIndex != this.state.storyToShow.stories.length-1){
                                     this.setState({ 
                                         startIndex: this.state.startIndex+1
-                                    });
+                                    },()=>{this.viewStory(this.state.storyToShow, this.state.startIndex)});
                                 }else{
                                     this.nextStory()
                                 }

@@ -5,6 +5,8 @@ import {
     GET_UNUSED_USERS,
     GET_NEW_USER,
     GET_TOTAL_OF_NEW_POSTS,
+    GET_TOP_TEN_USERS,
+    GET_USERS_BEHAVIORS,
 } from '../actions/types';
 
 export default function (state = {}, action) {
@@ -27,6 +29,12 @@ export default function (state = {}, action) {
         }
         case GET_TOTAL_OF_NEW_POSTS:{
             return { ...state, totalOfNewPost: action.payload}
+        }
+        case GET_TOP_TEN_USERS:{
+            return {...state, top10Users: action.payload}
+        }
+        case GET_USERS_BEHAVIORS: {
+            return {...state, userBehaviors: action.payload}
         }
         default: return state;
     }
