@@ -25,7 +25,7 @@ const loadScript = (url, callback) => {
 function handleScriptLoad(updateQuery, autoCompleteRef) {
     autoComplete = new window.google.maps.places.Autocomplete(
         autoCompleteRef.current,
-        { types: ["(cities)"], componentRestrictions: { country: "vn" } }
+        { types: ["(cities)"], componentRestrictions: { country: "us" } }
     );
     autoComplete.setFields(["address_components", "formatted_address"]);
     autoComplete.addListener("place_changed", () =>
@@ -46,16 +46,14 @@ function SearchLocationInput() {
 
     useEffect(() => {
         loadScript(
-            `https://maps.googleapis.com/maps/api/js?key=AIzaSyC2UANhvpqKx54aeIVGQk8q0FBCJThlVm4&libraries=places`,
-            () => 
-            handleScriptLoad(setQuery, autoCompleteRef)
+            `https://maps.googleapis.com/maps/api/js?key=AIzaSyCEBjxtxG9mUSiQ76P-o0KWELn53FjIRKk&libraries=places`,
+            () => handleScriptLoad(setQuery, autoCompleteRef)
         );
     }, []);
 
     return (
         <div className="search-location-input">
             <input
-                 id="input_value"
                 ref={autoCompleteRef}
                 onChange={event => setQuery(event.target.value)}
                 placeholder="Enter a City"

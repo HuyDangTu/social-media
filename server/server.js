@@ -927,7 +927,6 @@ app.post('/api/posts/create_post', auth, (req, res) => {
             const post = new Post({
                 images: req.body.images,
                 description: req.body.description,
-                locationName: req.body.locationInput,
                 userTag: userTag,
                 postedBy: req.user._id,
             })
@@ -996,8 +995,7 @@ app.post('/api/posts/update_post', auth, (req, res) => {
                 {
                     $set: {
                         description: req.body.description,
-                        userTag: userTag,
-                        locationName: req.body.locationInput
+                        userTag: userTag
                     }
                 },
                 { new: true }, (err, post) => {
@@ -1104,7 +1102,6 @@ function findPost(postId, userHiddenPost, blockedUsers) {
                     "userName": 1,
                 },
                 "hidden": 1,
-                "locationName": 1,
                 "description": 1,
                 "postedBy": {
                     "_id": 1,
@@ -1120,7 +1117,6 @@ function findPost(postId, userHiddenPost, blockedUsers) {
         {
             "$group": {
                 _id: '$_id',
-                locationName: {$first :'$locationName'},
                 description: { $first: '$description' },
                 dateDifference: { $first: '$dateDifference' },
                 images: { $first: '$images' },
@@ -1302,7 +1298,6 @@ app.post('/api/users/postsIncludedTags', auth, (req, res) => {
                     "userName": 1,
                 },
                 "hidden": 1,
-                "locationName": 1,
                 "description": 1,
                 "postedBy": {
                     "_id": 1,
@@ -1319,7 +1314,6 @@ app.post('/api/users/postsIncludedTags', auth, (req, res) => {
         {
             "$group": {
                 _id: '$_id',
-                locationName: {$first :'$locationName'},
                 description: { $first: '$description' },
                 dateDifference: { $first: '$dateDifference' },
                 images: { $first: '$images' },
@@ -1406,8 +1400,6 @@ app.post('/api/users/newfeed', auth, (req, res) => {
                     "userName": 1,
                 },
                 "hidden": 1,
-                "locationName": 1,
-
                 "description": 1,
                 "postedBy": {
                     "_id": 1,
@@ -1424,7 +1416,6 @@ app.post('/api/users/newfeed', auth, (req, res) => {
         {
             "$group": {
                 _id: '$_id',
-                locationName: {$first :'$locationName'},
                 description: { $first: '$description' },
                 dateDifference: { $first: '$dateDifference' },
                 images: { $first: '$images' },
@@ -1535,7 +1526,6 @@ app.post('/api/users/getRecommendPost',auth,(req,res)=>{
                     "userName": 1,
                 },
                 "hidden": 1,
-                "locationName": 1,
                 "description": 1,
                 "postedBy": {
                     "_id": 1,
@@ -1552,7 +1542,6 @@ app.post('/api/users/getRecommendPost',auth,(req,res)=>{
         {
             "$group": {
                 _id: '$_id',
-                locationName: {$first :'$locationName'},
                 description: { $first: '$description' },
                 dateDifference: { $first: '$dateDifference' },
                 images: { $first: '$images' },

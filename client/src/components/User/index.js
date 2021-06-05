@@ -191,7 +191,7 @@ class UserDashboard extends Component {
     submitForm = (event) => {
 
         event.preventDefault();
-        this.state.formData.locationInput.value = document.getElementById('input_value').value
+        
         let data = generateData(this.state.formData, 'posts');
         let formIsValid = ifFormValid(this.state.formData, 'posts');
 
@@ -257,8 +257,6 @@ class UserDashboard extends Component {
                                     change={(element) => this.updateForm(element)}
                                     formData={this.state.formData.userTag}
                                 />
-                                 <SearchLocationInput></SearchLocationInput>
-                  
                                 </div>
                                 <FileUpload
                                     imagesHandler={(images) => this.imagesHandler(images)}
@@ -273,7 +271,9 @@ class UserDashboard extends Component {
                             </div>
                         </div>
                    </form>
-                   
+                    {/* <div>
+                        <SearchLocationInput onChange={() => {}}/>
+                    </div> */}
                 </div>
                 <Dialog className="dialog_cont" 
                     onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
