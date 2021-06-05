@@ -269,7 +269,7 @@ class  Card extends Component {
         alert("tag");
     }
 
-    handleDescription(description, userTag){
+    handleDescription(description, userTag,locationName){
         console.log(this.state.tags)
         let hashtag =[];
         
@@ -283,6 +283,10 @@ class  Card extends Component {
             if(!this.props.user.userData.blockedUsers.includes(item._id))
                 description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
         })
+        if (locationName)
+        {
+            description += ` <b>- tại <b> <a> ${locationName} </a>`
+        }
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }
 
@@ -418,7 +422,7 @@ class  Card extends Component {
                                 <PostEdit description={props.description} close={this.closeEditor} handleSnackBar={(mess)=>{this.props.handleSnackBar(mess)}} ActionType="newFeed" userTag={props.userTag} postId={props._id}/>
                                 :
                                 <div className="description">
-                                    {this.handleDescription(props.description,props.userTag)}
+                                    {this.handleDescription(props.description,props.userTag,props.locationName)}
                                 </div>
                             }
                             <img onClick={()=>this.handlelightBox()} className='item_image'

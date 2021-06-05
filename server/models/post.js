@@ -31,6 +31,11 @@ const postSchema = mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    locationName: {
+        type: String,
+        required: false,
+        maxlength: 1000
+    }
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);
