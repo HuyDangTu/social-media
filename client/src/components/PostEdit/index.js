@@ -44,6 +44,7 @@ class PostEdit extends Component {
                     placeholder: 'Gắn thẻ bạn bè',
                     label: 'Gắn thẻ',
                     name: 'userTag',
+                   
                     options: [],
                 },
                 validation: {

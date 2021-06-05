@@ -929,6 +929,7 @@ app.post('/api/posts/create_post', auth, (req, res) => {
                 description: req.body.description,
                 locationName: req.body.locationInput,
                 userTag: userTag,
+          
                 postedBy: req.user._id,
             })
             post.save((err, post) => {

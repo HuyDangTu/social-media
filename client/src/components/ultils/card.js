@@ -281,7 +281,8 @@ class  Card extends Component {
         }
         userTag.forEach((item) =>{
             if(!this.props.user.userData.blockedUsers.includes(item._id))
-                description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
+      
+            description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
         })
         if (locationName)
         {

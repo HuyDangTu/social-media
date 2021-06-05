@@ -52,6 +52,7 @@ function SearchLocationInput() {
         );
     }, []);
 
+    
     return (
         <div className="search-location-input">
             <input

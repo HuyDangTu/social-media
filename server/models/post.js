@@ -36,7 +36,10 @@ const postSchema = mongoose.Schema({
         required: false,
         maxlength: 1000
     }
+    
 }, { timestamps: true });
+
+
 
 const Post = mongoose.model('Post', postSchema);
 module.exports = { Post }

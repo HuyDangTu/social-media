@@ -343,6 +343,7 @@ class PostDetailCard extends Component {
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }
     
+    
     confirmDialog(type){
         let template = "";
         switch (type) {
