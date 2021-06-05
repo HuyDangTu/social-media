@@ -17,9 +17,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@date-io/date-fns": "^2.10.11",
     "@felipeferreiraads/toast-ui.react-image-editor": "^1.1.2",
+    "@material-ui/pickers": "^3.3.10",
     "@nivo/core": "^0.70.1",
+    "@nivo/geo": "^0.70.1",
     "@nivo/line": "^0.70.1",
+    "@nivo/pie": "^0.70.1",
     "@toast-ui/react-image-editor": "^3.14.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

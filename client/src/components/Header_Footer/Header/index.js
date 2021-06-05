@@ -227,7 +227,7 @@ class Header extends Component {
             return (
                 <div>
                     {
-                        this.props.messages ? this.props.messages.conlist ? this.props.messages.conlist.forEach(
+                          this.props.messages ? this.props.messages.grouplist ? this.props.messages.grouplist.forEach(
                             (con) => {
                                 //console.log(con.seenBy)
                                 if (con.seenBy.includes(this.props.user.userData._id) == false) {

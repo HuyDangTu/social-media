@@ -324,7 +324,7 @@ class PostDetailCard extends Component {
         }
     }
 
-    handleDescription(description, userTag) {
+    handleDescription(description, userTag,locationName) {
         //let hashtag = this.findHashtags(description)
         
         this.state.tags.forEach((item) =>
@@ -336,6 +336,10 @@ class PostDetailCard extends Component {
         userTag.forEach((item) => {
             description += `<a href="/user/${item._id}"}>@${item.userName}</a> `
         })
+        if (locationName)
+        {
+            description += ` <b>- tại <b> <a> ${locationName} </a>`
+        }
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }
     
@@ -529,8 +533,9 @@ class PostDetailCard extends Component {
                                             handleSnackBar={(mess) => { this.handleSnackBar(mess) }} 
                                             ActionType="detail" 
                                             userTag={props.post.userTag} 
+                                            location={props.post.locationName}
                                             postId={props.post._id}/>
-                                    :this.handleDescription(props.post.description,props.post.userTag)
+                                            :this.handleDescription(props.post.description,props.post.userTag,props.post.locationName)
                                 }
                             </div>
                         

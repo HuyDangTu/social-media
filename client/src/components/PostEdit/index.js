@@ -9,6 +9,7 @@ import './postEdit.scss';
 import 'react-autocomplete-input/dist/bundle.css';
 import { getAllTags, getUserTag } from '../../actions/tag_actions';
 import { clearProduct, updatePost } from '../../actions/product_actions';
+import SearchLocationInput from '../SearchLocationInput/SearchLocationInput'
 import Skeleton from '@material-ui/lab/Skeleton'
 import MuiAlert from '@material-ui/lab/Alert';
 
@@ -53,6 +54,23 @@ class PostEdit extends Component {
                 validationMessage: '',
                 showlabel: false
             },
+            locationInput: {
+                element: 'locationInput',
+                value: '',
+                config: {
+                    placeholder: 'Thêm vị trí',
+                    label: 'Vị trí',
+                    name: 'location',
+                    options: [],
+                },
+                validation: {
+                    required: false,
+                },
+                valid: true,
+                touched: false,
+                validationMessage: '',
+                showlabel: false
+            }
         },
     }
 
@@ -67,7 +85,7 @@ class PostEdit extends Component {
         const newUsertag = {
             ...newFormdata["userTag"]
         }
-
+      
         newDescription.value = description
     
         let usertag = "";
@@ -81,6 +99,7 @@ class PostEdit extends Component {
         newFormdata["userTag"] = newUsertag;
 
         this.setState({ formData: newFormdata });
+
     }
 
     updateFields = (newFormData) => {
@@ -117,6 +136,7 @@ class PostEdit extends Component {
                 this.updateFields(newFormData)
                 this.populateInput(formData, this.props.description, this.props.userTag)
         })
+
     }
 
     emojiToggle = () => {
@@ -160,7 +180,7 @@ class PostEdit extends Component {
     submitForm = (event) => {
 
         event.preventDefault();
-
+        this.state.formData.locationInput.value = document.getElementById('input_value').value
         let data = generateData(this.state.formData, 'posts');
         let formIsValid = ifFormValid(this.state.formData, 'posts');
 
@@ -214,14 +234,21 @@ class PostEdit extends Component {
                                         formData={this.state.formData.description}
                                     />
                                 
+
                                 }
+                                
+                                 <SearchLocationInput></SearchLocationInput>
+                            
                                 <div className="field_container">
                                 {this.state.formData.description.value == "" ? <Skeleton variant="rect" width={300} height={50}  /> :
+                                    <div>
                                     <FormField
                                         id={'userTag'}
                                         change={(element) => this.updateForm(element)}
                                         formData={this.state.formData.userTag}
                                     />
+                                   
+                                    </div>
                                 }
                                 </div>
                                 {
