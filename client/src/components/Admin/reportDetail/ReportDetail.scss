@@ -147,20 +147,36 @@
                 }
                 
             }
+            .segment-title{
+                display: flex;
+                align-items: center;
+                b{ margin-left: 0.5rem; }
+            }
         }
-        .user-posts{      
+        .user-posts{ 
+            .segment-title{
+                display: flex;
+                align-items: center;
+                b{ margin-left: 0.5rem; }
+            }     
             .post{
                 width: 100%;
                 height: 100%;
             }
         }
         .user-resticted-functions{
+            .segment-title{
+                display: flex;
+                align-items: center;
+                b{ margin-left: 0.5rem; }
+            }
             .resticted-functions-list{
                 list-style: none;
                 .user-resticted-item{
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    margin-bottom: 0.5rem;
                     b{
                         margin-right: 1rem;
                     }

@@ -101,6 +101,8 @@ const { Conversation } = require('./models/conversations');
 const { Notification } = require('./models/notification');
 const { Group } = require('./models/group');
 const { Groupmess} = require('./models/groupmess');
+const { Nationality } = require('./models/nationality');
+
 //=============== MIDDLEWARE ===========
 const { auth } = require('./middleware/auth');
 const { admin } = require('./middleware/admin');
@@ -118,6 +120,15 @@ app.post('/api/posts/add_new', (req, res) => {
         success: true
     })
 })
+
+
+app.get('/api/users/nationality', (req,res)=>{
+    Nationality.find({}).then((err,doc)=>{
+        if(err) return res.json(err)
+        return res.status(200).json({doc});
+    })
+})
+
 
 //AUTH
 app.get('/api/users/auth', auth, (req, res) => {
@@ -3536,7 +3547,6 @@ app.get('/api/statistics/growthOfUser', auth, admin, async (req, res) => {
     return res.status(200).json(Data)
 })
 
-
 app.get('/api/statistics/userBehaviors', auth, admin, async (req, res) => {
     
     let year = req.query.year ? req.query.year : new Date().getFullYear(); ;
@@ -3635,7 +3645,40 @@ app.get('/api/statistics/userBehaviors', auth, admin, async (req, res) => {
     })
 })
 
+app.get('/api/statistics/userNationalities', auth, admin, async (req,res)=>{
+    let year = req.query.year ? req.query.year : new Date().getFullYear();
 
+    var firstDate = moment([year, 0]);
+    var endDate = moment([year, 11]);
+    var lastDate = moment(endDate).endOf('month');
+
+    User.aggregate([
+        {
+            "$match":{ createdAt: { $lt: new Date(lastDate)}}
+        },
+        {
+            $group:{
+                "_id":"$nationality",
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $lookup: { from: 'nationalities', localField: '_id', foreignField: '_id', as: '_id' }
+        },
+        {
+            "$project":{
+                "_id":  {
+                    "code": 1
+                },
+                "count": 1
+            }
+        }
+    ],function(err,users){
+        console.log(users)
+        if (err) return res.status(400).json(err)
+        return res.status(200).json(users)
+    })
+})
 
 app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
     
@@ -3685,7 +3728,6 @@ app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
 
     return res.status(200).json(Data)
 })
-
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {

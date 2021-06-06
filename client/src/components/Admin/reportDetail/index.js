@@ -19,7 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import { Ban , User ,Photo } from 'tabler-icons-react';
+import { Ban , User , Photo, CircleCheck, Receipt } from 'tabler-icons-react';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -155,7 +155,7 @@ class ReportDetail extends Component {
                                 <p><i>{user.bio}</i></p>
                             </div>
                         </div>
-                        <p> <User
+                        <p className="segment-title"><User
                                 size={22}
                                 strokeWidth={3}
                                 color={'#7166F9'}
@@ -167,7 +167,7 @@ class ReportDetail extends Component {
                         <p><b>Người theo dõi:</b> {user.followers.length}</p>
                     </div>
                     <div className="user-resticted-functions">
-                        <p> <Ban
+                        <p className="segment-title"><Ban
                                 size={22}
                                 strokeWidth={3}
                                 color={'#7166F9'}
@@ -198,7 +198,7 @@ class ReportDetail extends Component {
                         </ul>
                     </div>
                     <div className="user-posts">
-                       <p><Photo
+                       <p className="segment-title"><Photo
                                 size={22}
                                 strokeWidth={3}
                                 color={'#7166F9'}
@@ -504,7 +504,7 @@ class ReportDetail extends Component {
                                             </div>
                                         </div>
                                     <p>Ngày: <b>{moment(detail.createdAt).fromNow()}</b></p>
-                                    <p>Tình trạng: <b>{detail.status ? "Đã xử lý" : "Chưa xử lý"}</b></p>
+                                    <p>Tình trạng: <b>{detail.status ?"Đã xử lý":"Chưa xủ lý"}</b></p>
                                     <p>Chính sách vi phạm</p>
                                     <div>
                                         {

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import FormField from '../ultils/Form/FormField';
+import {populateOptionFields,updateFields} from '../ultils/Form/FormActions';
 import './register.scss';
 import Dialog from '@material-ui/core/Dialog';
 import { update, generateData, ifFormValid } from '../ultils/Form/FormActions';
 import { withRouter } from 'react-router-dom';
-import { registerUser } from '../../actions/user_action';
+import { registerUser, getNationality} from '../../actions/user_action';
+// import {  } from '../../actions/product_actions';
 import MyButton from '../ultils/button'
 import GoogleLoginButton from '../GoggleLoginButton/GoogleLoginButton';
 import FacebookLoginButton from '../FacebookLoginButton/FacebookLoginButton';
@@ -69,6 +71,24 @@ class Register extends Component {
                 validationMessage: '',
                 showlabel: false,
             },
+            dob: {
+                element: 'input',
+                value: '',
+                valueAsNumber: "",
+                config: {
+                    label: 'Ngày sinh',
+                    name: 'dob',
+                    type: 'date',
+                    placeholder: 'ngày sinh'
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false,
+            },
             password: {
                 element: 'input',
                 config: {
@@ -102,14 +122,42 @@ class Register extends Component {
                 touched: false,
                 validationMessage: '',
                 showlabel: false,
-            }
+            },
+            nationality: {
+                element: 'select',
+                value: '',
+                config: {
+                    label: 'nationality',
+                    name: 'nationality',
+                    options: []
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false
+            },
         },
     }
 
-    // componentDidMount(){
-    //     if(this.props.user.RegisterInfo)
-    //         this.setState({ RegisterWith: true})
-    // }
+    updateFields = (newFormData) => {
+        this.setState({
+            formData:newFormData
+        })
+    }
+
+
+    componentDidMount(){
+        const formData = this.state.formData;
+
+        this.props.dispatch(getNationality()).then(response =>{
+            console.log(response)
+            const newFormData = populateOptionFields(formData, response.payload,'nationality')
+            this.updateFields(newFormData)
+        })
+    }
 
     updateForm = (element) => {
         console.log(this.state)
@@ -127,7 +175,6 @@ class Register extends Component {
 
         let formIsValid = ifFormValid(this.state.formData, 'register');
 
-        // console.log("OK", formIsValid);
         if (formIsValid) {
             console.log(dataToSubmit);
             console.log("OK");
@@ -286,6 +333,16 @@ class Register extends Component {
                                                 <FormField
                                                     id={'email'}
                                                     formData={this.state.formData.email}
+                                                    change={(element) => this.updateForm(element)}
+                                                />
+                                                <FormField
+                                                    id={'nationality'}
+                                                    formData={this.state.formData.nationality}
+                                                    change={(element) => this.updateForm(element)}
+                                                />
+                                                 <FormField
+                                                    id={'dob'}
+                                                    formData={this.state.formData.dob}
                                                     change={(element) => this.updateForm(element)}
                                                 />
                                                 <FormField

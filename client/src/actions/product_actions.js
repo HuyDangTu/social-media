@@ -34,7 +34,8 @@ import {
     CREATE_STORY,
     DELETE_STORY,
     GET_RECOMMEND_POST,
-    RESTRICTED
+    RESTRICTED,
+    GET_NATIONALITY
 } from './types';
 
 export function getPostDetail(id){
@@ -548,6 +549,7 @@ export async function createStory(uri,id){
         console.log(error)
     }
 }
+
 
 function isViewed(item,id){
     let res = false;   

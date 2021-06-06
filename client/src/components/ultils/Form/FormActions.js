@@ -1,12 +1,17 @@
+import moment from 'moment';
+
 export const generateData = (formdata, formName) =>{
     
     let dataToSubmit = {};
     for (let key in formdata){
         if(key !== 'confirmPassword')
         {
-            dataToSubmit[key] = formdata[key].value;
+            if(key === 'dob'){
+               dataToSubmit[key] = formdata[key].valueAsNumber; 
+            }else{
+                dataToSubmit[key] = formdata[key].value;
+            }
         }
-        //dataToSubmit[key] = formdata[key].value;
     }
     return dataToSubmit;
 }
@@ -79,9 +84,13 @@ export const update = (element, formdata, formName) =>{
             console.log(element.event)
             newElement.value = element.event;
         }
-    } else if (element.id === "userTag" || element.id === "locationInput"){
+    }else if (element.id === "userTag" || element.id === "locationInput"){
         console.log(element.event)
         newElement.value = element.event;
+    }else if(element.id === "dob"){
+        console.log(element.event.target.valueAsNumber)
+        newElement.value = element.event.target.value;
+        newElement.valueAsNumber = moment(element.event.target.valueAsNumber).format()
     }else{
         newElement.value = element.event.target.value;
     }

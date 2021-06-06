@@ -28,7 +28,8 @@ import {
     VIEW_STORY,
     CREATE_STORY,
     DELETE_STORY,
-    RESTRICTED
+    RESTRICTED,
+    GET_NATIONALITY
 } from '../actions/types';
 
 

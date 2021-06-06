@@ -7,6 +7,7 @@ import {
     GET_TOTAL_OF_NEW_POSTS,
     GET_TOP_TEN_USERS,
     GET_USERS_BEHAVIORS,
+    GET_USERS_NATIONALITIES,
 } from '../actions/types';
 
 export default function (state = {}, action) {
@@ -35,6 +36,9 @@ export default function (state = {}, action) {
         }
         case GET_USERS_BEHAVIORS: {
             return {...state, userBehaviors: action.payload}
+        }
+        case GET_USERS_NATIONALITIES: {
+            return {...state, usersNationalities: action.payload }
         }
         default: return state;
     }

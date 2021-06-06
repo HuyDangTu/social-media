@@ -23,7 +23,8 @@ import {
     GET_BLOCKED_USERS,
     UNBLOCKED_USERS,
     BLOCK_USER,
-    RESTRICTED
+    RESTRICTED,
+    GET_NATIONALITY,
 } from '../actions/types';
 
 export default function(state={},action){
@@ -209,6 +210,12 @@ export default function(state={},action){
             return {
                 ...state,
                 restricted: true
+            }
+        }
+        case GET_NATIONALITY:{
+            return {
+                ...state,
+                nationality: action.payload
             }
         }
         default: return state;

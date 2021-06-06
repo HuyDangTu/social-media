@@ -71,6 +71,29 @@ class FormField extends Component{
                     </div>
                 )
                 break;
+            case ('datetime'):
+                formTemplate = (
+                    <div className="formBlock" >
+                        {  formData.showlabel?
+                            <div className="label_input">{formData.config.label}</div>
+                            :null
+                        }
+
+                        <input {...formData.config}
+                            value={formData.value}
+                            //sự kiện onBlur được dùng để validate required
+                            onBlur={(event) => change({event,id,blur:true})}
+                            //sự kiện change được dùng để validate email/password có pass đc Regex không
+                            onChange={(event) => change({ event, id, blur: true })}
+                        />
+
+                        <div className="error_label" style={{ height: '20px', fontSize: '15px', marginTop: '5px', marginBottom: '5px', color: 'red', textTransform: 'capitalize' }}>
+                            {this.showError()}
+                        </div>
+                        
+                    </div>
+                )
+                break;
             case ('password'):
                 formTemplate = (
                     <div className="formBlock" >
@@ -109,7 +132,9 @@ class FormField extends Component{
                                 ))
                             }
                         </select>
-                        {this.showError()}
+                         <div className="error_label" style={{ height: '20px', fontSize: '15px', marginTop: '5px', marginBottom: '5px', color: 'red', textTransform: 'capitalize' }}>
+                            {this.showError()}
+                        </div> 
                     </div>
                 )
             break;

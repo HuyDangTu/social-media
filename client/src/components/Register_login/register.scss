@@ -111,7 +111,15 @@
                     //box-shadow: 1px 1px 5px #CBCBCB;
                     border: 1px solid #CBCBCB;
                 }
-                 .label_input{
+                select{
+                    width: 100%;
+                    height: calc_width(60);
+                    @include general;
+                    color: black;
+                    //box-shadow: 1px 1px 5px #CBCBCB;
+                    border: 1px solid #CBCBCB;
+                    }
+                .label_input{
                     color: $linkColor;
                     margin-bottom: 2.5px;
                 }

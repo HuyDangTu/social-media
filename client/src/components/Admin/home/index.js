@@ -9,7 +9,8 @@ import {
     newPostThisMonth, newAccountThisMonth,
     numOfAccount,
     getTop10Users,
-    getUserBehaviors 
+    getUserBehaviors ,
+    getUsersNationality,
 } from '../../../actions/statistics_action';
 import { withRouter } from 'react-router-dom';
 import DateFnsUtils from '@date-io/date-fns';
@@ -181,30 +182,30 @@ class Home extends Component {
             },
             ],
         nationality: [
-  {
-    "id": "AFG",
-    "value": 985965
-  },
-  {
-    "id": "AGO",
-    "value": 200472
-  },
-  {
-    "id": "ALB",
-    "value": 3581
-  },
-  {
-    "id": "ARE",
-    "value": 430108
-  },
-  {
-    "id": "ARG",
-    "value": 900652
-  },
-  {
-    "id": "ARM",
-    "value": 266579
-  },
+            {
+                "id": "AFG",
+                "value": 985965
+            },
+            {
+                "id": "AGO",
+                "value": 200472
+            },
+            {
+                "id": "ALB",
+                "value": 3581
+            },
+            {
+                "id": "ARE",
+                "value": 430108
+            },
+            {
+                "id": "ARG",
+                "value": 900652
+            },
+            {
+                "id": "ARM",
+                "value": 266579
+            },
         ],
         selectedDate: new Date(),
     }
@@ -250,10 +251,26 @@ class Home extends Component {
         })
 
         this.props.dispatch(getPercentageOfAge(this.state.selectedDate.getFullYear())).then(response => {
-            console.log(response)
             this.setState({
                 percentageOfAge: response.payload
             })
+        })
+
+        this.props.dispatch(getUsersNationality(this.state.selectedDate.getFullYear())).then(response => {
+             console.log(response)
+            let data = []
+            response.payload.map(item => {
+                if(item._id.length>0){
+                    data.push({
+                        id: item._id[0].code,
+                        value: item.count
+                    })
+                }
+            })
+            this.setState({
+                nationality: data
+            })
+           
         })
         
         this.props.dispatch(unusedAccountSinceBeginOfThisYear())
@@ -282,6 +299,22 @@ class Home extends Component {
                 console.log(response)
                 this.setState({
                     percentageOfAge: response.payload
+                })
+            })
+            
+            this.props.dispatch(getUsersNationality(this.state.selectedDate.getFullYear())).then(response => {
+                console.log(response)
+                let data = []
+                response.payload.map(item => {
+                    if(item._id.length>0){
+                        data.push({
+                            id: item._id[0].code,
+                            value: item.count
+                        })
+                    }
+                })
+                this.setState({
+                    nationality: data
                 })
             })
             
@@ -630,92 +663,6 @@ class Home extends Component {
                   /> 
                 </div>
                 <div className="wrapper">
-                    <ResponsiveChoropleth
-                        data={this.state.nationality}
-                        features={countries.features}
-                        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                        colors="nivo"
-                        domain={[ 0, 1000000 ]}
-                        unknownColor="#666666"
-                        label="properties.name"
-                        valueFormat=".2s"
-                        projectionTranslation={[ 0.5, 0.5 ]}
-                        projectionRotation={[ 0, 0, 0 ]}
-                        enableGraticule={true}
-                        graticuleLineColor="#dddddd"
-                        borderWidth={0.5}
-                        borderColor="#152538"
-                        legends={[
-                            {
-                                anchor: 'bottom-left',
-                                direction: 'column',
-                                justify: true,
-                                translateX: 20,
-                                translateY: -100,
-                                itemsSpacing: 0,
-                                itemWidth: 94,
-                                itemHeight: 18,
-                                itemDirection: 'left-to-right',
-                                itemTextColor: '#444444',
-                                itemOpacity: 0.85,
-                                symbolSize: 18,
-                                effects: [
-                                    {
-                                        on: 'hover',
-                                        style: {
-                                            itemTextColor: '#000000',
-                                            itemOpacity: 1
-                                        }
-                                    }
-                                ]
-                            }
-                        ]}
-                    />              
-                </div>
-            </div>
-            <div className="top-ten-uesrs">
-                <div className="row no-gutters">
-                    <div className="col-xl-4 no-gutters">
-                        <ul className="user-list">
-                            {
-                                this.props.statistics.top10Users?
-                                    this.props.statistics.top10Users.map((item,i) => {
-                                        return <li className="user-item">
-                                            <img src={item.avt}/>
-                                            <div className="user-info">
-                                                <p>{item.userName}</p>
-                                                <p>{item.length} followers</p>
-                                            </div>
-                                            <div className="user-award">
-                                            {
-                                                i==0?
-                                                    <Award
-                                                        size={38}
-                                                        strokeWidth={2}
-                                                        color={'rgb(250, 227, 25)'}
-                                                    />
-                                                :i==1?
-                                                        <Award
-                                                            size={38}
-                                                            strokeWidth={2}
-                                                            color={'rgb(236, 114, 0)'}
-                                                        />
-                                                :i==2?
-                                                    <Award
-                                                        size={38}
-                                                        strokeWidth={2}
-                                                        color={' rgb(6, 211, 23)'}
-                                                    />
-                                                :""
-                                            }
-                                            </div>
-                                        </li>
-                                    })
-                                :""
-                            }
-                        </ul>
-                    </div>
-                    <div className="col-xl-8 no-gutters"> 
                     <ResponsiveLine
                         data={this.state.userBehaviors}
                         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
@@ -774,7 +721,93 @@ class Home extends Component {
                                 ]
                             }
                         ]}
-                    />
+                    />         
+                </div>
+            </div>
+            <div className="top-ten-uesrs">
+                <div className="row no-gutters">
+                    <div className="col-xl-4 no-gutters">
+                        <ul className="user-list">
+                            {
+                                this.props.statistics.top10Users?
+                                    this.props.statistics.top10Users.map((item,i) => {
+                                        return <li className="user-item">
+                                            <img src={item.avt}/>
+                                            <div className="user-info">
+                                                <p>{item.userName}</p>
+                                                <p>{item.length} followers</p>
+                                            </div>
+                                            <div className="user-award">
+                                            {
+                                                i==0?
+                                                    <Award
+                                                        size={38}
+                                                        strokeWidth={2}
+                                                        color={'rgb(250, 227, 25)'}
+                                                    />
+                                                :i==1?
+                                                        <Award
+                                                            size={38}
+                                                            strokeWidth={2}
+                                                            color={'rgb(236, 114, 0)'}
+                                                        />
+                                                :i==2?
+                                                    <Award
+                                                        size={38}
+                                                        strokeWidth={2}
+                                                        color={' rgb(6, 211, 23)'}
+                                                    />
+                                                :""
+                                            }
+                                            </div>
+                                        </li>
+                                    })
+                                :""
+                            }
+                        </ul>
+                    </div>
+                    <div className="col-xl-8 no-gutters"> 
+                    <ResponsiveChoropleth
+                        data={this.state.nationality}
+                        features={countries.features}
+                        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                        colors="nivo"
+                        domain={[ 0, 1000000 ]}
+                        unknownColor="#666666"
+                        label="properties.name"
+                        valueFormat=".2s"
+                        projectionTranslation={[ 0.5, 0.5 ]}
+                        projectionRotation={[ 0, 0, 0 ]}
+                        enableGraticule={true}
+                        graticuleLineColor="#dddddd"
+                        borderWidth={0.5}
+                        borderColor="#152538"
+                        legends={[
+                            {
+                                anchor: 'bottom-left',
+                                direction: 'column',
+                                justify: true,
+                                translateX: 20,
+                                translateY: -100,
+                                itemsSpacing: 0,
+                                itemWidth: 94,
+                                itemHeight: 18,
+                                itemDirection: 'left-to-right',
+                                itemTextColor: '#444444',
+                                itemOpacity: 0.85,
+                                symbolSize: 18,
+                                effects: [
+                                    {
+                                        on: 'hover',
+                                        style: {
+                                            itemTextColor: '#000000',
+                                            itemOpacity: 1
+                                        }
+                                    }
+                                ]
+                            }
+                        ]}
+                    />     
                     </div>
                 </div>
             </div>

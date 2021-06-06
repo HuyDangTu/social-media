@@ -10,6 +10,7 @@ import {
     GET_TOTAL_OF_NEW_POSTS,
     GET_TOP_TEN_USERS,
     GET_USERS_BEHAVIORS,
+    GET_USERS_NATIONALITIES,
 } from './types';
 
 export function getGrowthOfUsers(year) {
@@ -100,6 +101,18 @@ export function getUserBehaviors(year){
     })
     return {
         type:  GET_USERS_BEHAVIORS,
+        payload: request,
+    }
+}
+
+export function getUsersNationality(year){
+    const request = axios.get(`${STATISTICS_SERVER}/userNationalities?year=${year}`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+    return {
+        type:  GET_USERS_NATIONALITIES,
         payload: request,
     }
 }

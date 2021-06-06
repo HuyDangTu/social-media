@@ -6,7 +6,7 @@ import { getAll, sort} from '../../../actions/report_actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
-
+import {CircleCheck, Receipt} from 'tabler-icons-react'
 class Dashboard extends Component {
     state={
         limit: 8,
@@ -206,7 +206,18 @@ class Dashboard extends Component {
                                         </div>
                                         </td>
                                         <td className="admin">{  this.renderType(item.reportType)}</td>
-                                        <td className="status">{item.status?"Đã xử lý": "Chưa xử lý"}</td>
+                                        <td className="status">{item.status?
+                                            <CircleCheck
+                                            size={25}
+                                            strokeWidth={2}
+                                            color={'rgb(40, 153, 36)'}
+                                            />
+                                            :<Receipt
+                                                size={25}
+                                                strokeWidth={2}
+                                                color={'rgb(252, 168, 42)'}
+                                            />
+                                        }</td>
                                     </tr>
                                     ))
                                 }

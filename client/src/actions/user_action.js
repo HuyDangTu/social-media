@@ -26,6 +26,7 @@ import {
     GET_BLOCKED_USERS,
     UNBLOCKED_USERS,
     RESTRICTED,
+    GET_NATIONALITY,
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -145,7 +146,17 @@ export function findPosted(id) {
         payload: request
     }
 }
-
+export function getNationality() {
+    const request = axios.get(`${USER_SERVER}/nationality`)
+        .then(response => {
+            console.log(response.data)
+            return response.data
+        })
+    return {
+        type: GET_NATIONALITY,
+        payload: request
+    }
+}
 export function follow(followId) {
     
     const request = axios.put(`${USER_SERVER}/follow/${followId}`)
