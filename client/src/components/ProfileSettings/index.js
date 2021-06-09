@@ -7,7 +7,7 @@ import FormField from '../ultils/Form/FormField';
 import './profilesetting.scss';
 import { populateOptionFields, update, ifFormValid, generateData, resetFields } from '../ultils/Form/FormActions';
 import { GridDots, User, Lock } from 'tabler-icons-react'
-import { updateprofileimgfile, updateprofileimg, changeProfile, changePassword,auth, getBlockedUsers, unBlockUser, blockUser } from '../../actions/user_action';
+import { updateprofileimgfile, updateprofileimg, changeProfile, changePassword,auth, getBlockedUsers, unBlockUser, blockUser,changePrivate } from '../../actions/user_action';
 import { Link, withRouter, useParams } from 'react-router-dom';
 import { Button, CircularProgress, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
@@ -210,6 +210,25 @@ class ProfileSettings extends Component {
             }
         })
     }
+    handlePrivateChange(){
+        this.setState({ loading: true })
+        this.setState({ privateMode: !this.state.privateMode })
+        this.props.dispatch(changePrivate(this.state.privateMode))
+        .then(response=>
+            {
+                console.log(response)
+            if(response.payload.success == false)
+            {
+                this.setState({loading:false,severity:'error', setSnack: true, formMessage: response.payload.message})
+                
+            }
+            else
+            {
+                this.setState({loading:false,severity:'success',edited:false, setSnack: true, formMessage: response.payload.message})
+                this.props.dispatch(auth());
+            }
+        })
+    }
 
     updateForm = (element) => {
         const newFormdata = update(element, this.state.formData, 'update_pro');
@@ -242,6 +261,7 @@ class ProfileSettings extends Component {
 
     componentDidMount() {
         this.getUserForm();
+        this.setState({privateMode:this.props.user.userData.privateMode?this.props.user.userData.privateMode:false})
         this.props.dispatch(getBlockedUsers());
     }
 
@@ -330,7 +350,7 @@ class ProfileSettings extends Component {
                                 </div>
                                 <div className="col-xl-9 col-md-9  field">
 
-                                    <Switch checked={this.state.privateMode} onColor="#7166F9" onChange={() => this.setState({ privateMode: !this.state.privateMode })}>
+                                    <Switch checked={this.state.privateMode} onColor="#7166F9" onChange={() => this.handlePrivateChange()}>
 
                                     </Switch>
 

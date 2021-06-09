@@ -25,6 +25,9 @@ import {
     BLOCK_USER,
     RESTRICTED,
     GET_NATIONALITY,
+    CHANGE_PRIVATE,
+    REQUEST_FOLLOW,
+    ACCEPT_FOLLOW
 } from '../actions/types';
 
 export default function(state={},action){
@@ -218,6 +221,20 @@ export default function(state={},action){
                 nationality: action.payload
             }
         }
+        case REQUEST_FOLLOW:{
+            let newuserProfile= {...state.userProfile}
+            newuserProfile.request = action.payload.request
+            return {
+                ...state, userProfile: newuserProfile
+                }
+        }
+        case ACCEPT_FOLLOW:{
+            return {
+                ...state,
+                accept: action.payload
+            }
+        }
+     
         default: return state;
     }
 }

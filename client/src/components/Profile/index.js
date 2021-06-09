@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
-import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth, blockUser } from '../../../src/actions/user_action'
+import { findProfile, follow, unfollow, findTagged, findPosted, findSaved ,auth, blockUser,requestfollow,undorequestfollow } from '../../../src/actions/user_action'
 import {findPersonal} from '../../../src/actions/message_action'
 import {getHighLightStory,getAllStories,createHighLightStory} from '../../actions/user_action';
 import './profile.scss';
@@ -16,6 +16,7 @@ import FormField from '../ultils/Form/FormField';
 import { populateOptionFields, update, ifFormValid, generateData, resetFields } from '../ultils/Form/FormActions';
 import Slide from '@material-ui/core/Slide';
 import Report from '../Report/Report';
+import PostRow from './post';
 import { getPolicy } from '../../actions/policy_actions';
 import moment from 'moment';
 
@@ -134,30 +135,46 @@ class Profile extends Component {
         }
     }
     handleClickfollow = async (id) => {
-        await this.props.dispatch(follow(id)).then(response=>{
-            if(response.payload.restricted){
-                console.log(response.payload);
-                this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
-            }else{
-                this.props.dispatch(findProfile(this.props.match.params.id))
-                this.props.dispatch(auth());
+        if(this.props.user.userProfile?this.props.user.userProfile.privateMode===true:'')
+        {
+            await this.props.dispatch(requestfollow(id)).then(response=>{
                 this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
-            }
-        })
-    }
-    
-    handleClickunfollow = async (id) => {
-        await this.props.dispatch(unfollow(id)).then(response=>
-            {
+            })
+        }
+        else{
+            await this.props.dispatch(follow(id)).then(response=>{
                 if(response.payload.restricted){
                     console.log(response.payload);
                     this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
                 }else{
                     this.props.dispatch(findProfile(this.props.match.params.id))
                     this.props.dispatch(auth());
-                    this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
+                    this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
                 }
             })
+        }
+    
+    }
+    
+    handleClickunfollow = async (id) => {
+        if(this.props.user.userProfile?this.props.user.userProfile.request.includes(this.props.user.userData?this.props.user.userData._id:''):''){
+            await this.props.dispatch(undorequestfollow(id)).then(response=>{
+                this.setState({ setSnack: true, setMessage: 'Đã hủy yêu cầu theo dõi', severity: 'warning' })
+            })
+        }
+        else{
+            await this.props.dispatch(unfollow(id)).then(response=>
+                {
+                    if(response.payload.restricted){
+                        console.log(response.payload);
+                        this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
+                    }else{
+                        this.props.dispatch(findProfile(this.props.match.params.id))
+                        this.props.dispatch(auth());
+                        this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
+                    }
+                })
+        }  
     }
 
     setDisplayIndex = (index) => {
@@ -282,12 +299,17 @@ class Profile extends Component {
                                             <div>
                                                  <Button className="follow_options" onClick={async()=>{await this.props.dispatch(findPersonal(this.props.match.params.id)); await this.props.history.push(`/message/inbox/${this.props.messages.conversationinfo._id}`) }}>Nhắn tin</Button>
                                                 {
-                                                    yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
+                                                    
+                                                        userProfile?userProfile.request.includes(yourProfile._id)?
+                                                        <Button className="follow_options" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}>Đã gửi yêu cầu</Button>
+                                                        :
+                                                        yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
                                                         <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}>Đang Theo dõi</Button>
                                                         :
                                                         <Button className="follow_options" onClick={() => this.handleClickfollow(userProfile ? userProfile._id : 0)}>Theo dõi</Button>
                                                         : <Skeleton variant="rect" width={195} height={40} />
                                                         : <Skeleton variant="rect" width={195} height={40} />
+                                                        :<Skeleton variant="rect" width={195} height={40} />
                                                         
                                                 }
                                                 <Button onClick={this.showDialog}><Dots size={24} strokeWidth={1} color={'#7166F9'}/></Button>
@@ -415,25 +437,27 @@ class Profile extends Component {
                                 }
                             </ul>
                         </div>
+                        {
+                        yourProfile ? yourProfile._id !== this.props.match.params.id ? this.props.user.userProfile?this.props.user.userProfile.privateMode===true ? yourProfile.followings.includes(this.props.match.params.id)===false?
                         <div className="row body">
-                            {
-                                typelist ? typelist.map(posts => {
-                                    return posts.hidden ? null :
-                                        (
-                                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
-                                            <div className="img_overlay">
-                                                <div className="overlay_info">
-                                                    <div className="hearts">  <Heart size={24} strokeWidth={1} color="white" fill="white"></Heart><h2>{posts.likes.length}</h2> </div>
-                                                    <div className="comments">  <Message2 size={24} strokeWidth={1} color="white" fill="white"></Message2><h2>{posts.comments.length} </h2></div>
-                                                </div>
-                                            </div>
-                                            <img src={posts.images[0].url}></img>
-                                        </div>
-                                    )
-                                }) : <Skeleton variant="rect" width={1043} height={315} />
-                            }
-
+                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain"></div>
+                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain">
+                            <h6>Tài khoản riêng tư theo dõi để thấy bài viết</h6>
+                            </div>
+                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain"></div>
+                          
                         </div>
+                        :
+                        <PostRow typelist={typelist}></PostRow>
+                        :
+                        <PostRow typelist={typelist}></PostRow>
+                        :
+                        <PostRow typelist={typelist}></PostRow>
+                        :
+                        <PostRow typelist={typelist}></PostRow>
+                        :
+                        <PostRow typelist={typelist}></PostRow>
+                        }
                     </div>
                 </div>
                 </div>
@@ -459,8 +483,7 @@ class Profile extends Component {
                                                 <Button className="minibtn" onClick={() => this.handleClickfollow(follower._id)}>Theo dõi</Button>
                                                 : null)
                                             : null
-                                    }
-
+                            }
                                 </div>
 
                             )

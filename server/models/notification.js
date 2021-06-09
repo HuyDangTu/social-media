@@ -23,6 +23,11 @@ const notificationSchema = mongoose.Schema({
     seenStatus:{
         type: Boolean,
         required:false
+    },
+    disabled:{
+        type:Boolean,
+        required:true,
+        default:false
     }
 }, { timestamps: true });
 

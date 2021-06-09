@@ -102,7 +102,6 @@ const { Notification } = require('./models/notification');
 const { Group } = require('./models/group');
 const { Groupmess} = require('./models/groupmess');
 const { Nationality } = require('./models/nationality');
-
 //=============== MIDDLEWARE ===========
 const { auth } = require('./middleware/auth');
 const { admin } = require('./middleware/admin');
@@ -112,6 +111,7 @@ const post = require("./models/post");
 //ULTILS
 const { sendEmail } = require('./ultils/mail/index');
 const user = require("./models/user");
+const { error } = require("console");
 
 // ============== API ===============
 //TEST
@@ -120,7 +120,6 @@ app.post('/api/posts/add_new', (req, res) => {
         success: true
     })
 })
-
 
 app.get('/api/users/nationality', (req,res)=>{
     Nationality.find({}).then((err,doc)=>{
@@ -140,6 +139,7 @@ app.get('/api/users/auth', auth, (req, res) => {
         name: req.user.name,
         privateMode: req.user.privateMode,
         lastname: req.user.lastname,
+        request: req.user.request,
         avt: req.user.avt,
         bio: req.user.bio,
         followers: req.user.followers,
@@ -940,7 +940,6 @@ app.post('/api/posts/create_post', auth, (req, res) => {
                 description: req.body.description,
                 locationName: req.body.locationInput,
                 userTag: userTag,
-          
                 postedBy: req.user._id,
             })
             post.save((err, post) => {
@@ -1799,6 +1798,7 @@ app.get('/api/users/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
         .populate("followers", "_id userName avt")
         .populate("followings", "_id userName avt")
+        
         .select("-password")
         .then(user => {
             if(!req.user.blockedUsers.includes(user._id) && !user.blockedUsers.includes(req.user._id)){
@@ -1864,6 +1864,18 @@ app.get('/api/users/posted/:id', auth, (req, res) => {
     })
 })
 
+app.put('/api/users/updatePrivate', auth, (req, res)=>{
+    User.findByIdAndUpdate(req.user._id, { $set: { privateMode: req.body.privateMode } }, { new: true },
+        (err, result) => {
+            if (err) {
+                return res.json({ success: false, message: "Đã xảy ra lỗi" })
+            }
+            else{
+                return res.json({ success: true, message: "Đã đổi thành công" })
+            }
+        })
+})
+
 app.put('/api/users/updatepic', auth, (req, res) => {
     User.findByIdAndUpdate(req.user._id, { $set: { avt: req.body.url } }, { new: true },
         (err, result) => {
@@ -1875,6 +1887,8 @@ app.put('/api/users/updatepic', auth, (req, res) => {
             }
         })
 })
+
+
 
 app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
     let message = "", isValidUserName = false;
@@ -1919,8 +1933,119 @@ app.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
     })
 })
 
+app.put('/api/users/askfollow/:followId',auth,(req,res)=>{
+    const notification = new Notification({
+        sentFrom: req.user._id,
+        sentTo: req.params.followId,
+        type: "askfollow",
+        link: req.user._id,
+        "seenStatus": false
+    });
+    User.findByIdAndUpdate(req.params.followId,{
+        $addToSet: {request: req.user._id }
+    }, {
+        new: true
+    }) .populate("followers", "_id userName avt")
+    .populate("followings", "_id userName avt")
+   
+    .then(results=>
+        {
+            res.json(results)
+        })
+    SaveNotification(notification);
+})
+
+app.put('/api/users/declinefollow/:id',auth,(req,res)=>{
+    Notification.updateMany( 
+        {"sentFrom": req.params.id, "sentTo":req.user._id  , "type": 'askfollow'},
+        {
+            $set:   { disabled:true}
+        },
+        {
+            new:true
+        }
+    ).catch(err=>console.log(err))
+    User.findByIdAndUpdate(req.user._id,{
+        $pull:{request:req.params.id}
+    }).exec((err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json('success')
+            console.log(result)
+        }
+    })
+})
+
+app.put('/api/users/acceptfollow/:id',auth,(req,res)=>{
+   
+    Notification.updateMany( 
+        {"sentFrom": req.params.id, "sentTo":req.user._id  , "type": 'askfollow'},
+        {
+            $set:   { disabled:true}
+        },
+        {
+            new:true
+        }
+    ).catch(err=>console.log(err))
+    const notification = new Notification({
+        sentFrom: req.user._id,
+        sentTo: req.params.id,
+        type: "acceptfollow",
+        link: req.user._id,
+        "seenStatus": false
+    });
+    SaveNotification(notification);
+    User.findByIdAndUpdate(req.params.id,{
+        $addToSet:{followings:req.user._id}
+    }).exec((err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else{
+           
+            console.log(result)
+        }})
+    User.findByIdAndUpdate(req.user._id,{
+        $addToSet:{followers:req.params.id},
+        $pull:{request:req.params.id}
+    }).exec((err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else{
+            res.json('success')
+            console.log(result)
+        }
+    })
+})
+app.put('/api/users/undoaskfollow/:followId',auth,(req,res)=>{
+    Notification.updateMany( 
+        {"sentFrom": req.user._id , "sentTo": req.params.followId , "type": 'askfollow'},
+        {
+            $set:   { disabled:true}
+        },
+        {
+            new:true
+        }
+    ).catch(err=>console.log(err))
+    User.findByIdAndUpdate(req.params.followId,{
+        $pull: {request: req.user._id }
+    }, {
+        new: true
+    }) .populate("followers", "_id userName avt")
+    .populate("followings", "_id userName avt")
+    .then(results=>
+        {
+            res.json(results)
+        })
+    
+})
+
 app.put('/api/users/follow/:followId', auth, (req, res) => {
     if(!isRestricted(req.user.restrictedFunctions,"Follow")){
+        User.findById(req.params.followId)
         User.findByIdAndUpdate(req.params.followId, {
             $push: { followers: req.user._id }
         }, {
@@ -1928,6 +2053,7 @@ app.put('/api/users/follow/:followId', auth, (req, res) => {
         })
             .populate("followers", "_id userName avt")
             .populate("followings", "_id userName avt")
+            .populate("request", "_id userName avt")
             .then(results => {
                 User.findByIdAndUpdate(req.user._id, {
                     $push: { followings: req.params.followId }
@@ -2005,7 +2131,8 @@ app.put('/api/users/unfollow/:unfollowId', auth, (req, res) => {
 
 app.get('/api/messages/get/:id', auth, (req, res) => {
     const userlist = [(req.params.id), (req.user._id)]
-    Conversation.findOne({ $and: [{ user1: { $in: userlist } }, { user2: { $in: userlist } }] })
+    Conversation.findOne({ $and: [{ 
+        user1: { $in: userlist } }, { user2: { $in: userlist } }] })
         .populate("messagelist")
         .populate("user1", "_id userName avt")
         .populate("user2", "_id userName avt")
@@ -3547,6 +3674,7 @@ app.get('/api/statistics/growthOfUser', auth, admin, async (req, res) => {
     return res.status(200).json(Data)
 })
 
+
 app.get('/api/statistics/userBehaviors', auth, admin, async (req, res) => {
     
     let year = req.query.year ? req.query.year : new Date().getFullYear(); ;
@@ -3644,7 +3772,6 @@ app.get('/api/statistics/userBehaviors', auth, admin, async (req, res) => {
         reportsData,
     })
 })
-
 app.get('/api/statistics/userNationalities', auth, admin, async (req,res)=>{
     let year = req.query.year ? req.query.year : new Date().getFullYear();
 
@@ -3679,6 +3806,8 @@ app.get('/api/statistics/userNationalities', auth, admin, async (req,res)=>{
         return res.status(200).json(users)
     })
 })
+
+
 
 app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
     
@@ -3728,6 +3857,7 @@ app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
 
     return res.status(200).json(Data)
 })
+
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import {USER_SERVER} from '../components/ultils/mise';
 import {STORY_SERVER} from '../components/ultils/mise';
-
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -27,6 +26,8 @@ import {
     UNBLOCKED_USERS,
     RESTRICTED,
     GET_NATIONALITY,
+    REQUEST_FOLLOW,
+    ACCEPT_FOLLOW
     } from './types';
 
 export function registerUser(dataToSubmit){
@@ -156,6 +157,28 @@ export function getNationality() {
         type: GET_NATIONALITY,
         payload: request
     }
+}
+export function requestfollow(followId) {      
+    const request = axios.put(`${USER_SERVER}/askfollow/${followId}`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+return{
+                type: REQUEST_FOLLOW,
+                payload: request
+        }
+}
+export function undorequestfollow(followId) {      
+    const request = axios.put(`${USER_SERVER}/undoaskfollow/${followId}`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+return{
+                type: REQUEST_FOLLOW,
+                payload: request
+        }
 }
 export function follow(followId) {
     
@@ -374,3 +397,39 @@ export function getBlockedUsers(){
         payload: request
     }
 } 
+
+export function changePrivate(privateMode) {
+    const config = {
+        "Content-Type": "application/json"
+    }
+    const request = axios.put(`${USER_SERVER}/updatePrivate`, {"privateMode":privateMode},config)
+        .then(response => response.data)
+    return {
+        type: CHANGE_IMG,
+        payload: request
+    }
+}
+
+export function acceptfollow(id) {      
+    const request = axios.put(`${USER_SERVER}/acceptfollow/${id}`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+return{
+                type: ACCEPT_FOLLOW,
+                payload: request
+        }
+}
+
+export function declinefollow(id) {      
+    const request = axios.put(`${USER_SERVER}/declinefollow/${id}`)
+    .then(response => {
+        console.log(response.data)
+        return response.data
+    })
+return{
+                type: ACCEPT_FOLLOW,
+                payload: request
+        }
+}

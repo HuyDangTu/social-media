@@ -53,6 +53,10 @@ const userSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     }],
+    request: [{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }],
     role: {
         type: Number,
         default: 0,

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './header.scss'
-import { Link, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {logoutUser} from '../../../actions/user_action'
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logoutUser, auth, acceptfollow, declinefollow} from '../../../actions/user_action'
 import NativeClickListener from '../../ultils/NativeClickListener';
 import { getConversation } from '../../../actions/message_action'
 import { getNotification, seenNotification, seenAllNotification } from '../../../actions/notification_action'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Send, Notification, BrandSafari, User, Settings, Point} from 'tabler-icons-react'
+import { Send, Notification, BrandSafari, User, Settings, Point } from 'tabler-icons-react'
 import faUser from '@fortawesome/fontawesome-free-solid/faUser';
 import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 import SearchBar from '../../Search';
@@ -16,16 +17,17 @@ import Pusher from 'pusher-js';
 import Badge from '@material-ui/core/Badge';
 import Snackbar from '@material-ui/core/Snackbar';
 import moment from 'moment'
+import { Button } from '@material-ui/core';
 class Header extends Component {
-    
+
     state = {
-        user:[
+        user: [
             {
                 name: 'Explore',
                 linkTo: '/explore',
             },
             {
-                name:'Direct',
+                name: 'Direct',
                 linkTo: '/users/direct',
             },
             {
@@ -48,15 +50,15 @@ class Header extends Component {
         notifyimg: '',
     }
 
-    logoutHandler = () =>{
+    logoutHandler = () => {
         this.props.dispatch(logoutUser())
-        .then(response => {
-            if(response.payload.success){
-                this.props.history.push('/')
-            }
-        })
+            .then(response => {
+                if (response.payload.success) {
+                    this.props.history.push('/')
+                }
+            })
     }
-    
+
     // handleDropdown = () => {
     //     console.log(!this.state.dropdown)
     //     this.setState({
@@ -69,45 +71,45 @@ class Header extends Component {
         this.props.dispatch(getNotification())
     }
 
-    defaultLink = (item,i) =>{
-        if(item.name === 'Log out'){
-            return(
-            <div>
-                <Link to={item.linkTo} key={i}
-                onClick={this.logoutHandler}>{item.name}</Link>
-            </div>)
+    defaultLink = (item, i) => {
+        if (item.name === 'Log out') {
+            return (
+                <div>
+                    <Link to={item.linkTo} key={i}
+                        onClick={this.logoutHandler}>{item.name}</Link>
+                </div>)
         } else if (item.name === 'avt') {
             return (
                 <div className="menu">
                     {
-                    this.props.user.userData.avt ?
-                        <img onClick={this.toggleDropdown} className="avt" alt="photo" src={this.props.user.userData.avt} />
+                        this.props.user.userData.avt ?
+                            <img onClick={this.toggleDropdown} className="avt" alt="photo" src={this.props.user.userData.avt} />
                             : <Skeleton variant="circle" width={40} height={40} />
                     }
                     {
-                    this.state.dropdown ?
-                    <NativeClickListener onClick={()=>this.setState({dropdown: false})}>
-                    <div className="dropdown" onClick={this.handleBodyClick}>
-                        <div className="user_navigation">
-                            <div>
-                            <User size={22} strokeWidth={1.5} color="grey"></User>
-                                <Link to={`/user/${this.props.user.userData._id}`}>Profile</Link>
-                            </div>
-                            <div>
-                            <Settings size={22} strokeWidth={1.5} color="grey"></Settings>
-                            <Link to={`/profilesettings`}>Setting</Link>
-                            </div>
-                        </div>
-                        <div className="logout">
-                            <Link key={i} onClick={this.logoutHandler}>Log out</Link>
-                        </div>
-                    </div>
-                    </NativeClickListener>
-                    : null
-                    }          
+                        this.state.dropdown ?
+                            <NativeClickListener onClick={() => this.setState({ dropdown: false })}>
+                                <div className="dropdown" onClick={this.handleBodyClick}>
+                                    <div className="user_navigation">
+                                        <div>
+                                            <User size={22} strokeWidth={1.5} color="grey"></User>
+                                            <Link to={`/user/${this.props.user.userData._id}`}>Profile</Link>
+                                        </div>
+                                        <div>
+                                            <Settings size={22} strokeWidth={1.5} color="grey"></Settings>
+                                            <Link to={`/profilesettings`}>Setting</Link>
+                                        </div>
+                                    </div>
+                                    <div className="logout">
+                                        <Link key={i} onClick={this.logoutHandler}>Log out</Link>
+                                    </div>
+                                </div>
+                            </NativeClickListener>
+                            : null
+                    }
                 </div>
             )
-        }else if (item.name === 'Explore'){
+        } else if (item.name === 'Explore') {
             return (
                 <div>
                     <Link to="/explore">
@@ -121,7 +123,7 @@ class Header extends Component {
                 <div className="notify">
                     <div>
                         {
-                            this.props.notification ? this.props.notification.notifylist ? 
+                            this.props.notification ? this.props.notification.notifylist ?
                                 this.props.notification.notifylist.forEach(
                                     (item) => {
                                         console.log(item.seenStatus)
@@ -129,7 +131,7 @@ class Header extends Component {
                                             notinumber = notinumber + 1;
                                         }
                                     }
-                            ) : '' : ''
+                                ) : '' : ''
                         }
                         <Badge badgeContent={notinumber} overlap="circle" color="secondary">
                             <Notification onClick={this.toggleNofifyDropdown} size={34} color="grey" strokeWidth={1} />
@@ -142,34 +144,83 @@ class Header extends Component {
                                 <div className="notifydropdown" onClick={this.handleBodyClick}>
                                     <div className="notifyheader" > <h2>Thông báo</h2> <h6 onClick={this.handleSeenall}>Đánh dấu tất cả đã đọc</h6></div>
                                     {
+                                        console.log(this.props.user)
+                                    }
+                                    {/* {        
+                                        this.props.user.userData? this.props.user.userData.request? this.props.user.userData.request.map(data=>{
+                                         return( <div className="noti_wrapper">
+                                                 <div className="user_avt">
+                                                        <img src={data.avt?data.avt:"https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png"}></img>
+                                                    </div>
+                                                <div className="content">
+                                                    <p> {data.userName} Đã yêu cầu theo dõi bạn</p>
+                                                    <Button>Đồng ý</Button>
+                                                    <Button>Hủy</Button>
+                                                </div>
+                                            </div>
+                                        )}):'':''
+                                    } */}
+                                    {
                                         this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
                                             return (
-                                               
+                                                data.type == "askfollow" ?
+                                                    data.disabled != true ?
+                                                        
+                                                            <div className={data.seenStatus ? "noti_wrapper seen" : "noti_wrapper"}>
+                                                                <div className="user_avt">
+                                                                    <img src={data.sentFrom.avt}></img>
+                                                                </div>
+                                                                <div className="content">
+                                                                    <p>
+                                                                        <h6>{data.sentFrom.userName}</h6>
+                                                                        <p> {data.userName} Đã yêu cầu theo dõi bạn</p>
+                                                                        <Button onClick={async()=>{await this.props.dispatch(acceptfollow(data.sentFrom._id)); await this.props.dispatch(getNotification())}}>Đồng ý</Button>
+                                                                        <Button onClick={async()=>{await this.props.dispatch(declinefollow(data.sentFrom._id)); await this.props.dispatch(getNotification())}}>Hủy</Button>
+                                                                    </p>
+                                                                    <h6>
+                                                                        <h6>{moment(data.createdAt).fromNow()} </h6>
+                                                                    </h6>
+                                                                </div>
+                                                                <div className="status">
+                                                                    <Point visibility={data.seenStatus ? "hidden" : ""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
+                                                                </div>
+                                                            </div>
+                                                        
+                                                        : null
+                                                    : null
+                                            )
+                                        }) : null : null
+                                    }
+                                    {
+                                        this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
+                                            return (
+                                                data.type != "askfollow" ?
                                                 <div className={data.seenStatus ? "noti_wrapper seen" : "noti_wrapper"} onClick={() => this.handleNotiClick(data._id, data.type, data.link)}>
                                                     <div className="user_avt">
                                                         <img src={data.sentFrom.role == 0 ? data.sentFrom.avt : "https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png"}></img>
                                                     </div>
                                                     <div className="content">
                                                         <p>
-                                                            <h6>{data.sentFrom.role == 0 ?data.sentFrom.userName : "Stunning "}</h6>
+                                                            <h6>{data.sentFrom.role == 0 ? data.sentFrom.userName : "Stunning "}</h6>
                                                             {
-                                                                data.type == "follow" ? ' đã theo dõi bạn' : 
-                                                                data.type == "likepost" ? ' đã thích bài viết của bạn' :
-                                                                data.type=='comment'? ' đã bình luận về bài viết của bạn' :
-                                                                data.type=='likecomment'? ' đã thích bình luận của bạn':
-                                                                data.type=='discardReport'? 'Nội dung bạn báo cáo chưa vi phạm chính sách cộng đồng':
-                                                                data.type=='deletePost'? 'Bài viết của bạn đã bị xoá vì vi phạm chính sách cộng đông' :
-                                                                data.type == 'deleteComment' ? 'Bình luận của bạn đã bị xoá vì vi phạm chính sách cộng đồng ' :''
+                                                                data.type == "follow" ? ' đã theo dõi bạn' :
+                                                                    data.type == "likepost" ? ' đã thích bài viết của bạn' :
+                                                                        data.type == 'comment' ? ' đã bình luận về bài viết của bạn' :
+                                                                            data.type == 'likecomment' ? ' đã thích bình luận của bạn' :
+                                                                                data.type == 'discardReport' ? 'Nội dung bạn báo cáo chưa vi phạm chính sách cộng đồng' :
+                                                                                    data.type == 'deletePost' ? 'Bài viết của bạn đã bị xoá vì vi phạm chính sách cộng đông' :
+                                                                                        data.type == 'deleteComment' ? 'Bình luận của bạn đã bị xoá vì vi phạm chính sách cộng đồng ' : 
+                                                                                        data.type == 'acceptfollow' ? 'đã chấp nhập lời theo dõi của bạn':''
                                                             }
                                                         </p>
                                                         <h6>
-                                                        <h6>{moment(data.createdAt).fromNow()} </h6>
+                                                            <h6>{moment(data.createdAt).fromNow()} </h6>
                                                         </h6>
                                                     </div>
                                                     <div className="status">
-                                                        <Point visibility={data.seenStatus?"hidden":""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
+                                                        <Point visibility={data.seenStatus ? "hidden" : ""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
                                                     </div>
-                                                </div>     
+                                                </div>:''
                                             )
                                         }) : '' : ''
                                     }
@@ -192,21 +243,22 @@ class Header extends Component {
                                 <div className="snack_noti">
                                     <div className="noti_wrapper" onClick={() => this.handleNotiClick(this.props.notification.notifylist[0]._id, this.props.notification.notifylist[0].type, this.props.notification.notifylist[0].link)}>
                                         <div className="user_avt">
-                                            <img src={this.props.notification.notifylist[0].sentFrom.role == 0 ? 
-                                                this.props.notification.notifylist[0].sentFrom.avt : "https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png" }></img>
+                                            <img src={this.props.notification.notifylist[0].sentFrom.role == 0 ?
+                                                this.props.notification.notifylist[0].sentFrom.avt : "https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png"}></img>
                                         </div>
+
                                         <div className="content">
                                             <p>
-                                            <h6>{this.props.notification.notifylist[0].sentFrom.userName}</h6>
-                                            {
-                                                this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' : 
-                                                this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' : 
-                                                this.props.notification.notifylist[0].type == "comment" ? 'đã bình luận về bài viết của bạn' : 
-                                                this.props.notification.notifylist[0].type == "likecomment" ? 'đã thích bình luận của bạn':
-                                                this.props.notification.notifylist[0].type == "discardReport" ? 'Báo cáo của bạn chưa phù hợp' : 
-                                                this.props.notification.notifylist[0].type == "deletePost" ? 'Bài viết của bạn đã vi phạm chính sách' : 
-                                                this.props.notification.notifylist[0].type == "deleteComment" ? 'Báo cáo của bạn đã vi phạm chính sách':''
-                                            }
+                                                <h6>{this.props.notification.notifylist[0].sentFrom.userName}</h6>
+                                                {
+                                                    this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' :
+                                                        this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' :
+                                                            this.props.notification.notifylist[0].type == "comment" ? 'đã bình luận về bài viết của bạn' :
+                                                                this.props.notification.notifylist[0].type == "likecomment" ? 'đã thích bình luận của bạn' :
+                                                                    this.props.notification.notifylist[0].type == "discardReport" ? 'Báo cáo của bạn chưa phù hợp' :
+                                                                        this.props.notification.notifylist[0].type == "deletePost" ? 'Bài viết của bạn đã vi phạm chính sách' :
+                                                                            this.props.notification.notifylist[0].type == "deleteComment" ? 'Báo cáo của bạn đã vi phạm chính sách' : ''
+                                                }
                                             </p>
                                             <h6>
                                                 <h6>{moment(this.props.notification.notifylist[0].createdAt).fromNow()} </h6>
@@ -227,8 +279,8 @@ class Header extends Component {
             return (
                 <div>
                     {
-                          this.props.messages ? this.props.messages.grouplist ? this.props.messages.grouplist.forEach(
-                        
+                        this.props.messages ? this.props.messages.grouplist ? this.props.messages.grouplist.forEach(
+
                             (con) => {
                                 //console.log(con.seenBy)
                                 if (con.seenBy.includes(this.props.user.userData._id) == false) {
@@ -242,7 +294,7 @@ class Header extends Component {
                     </Badge>
 
                 </div>)
-        }else{
+        } else {
             return <div>
                 <Link to={item.linkTo} key={i}></Link>
             </div>
@@ -250,10 +302,12 @@ class Header extends Component {
     }
 
     componentDidMount = () => {
+        this.props.dispatch(auth())
         this.props.dispatch(getConversation())
+        console.log(this.props.user.userData)
         console.log(this.props.messages ? this.props.messages.conlist : '')
         this.props.dispatch(getNotification())
-        console.log(this.props.notification?  this.props.notification.notifylist:'')
+        console.log(this.props.notification ? this.props.notification.notifylist : '')
         const pusher = new Pusher('c0e96b0fff8d0edac17d', {
             cluster: 'mt1'
         });
@@ -265,14 +319,24 @@ class Header extends Component {
                     this.setState({ setSnack: true })
                 }
             }
+            if (data.change.operationType =="update")
+            {
+                this.props.notification.notifylist.map(noti=>{
+                    if(noti._id==data.change?data.change.fullDocument?data.change.fullDocument._id:'':'')
+                    {
+                        this.props.dispatch(getNotification())
+                        this.setState({ setSnack: true })
+                    }
+                })
+            }
         });
         const channel2 = pusher.subscribe('messages');
         channel2.bind('newMessage', data => {
             if (data.change.operationType == "insert") {
-            if (data.change.fullDocument.sentTo == this.props.user.userData._id || data.change.fullDocument.sentBy == this.props.user.userData._id) {
-                this.props.dispatch(getConversation())
+                if (data.change.fullDocument.sentTo == this.props.user.userData._id || data.change.fullDocument.sentBy == this.props.user.userData._id) {
+                    this.props.dispatch(getConversation())
+                }
             }
-        }
         });
     }
 
@@ -299,47 +363,50 @@ class Header extends Component {
         if (type == 'follow') {
             this.props.history.push(`/user/${link}`)
         }
-        if(type=='likepost'){
+        if (type == 'acceptfollow') {
+            this.props.history.push(`/user/${link}`)
+        }
+        if (type == 'likepost') {
             this.props.history.push(`/postDetail/${link}`)
         }
-        if(type=='comment'){
+        if (type == 'comment') {
             this.props.history.push(`/postDetail/${link}`)
         }
-        if(type=='likecomment'){
+        if (type == 'likecomment') {
             this.props.history.push(`/postDetail/${link}`)
         }
         this.props.dispatch(getNotification())
     }
 
-    showLinks = (type) =>{
+    showLinks = (type) => {
         let list = [];
 
-        if(this.props.user.userData){
-            type.forEach((item)=>{
-                if(!this.props.user.userData.isAuth){
+        if (this.props.user.userData) {
+            type.forEach((item) => {
+                if (!this.props.user.userData.isAuth) {
                     if (item.name === 'Log in') {
                         list.push(item)
-                    } 
-                }else{
-                    if(item.name !== 'Log in'){
+                    }
+                } else {
+                    if (item.name !== 'Log in') {
                         list.push(item)
                     }
                 }
             })
         }
 
-        return list.map((item,i) => {
-            return this.defaultLink(item,i)
+        return list.map((item, i) => {
+            return this.defaultLink(item, i)
         })
     }
 
     render() {
         return (
-            <header className="header">    
-                <div className="header__container"> 
+            <header className="header">
+                <div className="header__container">
                     <div className="row no-gutters">
                         <div className="col-xl-4 col-sm-4 col-4 no-gutters">
-                            <div className="header__logo" onClick={()=>{this.props.history.push('/newfeed')}}>
+                            <div className="header__logo" onClick={() => { this.props.history.push('/newfeed') }}>
                                 <img src={require('../../../asset/logo/logo2x.png')} />
                                 <img class="Logo_stunn" src={require('../../../asset/logo/stunn2x.png')} />
                             </div>
@@ -360,8 +427,8 @@ class Header extends Component {
         );
     }
 }
-function mapStateToProps(state){
-    return{
+function mapStateToProps(state) {
+    return {
         user: state.user,
         notification: state.notification,
         messages: state.messages

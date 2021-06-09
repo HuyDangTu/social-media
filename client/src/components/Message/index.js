@@ -492,7 +492,7 @@ class Message extends Component {
                             <SearchBar sendinguserlistid={this.state.sendinguserlistid} removelist={this.removelist} addList={this.addList} />
                         </div>
                         <hr></hr>
-                        <div className="suggest">
+                        {/* <div className="suggest">
                             <h6>Gợi ý</h6>
                             {
                                 this.props.messages ?
@@ -535,7 +535,7 @@ class Message extends Component {
                                                 </div>)
                                         }) : '' : ''
                             }
-                        </div>
+                        </div> */}
                     </div>
                 </Dialog>
                 {
