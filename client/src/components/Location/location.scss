@@ -1,0 +1,101 @@
+@import '../ultils/initial.scss';
+
+.TagPage{
+    .tag_info{
+        width: 60%;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .tag_image{
+            img{
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+        .button_wrapper{
+            button{
+                width: 150px;
+                height: 40px;
+                box-sizing: border-box;
+                justify-self: right;
+                background: $blueColor;
+                color: black;
+                font-size: 16px;
+                padding: 5px 15px 5px 15px;
+                border: none;
+                border-radius: 5px;
+            }
+        }
+    }
+    .posts{
+        width: 70%;
+        margin: 0 auto;
+        border-top: 1px solid #dddddd;
+        .image-wrapper{
+            width: 100%;
+            padding-bottom: 100%;
+            background-size: cover;
+            background-position: center;
+            // img{
+            //     width: 100%;
+            //     height: 100%;
+            //     object-fit: cover;
+            // }
+        }
+    }
+}
+
+
+@media screen and (max-width : 992px){
+    .TagPage{
+        .tag_info{ 
+            width: 70%;
+            .tag_name{
+                h3{
+                    font-size: 18px;
+                }
+            }
+            .button_wrapper{
+                button{
+                  
+                }
+            }
+        }
+        .posts{
+            width: 70%;
+        }
+    }
+}
+
+@media screen and (max-width : 576px){
+    .TagPage{
+        .tag_info{ 
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            .tag_name{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                h3{
+                    font-size: 25px;
+                }
+                h6{
+                    color: #a0a0a0
+                }
+            }
+            .button_wrapper{
+                button{
+                  
+                }
+            }
+        }
+        .posts{
+            width: 90%;
+        }
+    }
+}

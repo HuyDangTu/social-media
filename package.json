@@ -11,7 +11,6 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
-  
   "engines": {
     "node": "12.18.2"
   },
@@ -31,6 +30,7 @@
     "cloudinary": "^1.23.0",
     "concurrently": "^5.3.0",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "emoji-mart": "^3.0.0",
     "emoji-picker-react": "^3.2.4",
@@ -43,6 +43,7 @@
     "nodemailer": "4.6.7",
     "pusher": "^4.0.2",
     "pusher-js": "^7.0.2",
+    "react-geocode": "^0.2.3",
     "react-giphy-component": "^1.1.0",
     "react-giphy-picker": "^1.1.1",
     "react-giphy-picker-advanced": "^1.0.3",

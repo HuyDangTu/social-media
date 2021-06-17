@@ -42,7 +42,11 @@ const groupSchema = mongoose.Schema({
     type:{
         type: String,
         required:false,
-    }
+    },
+    disabledBy:[{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }]
 }, { timestamps: true });
 
 const Group = mongoose.model('Group', groupSchema);

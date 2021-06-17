@@ -3,25 +3,23 @@ import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
 import Skeleton from '@material-ui/lab/Skeleton'
 import Portal from '@material-ui/core/Portal';
-import { getMessage, getConversation, sendMessage, seenMessage, sendimg, getGroup, getGroupMessage, sendGroupMessage, createGroup, editTitle, addMember, removeMember, changegroupimg, uploadgroupimg, seenGroupMess } from '../../../src/actions/message_action'
+import { getMessage, getConversation, sendMessage, seenMessage, sendimg, getGroup,seenAll, getGroupMessage, sendGroupMessage, createGroup, findPersonal ,editTitle, addMember, removeMember, changegroupimg, uploadgroupimg, seenGroupMess, disableGroupMess } from '../../../src/actions/message_action'
 import { follow, unfollow,auth } from '../../../src/actions/user_action'
 import GroupMess from './groupmess';
 import './Message.scss';
 import { update, generateData } from '../ultils/Form/FormActions';
 import { Link, withRouter } from 'react-router-dom';
-import { Settings, Dots, Heart, Pencil, Search, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck, User, Users } from 'tabler-icons-react';
+import { Settings, Dots, Heart, Pencil, Search,Phone, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck, User, Users } from 'tabler-icons-react';
 import SearchBar from './SearchBar/index'
-import Pusher from 'pusher-js'
+import Pusher, { Members } from 'pusher-js'
 import { Button, Dialog, LinearProgress, Checkbox, Chip, Avatar, ClickAwayListener } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
-import Mess from './mess';
 import EditMess from './editchat'
 import ReactDOM from 'react-dom'
 import { Picker } from 'emoji-mart'
 import Picker2 from 'react-giphy-component'
 import styled from 'styled-components'
 import moment from 'moment';
-import Conversation from './conversation';
 import Group from './group';
 
 const GifPicker = styled(Picker2)`
@@ -59,22 +57,289 @@ class Message extends Component {
         sendinguserlistid: [],
         view: 'ls',
         editmess: false,
+        onlineusers:[],
+        calling:false
+    }
+    constructor(props){
+        super(props)
+        this.sessionDesc=null;
+        this.currentcaller=null;
+        this.room=null;
+        this.caller=null;
+        this.localUserMedia=null;
+        this.id=null;
+        this.channel=null;
+    }
+    prepareCaller= ()=>{
+        //Initializing a peer connection
+        this.caller = new window.RTCPeerConnection();
+        //Listen for ICE Candidates and send them to remote peers
+        this.caller.onicecandidate = (evt)=> {
+            if (!evt.candidate) return;
+            console.log("onicecandidate called");
+            this.onIceCandidate(this.caller, evt);
+        };
+        //onaddstream handler to receive remote feed and show in remoteview video element
+        this.caller.onaddstream = (evt)=> {
+            console.log("onaddstream called");
+            if (window.URL) {
+                ReactDOM.findDOMNode(this.remoteview).srcObject = evt.stream;   
+                ReactDOM.findDOMNode(this.remoteview).play()
+            } else {
+                ReactDOM.findDOMNode(this.remoteview).src = evt.stream;
+                ReactDOM.findDOMNode(this.remoteview).play()
+            }
+        };
+    }
+    getCam = () => {
+        //Get local audio/video feed and show it in selfview video element 
+        return navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        });
+    }
+
+    GetRTCIceCandidate= () =>{
+        window.RTCIceCandidate = window.RTCIceCandidate || window.webkitRTCIceCandidate ||
+            window.mozRTCIceCandidate || window.msRTCIceCandidate;
+
+        return window.RTCIceCandidate;
+    }
+
+    GetRTCPeerConnection=() =>{
+        window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection ||
+            window.mozRTCPeerConnection || window.msRTCPeerConnection;
+        return window.RTCPeerConnection;
+    }
+
+    GetRTCSessionDescription= ()=> {
+        window.RTCSessionDescription = window.RTCSessionDescription || window.webkitRTCSessionDescription ||
+            window.mozRTCSessionDescription || window.msRTCSessionDescription;
+        return window.RTCSessionDescription;
+    }
+
+    //Create and send offer to remote peer on button click
+    callUser = (user) => {
+       
+        this.getCam()
+            .then(stream => {
+                if (window.URL) {
+                    ReactDOM.findDOMNode(this.selfview).srcObject = stream;
+                    ReactDOM.findDOMNode(this.selfview).play()
+                    // document.getElementById("selfview").srcObject  =  stream;
+                } else {
+                    ReactDOM.findDOMNode(this.selfview).src = stream;
+                    ReactDOM.findDOMNode(this.selfview).play()
+                }
+                this.toggleEndCallButton();
+                this.caller.addStream(stream);
+                this.localUserMedia = stream;
+                this.caller.createOffer().then((desc) => {
+                    this.caller.setLocalDescription(new RTCSessionDescription(desc));
+                    this.channel.trigger("client-sdp", {
+                        "sdp": desc,
+                        "room": user,
+                        "from": this.id
+                    });
+                    this.room = user;
+                });
+            
+            })
+            .catch(error => {
+                console.log('an error occured', error);
+            })
+    };
+
+    endCall = ()=>{
+        this.room = null;
+        this.caller.close();
+        // ReactDOM.findDOMNode(this.remoteview).stop()
+        // ReactDOM.findDOMNode(this.selfview).stop()
+        for (let track of this.localUserMedia.getTracks()) { track.stop() }
+        this.prepareCaller();
+        this.toggleEndCallButton();
+    }
+
+   endCurrentCall= ()=>{
+        this.channel.trigger("client-endcall", {
+                "room": this.room
+            });
+        this.endCall();
+    }
+    onIceCandidate = (peer, evt)=> {
+        if (evt.candidate) {
+            this.channel.trigger("client-candidate", {
+                "candidate": evt.candidate,
+                "room": this.room
+            });
+        }
+    }
+
+    toggleEndCallButton= ()=>{
+        if(document.getElementById("endCall").style.display == 'block'){
+            document.getElementById("endCall").style.display = 'none';
+        }else{
+            document.getElementById("endCall").style.display = 'block';
+        }
     }
 
     componentDidMount() {
-
+        const script = document.createElement("script");
+        const list = this.state.onlineusers;
+        script.src = "https://js.pusher.com/4.1/pusher.min.js";
+        script.async = true;
+        document.body.appendChild(script);
         this.props.dispatch(getGroup())
         /// Bind với pusher để làm realtime
         const pusher = new Pusher('c0e96b0fff8d0edac17d', {
-            cluster: 'mt1'
+            cluster: 'mt1',
+            encrypted: true,
+            authEndpoint: `http://localhost:3002/api/pusher/auth/${this.props.user.userData._id}`,
         });
-        const channel = pusher.subscribe('messages');
-        channel.bind('newMessage', data => {
+        var usersOnline,  users = [],
+        sessionDesc,
+        caller, localUserMedia;
+        this.channel = pusher.subscribe('presence-videocall');
+        this.channel.bind('pusher:subscription_succeeded', (members) => {
+        var me = this.channel.members.me;
+        usersOnline = this.channel.members.count;
+        this.id = me.id;
+        console.log(this.channel)
+        
+      //  document.getElementById('myid').innerHTML = ` My caller id is : ` + id;
+        this.channel.members.each((member) => {      
+            if (member.id != me.id) {               
+                list.push(member.info);             
+            } 
+            console.log(list)
+        });
+        this.setState({onlineusers:list})
+    })
+
+    this.channel.bind('pusher:member_added', (member) => {
+        list.push(member.info)
+        this.setState({onlineusers:list})
+    });
+    this.channel.bind('pusher:member_removed', (member) => {
+        // for remove member from list:
+        var index = users.indexOf(member.id);
+        list.splice(index, 1);
+        // if(member.id==room){
+        //     endCall();
+        // }
+        this.setState({onlineusers:list})
+    });
+
+    this.GetRTCPeerConnection();
+    this.GetRTCSessionDescription();
+    this.GetRTCIceCandidate();
+    this.prepareCaller();
+
+this.channel.bind("client-candidate", (msg)=> {
+      
+        if(msg.room==this.room){
+            console.log("candidate received");
+           this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
+        }
+    });
+
+    //Listening for Session Description Protocol message with session details from remote peer
+    this.channel.bind("client-sdp", (msg) =>{
+        if(msg.room == this.id){
+            var sessionDesc = new RTCSessionDescription(msg.sdp);
+                    this.caller.setRemoteDescription(sessionDesc);
+            console.log("sdp received");
+            var answer = window.confirm("You have a call from: "+ msg.from + "Would you like to answer?");
+            if(!answer){
+                return this.channel.trigger("client-reject", {"room": msg.room, "rejected":this.id});
+            }
+            this.room = msg.room;
+            this.getCam()
+                .then(stream => {
+                    this.localUserMedia = stream;
+                    this.toggleEndCallButton();
+                    if (window.URL) {
+                        document.getElementById("selfview").srcObject = stream;
+                        document.getElementById("selfview").play()
+                    } else {
+                        document.getElementById("selfview").src = stream;
+                        document.getElementById("selfview").play()
+                    }
+                    this.caller.addStream(stream);
+
+                    this.caller.createAnswer().then((sdp)=> {
+                        this.caller.setLocalDescription(new RTCSessionDescription(sdp));
+                        this.channel.trigger("client-answer", {
+                            "sdp": sdp,
+                            "room": this.room
+                        });
+                    });
+
+                })
+                .catch(error => {
+                    console.log('an error occured', error);
+                })
+        }
+        
+
+    });
+
+    //Listening for answer to offer sent to remote peer
+    this.channel.bind("client-answer", (answer) => {
+        if(answer.room==this.room){
+            console.log("answer received");
+            this.caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
+        }
+    });
+
+    this.channel.bind("client-reject", (answer)=> {
+        if(answer.room==this.room){
+            console.log("Call declined");
+            alert("call to " + answer.rejected + "was politely declined");
+            this.endCall();
+        }
+        
+    });
+
+     this.channel.bind("client-endcall", (answer) =>{
+        if(answer.room==this.room){
+            console.log("Call Ended");
+            this.endCall();
+        }
+        
+    });
+
+  
+  
+
+    
+
+    this.channel.bind("client-reject", (answer)=> {
+        if(answer.room==this.room){
+            console.log("Call declined");
+            alert("call to " + answer.rejected + "was politely declined");
+            this.endCall();
+        }
+        
+    });
+    this.channel.bind("client-endcall", answer=> {
+        if(answer.room==this.room){
+            console.log("Call Ended");
+            this.endCall();
+            
+        }
+    });
+
+
+
+    const channel5 = pusher.subscribe('messages');
+        channel5.bind('newMessage', data => {
             if (data.change.fullDocument.sentTo == this.props.user.userData._id || data.change.fullDocument.sentBy == this.props.user.userData._id) {
                 this.props.dispatch(getConversation())
                 this.setState({ sending: false })
             }
         });
+
         const groupchan = pusher.subscribe('groups');
         groupchan.bind('newGroupmess', data => {
             if (data.change.documentKey._id == this.props.match.params.id) {
@@ -120,8 +385,6 @@ class Message extends Component {
                 this.state.mess.sentBy = this.props.user.userData._id;
                 this.setState({ sending: false })
             })
-
-
         }
         this.scrollToBottom();
     }
@@ -196,12 +459,18 @@ class Message extends Component {
         listid.splice(this.state.sendinguserlistid.indexOf(id), 1);
         this.setState({ sendinguserlistid: listid });
     };
-    createGroup = (list) => {
+    createGroup  = (list) => {
         console.log('clicked');
-        list.push(this.props.user.userData._id);
-        this.props.dispatch(createGroup(list)).then(data => this.props.history.push(`/message/inbox/${this.props.messages.newgroup._id}`));
+        if(list.length<=1)
+        {
+            this.props.dispatch(findPersonal(list[0])).then(data => this.props.history.push(`/message/inbox/${this.props.messages.conversationinfo._id}`));
+        }
+        else
+        {
+            list.push(this.props.user.userData._id);
+            this.props.dispatch(createGroup(list)).then(data => this.props.history.push(`/message/inbox/${this.props.messages.newgroup._id}`));
+        }
         this.setState({ newmess: false });
-
     };
     addList = (id, name) => {
         const list = this.state.sendinguserlist;
@@ -216,6 +485,7 @@ class Message extends Component {
     }
     editTitle = (id, title) => {
         this.props.dispatch(editTitle(id, title))
+        this.setState({editmess:false})
     }
     createGroupEvent = (des) => {
         this.setState({ sending: true });
@@ -227,9 +497,11 @@ class Message extends Component {
     }
     addMember = (id, userlist, userlistid) => {
         this.props.dispatch(addMember(id, userlist, userlistid))
+        this.setState({editmess:false})
     }
     removeMember = (id, uid) => {
         this.props.dispatch(removeMember(id, uid))
+        this.setState({editmess:false})
     }
     onGroupImgChange = async (event) => {
         this.setState({ sending: true })
@@ -238,20 +510,26 @@ class Message extends Component {
             .then(response => {
                 console.log(response)
                 if (response.payload.success == false) {
-                    this.setState({ loading: false })
+                    this.setState({ loading: false,editmess:false })
                 }
                 else {
-                    this.setState({ loading: false })
+                    this.setState({ loading: false,editmess:false })
                 }
             })
     }
     seenGroupMess = (id) => {
         this.props.dispatch(seenGroupMess(id))
     }
+    disableGroupMess = async (id) => {
+        await this.props.dispatch(disableGroupMess(id))
+        await this.props.dispatch(getGroupMessage(this.props.match.params.id))
+        this.setState({editmess:false})
+    }
     outGroup = async (id, uid) => {
         await this.props.dispatch(removeMember(id, uid))
         await this.props.history.push('/message/inbox')
         await this.props.dispatch(getGroupMessage(this.props.match.params.id))
+        this.setState({editmess:false})
     }
     follow = async (id) =>{
         await this.props.dispatch(follow(id))
@@ -276,7 +554,9 @@ class Message extends Component {
                 <div className="message_container">
                     <div className="message_wrapper">
                         <div className="row no-gutters">
-                            <div className="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-2 left_contain">
+                            <div className="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 left_contain">
+                            </div>
+                            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 left_contain">
                                 <div className="chat_info">
                                     <div className="chat_settings">
                                         <h2> Trò chuyện</h2>
@@ -291,9 +571,11 @@ class Message extends Component {
                                         <Search size={22} strokeWidth={1} color="grey" ></Search>
                                         <input type="text" placeholder="Tìm kiếm" />
 
-
                                     </div>
-
+                                    <div className="seenall" onClick={()=>this.props.dispatch(seenAll())}>
+                                        <h6>Đánh dấu tất cả là đã đọc</h6>
+                                        
+                                    </div>
 
                                 </div>
 
@@ -313,7 +595,7 @@ class Message extends Component {
                                 </Group>
 
                             </div>
-                            <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-10 right_contain">
+                            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-9 right_contain">
                                 <div className="top_info">
 
                                     <div className="user_info">
@@ -370,20 +652,6 @@ class Message extends Component {
                                 <div className="message" ref={(el) => { this.messagesContainer = el; }} >
 
                                     {
-                                        this.props.messages.messlist ? this.props.messages.messlist.messagelist ? this.props.messages.messlist.messagelist.map(mess => {
-
-                                            return (
-                                                <Mess
-                                                    mess={mess}
-                                                    yourProfile={yourProfile}
-                                                    seenMessage={this.props.seenMessage}
-                                                />
-
-                                            )
-                                        }
-                                        ) : '' : ''
-                                    }
-                                    {
                                         this.props.messages.groupmesslist ? this.props.messages.groupmesslist.messagelist ? this.props.messages.groupmesslist.messagelist.map(mess => {
 
                                             return (
@@ -406,7 +674,7 @@ class Message extends Component {
 
                                                 this.props.messages.groupmesslist ? this.props.messages.groupmesslist.seenBy ? this.props.messages.groupmesslist.seenBy.map(seen => {
                                                     return (
-                                                        <img className="seen_avt" src={seen.avt}></img>
+                                                        <img className="seen_avt" src={seen.avt?seen.avt:''}></img>
                                                     )
                                                 }
                                                 ) : '' : ''
@@ -467,6 +735,51 @@ class Message extends Component {
                                 }
 
                             </div>
+                            <div className="col-xl-2 col-lg-2 col-md-2 col-sm-2 active_col">
+                            <div className="chat_settings">
+                                        <h2> Đang hoạt động</h2>
+                                        <div className="chat_icon">
+                                        </div>
+                                    </div>
+                        <div className="user_contain">
+
+                                {
+                                    this.state.onlineusers.map(user=>{
+                                        return(
+                                            <div className="uinfo">
+                                         
+                                            <img src={user.avt}></img>
+                                            <a>{user.userName}</a>
+                                            <Phone onClick={()=>{
+                                                console.log(this.state.onlineusers)
+                                                this.setState({calling:true})
+                                                this.state.onlineusers.forEach(user => {
+                                                    this.callUser(user.id)
+                                                });
+                                                
+                                            }}  size={24} strokeWidth={0.5} color="black"></Phone>
+    
+                                           </div>
+                
+                                        )
+                                
+                                    })
+                                }
+                                <div id="app">
+                    <span id="myid"> </span>
+                    <video id="selfview"  ref={(n) => this.selfview = n} autoplay></video>
+                    <video id="remoteview"   ref={(n) => this.remoteview = n} autoplay></video>
+                    <button id="endCall" onclick={()=>this.endCurrentCall()}>End Call </button>
+                    <div id="list">
+                        <ul id="users">
+            
+                        </ul>
+                    </div>
+                    </div>
+                                
+                            </div>
+                                    
+                            </div>      
                         </div>
                     </div>
                 </div>
@@ -536,14 +849,20 @@ class Message extends Component {
                                         }) : '' : ''
                             }
                         </div> */}
+                       
+                   
+                
                     </div>
+                  
                 </Dialog>
                 {
                     <Dialog open={this.state.editmess} onClose={() => this.setState({ editmess: false })}>
-                        <EditMess history={this.props.history} follow={this.follow} unfollow={this.unfollow} outGroup={this.outGroup} onGroupImgChange={this.onGroupImgChange} createGroupEvent={this.createGroupEvent} editTitle={this.editTitle} conversation={this.props.messages.groupmesslist} yourProfile={yourProfile} addMember={this.addMember} removeMember={this.removeMember}>
+                        <EditMess disableGroupMess={this.disableGroupMess} history={this.props.history} follow={this.follow} unfollow={this.unfollow} outGroup={this.outGroup} onGroupImgChange={this.onGroupImgChange} createGroupEvent={this.createGroupEvent} editTitle={this.editTitle} conversation={this.props.messages.groupmesslist} yourProfile={yourProfile} addMember={this.addMember} removeMember={this.removeMember}>
                         </EditMess>
                     </Dialog>
                 }
+
+             
             </Layout>
         );
     }

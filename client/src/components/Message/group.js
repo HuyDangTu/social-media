@@ -12,11 +12,7 @@ import SearchBar from './SearchBar/index'
 import Pusher from 'pusher-js'
 import { Button, Dialog, LinearProgress, Checkbox, Avatar } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
-import Mess from './mess';
-import ReactDOM from 'react-dom'
-import { Picker } from 'emoji-mart'
-import Picker2 from 'react-giphy-component'
-import styled from 'styled-components'
+
 import moment from 'moment';
 
 class Group extends Component {
@@ -30,6 +26,7 @@ class Group extends Component {
                         this.props.messages.grouplist ?
                             this.props.messages.grouplist.map(con => {
                                 return (
+                                    con.disabledBy.includes(this.props.yourProfile._id)?'':
                                     <div onClick={() => { this.props.seenGroupMess(con._id); console.log('clicked') }}>
                                         {
                                             <Link className="link" to={`/message/inbox/${con._id}`}>

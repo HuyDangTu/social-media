@@ -1,7 +1,11 @@
 const express = require("express");
+var cors = require('cors')
+
+
 const app = express();
 const Pusher = require("pusher");
 // const bodyParser = require('body-parser');
+app.use(cors())
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -112,6 +116,7 @@ const post = require("./models/post");
 const { sendEmail } = require('./ultils/mail/index');
 const user = require("./models/user");
 const { error } = require("console");
+const { ppid } = require("process");
 
 // ============== API ===============
 //TEST
@@ -155,7 +160,36 @@ app.get('/api/users/auth', auth, (req, res) => {
 // =========================
 //          USER
 // =========================
+///
+app.post('/api/pusher/auth/:id', (req, res) => {
+    const socketId = req.body.socket_id;
+    const channel = req.body.channel_name;
+    let id = req.params.id
+    User.findById(id,(err,user)=>{
+        if(err) throw err;
+        
+        if(!user) return res.json({
+            isAuth: false,
+            error: true
+        });      
+        //use later
+        console.log(user);
+        var presenceData = {
+            user_id: user._id,
+            user_info: {
+                avt: user.avt,
+                userName: user.userName,
+                id:user._id
+            }
+        }
+        const auth = pusher.authenticate(socketId, channel, presenceData);
+        console.log(auth)
+        res.send(auth);
+    })
+    
+});
 
+///
 //REGISTER 
 app.post('/api/users/register', jsonParser, (req, res) => {
 
@@ -289,6 +323,39 @@ app.post('/api/messages/group/seen/:id', auth, (req, res) => {
         })
 })
 
+app.post('/api/messages/group/seenall', auth, (req, res) => {
+    Group.updateMany( 
+        { user: { $in: req.user._id }},
+        {
+            $addToSet:   { seenBy: req.user._id }
+        },
+        {
+            new:true
+        }
+    ).exec((err, data) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+        else {
+            res.json(data)
+        }
+    })
+})
+
+
+app.post('/api/messages/group/disable/:id', auth, (req, res) => {
+    Group.findByIdAndUpdate(req.params.id, { $addToSet: { disabledBy: req.user._id } })
+        .exec((err, data) => {
+            if (err) {
+                res.status(500).send(err)
+            }
+            else {
+                res.json(data)
+            }
+        })
+})
+
+
 app.post('/api/messages/group/addmember/:id',auth,(req,res)=>{
     const  userlist  = [req.body.user]
     const userlistid = [req.body.userid]
@@ -296,7 +363,7 @@ app.post('/api/messages/group/addmember/:id',auth,(req,res)=>{
         Group.findByIdAndUpdate({_id:req.params.id}, 
             {
                 $addToSet:{user:uid},
-                $set:{seenBy:[(req.user._id)]}
+                $set:{seenBy:[(req.user._id)],disabledBy:[]}
             },
             (err, group) => {
             if (err) {
@@ -541,7 +608,7 @@ app.post('/api/messages/group/remove/:id',auth,(req,res)=>{
         Group.findOneAndUpdate({_id:req.params.id}, 
             {
                 $pull:{user : req.body.uid},
-                $set:{seenBy:[(req.user._id)]}
+                $set:{seenBy:[(req.user._id)],disabledBy:[]}
             },
             (err, group) => {
             if (err) {
@@ -624,7 +691,8 @@ app.post('/api/messages/group/save', auth,jsonParser, (req, res) => {
                     $set: {
                         lastMess: data._id,
                         seenBy:[(req.user._id)],
-                        lastMessageTimestamp: data.updatedAt
+                        lastMessageTimestamp: data.updatedAt,
+                        disabledBy:[]
                     },
                 }, {
             },(err, doc) => {
@@ -1648,7 +1716,6 @@ app.get('/api/tags/getAllTags', (req, res) => {
 //tag?id=5f90e95460842c39900e3ffb&sortBy=createdAt&order=desc&limit=6
 
 app.post('/api/tags/getTag', auth, (req, res) => {
-
     let id = req.body.id ? req.body.id : '';
     let order = 'desc';
     let sortBy = 'createdAt';
@@ -1683,14 +1750,21 @@ app.get('/api/tags/getFollowers', auth, (req, res) => {
         })
 });
 
-app.get('/api/users/blockedUsers', auth, (req, res) => {
-    
+app.get('/api/users/blockedUsers', auth, (req, res) => { 
     User.find({ "_id": { $in: req.user.blockedUsers } })
         .select('userName _id avt')
         .exec((err, users) => {
             if (err) return res.status(400).send(err);
             res.send(users);
         })
+});
+
+app.get('/api/posts/location/:name',auth,(req,res)=>{
+    Post.find({"locationName": req.params.name})
+    .exec((err, posts) => {
+        if (err) return res.status(400).send(err);
+        res.send(posts);
+    })
 });
 
 app.post('/api/tags/getTop10Tags', auth, (req, res) => {
@@ -2219,6 +2293,21 @@ app.post('/api/notify/seen/:id', auth, (req, res) => {
             res.json(noti);
     })
 })
+
+app.post('/api/notify/disable/:id',auth,(req,res)=>{
+    Notification.findByIdAndUpdate(req.params.id,{
+        $set:{disabled:true,seenStatus:true}
+    }).exec((err, data) => {
+        if (err) {
+            res.status(500).send(err)
+        }
+        else {
+            res.json(data)
+        }
+    })
+})
+
+
 
 app.post('/api/notify/seenall', auth, (req, res) => {
     Notification.update({ "sentTo": req.user._id }, {

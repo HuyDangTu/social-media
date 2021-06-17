@@ -29,3 +29,15 @@ export function seenAllNotification(){
         payload: request,
     }
 }
+
+export function disablenotification(id){
+    const request = axios.post(`${NOTIFY_SERVER}/disable/${id}`)
+    .then(response => response.data);
+    return{
+        type: NOTIFICATION_DETAIL,
+        payload:request
+    }
+}
+
+
+

@@ -29,6 +29,7 @@ import ProfileSettings from './components/ProfileSettings/index';
 import Message from './components/Message/index';
 import Explore from './components/Explore/index';
 import NotFoundPage from './components/notFoundPage';
+import Location from './components/Location'
 
 
 // import photoEditor from './components/photoEditor/index';
@@ -45,6 +46,7 @@ const Routes = () =>{
         <Route path="/register" exact component={Auth(Register, false)} />
         <Route path="/newfeed" exact component={Auth(Newfeed, true)} />
         <Route path="/tag/:id" exact component={Auth(Tag, true)} /> 
+        <Route path="/location/:name" exact component={Auth(Location, true)} /> 
         <Route path="/search/:keyword" exact component={Auth(SearchResult, true)} /> 
         <Route path="/post/edit" exact component={Auth(PostEdit, true)} /> 
         <Route path="/reset_password" exact component={Auth(ResetUser, false)} /> 
@@ -66,6 +68,7 @@ const Routes = () =>{
         <Route path="/Admin/Account" exact component={Auth(AccountPage, true, "/Admin/login")} />
         <Route path="/Admin/Account/add_new" exact component={Auth(AddAccount, true, "/Admin/login")} />
         <Route path="/Admin/EditAccount" exact component={Auth(EditAccount, true, "/Admin/login")} />
+
     </Switch>
   )
 }

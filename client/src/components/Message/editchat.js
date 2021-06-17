@@ -129,8 +129,6 @@ class EditMess extends Component {
 
 
                                 <Userinfo history={this.props.history} follow={this.props.follow} unfollow={this.props.unfollow} outGroup={this.props.outGroup} removeMember={this.props.removeMember} conversation={this.props.conversation} mess={mess} yourProfile={this.props.yourProfile} openMenu={this.openMenu} anchorEl={this.state.anchorEl} closeMenu={this.closeMenu}></Userinfo>
-
-
                                 : ''
                         )
                     }
@@ -144,6 +142,8 @@ class EditMess extends Component {
                             <h6 onClick={() => this.props.outGroup(this.props.conversation._id, this.props.yourProfile._id)}>Thoát nhóm</h6>
                         </div>
                 }
+                 <hr></hr>
+                <h6 onClick={()=>this.props.disableGroupMess(this.props.conversation._id)}>Xóa cuộc trò chuyện</h6>
 
                 <Dialog open={this.state.addnew} onClose={() => this.setState({ addnew: false })}>
                     <div className="newmess_contain">

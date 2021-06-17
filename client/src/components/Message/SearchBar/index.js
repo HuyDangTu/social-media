@@ -49,7 +49,6 @@ class Search extends React.Component {
     }
 
     render() {
-
         const { result, showResult,tags } = this.state;
         return (
             <div className="search">

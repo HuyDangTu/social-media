@@ -30,7 +30,7 @@ export default function(state={},action){
         case SEND_MESS:{
             let newmesslist= {...state.messlist}
             newmesslist.lastMess = action.payload.lastMess
-            newmesslist.seenBy =[...action.payload.seenBy]
+            // newmesslist.seenBy =[...action.payload.seenBy]
             newmesslist.messagelist = [...newmesslist.messagelist,action.payload.messagelist[action.payload.messagelist.length-1]]
             return {...state, messlist: newmesslist}
         }
@@ -49,7 +49,7 @@ export default function(state={},action){
         case SEND_GROUP_MESS:{
             let newgroupmesslist= {...state.groupmesslist}
             newgroupmesslist.lastMess = action.payload.lastMess
-            newgroupmesslist.seenBy =[...action.payload.seenBy]
+        
             newgroupmesslist.messagelist = [...newgroupmesslist.messagelist,action.payload.messagelist[action.payload.messagelist.length-1]]
             return {...state, groupmesslist: newgroupmesslist}
         }
@@ -87,7 +87,7 @@ export default function(state={},action){
                 }
         case SEEN_GROUP:{
             let newgroupmesslist= {...state.groupmesslist}
-            newgroupmesslist.seenBy = [...action.payload.seenBy]
+            // newgroupmesslist.seenBy = [...action.payload.seenBy]
             return {...state, groupmesslist: newgroupmesslist}
         }
         case FIND_PERSONAL:{

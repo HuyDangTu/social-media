@@ -29,7 +29,8 @@ import {
     CREATE_STORY,
     DELETE_STORY,
     RESTRICTED,
-    GET_NATIONALITY
+    GET_NATIONALITY,
+    FIND_LOCATION
 } from '../actions/types';
 
 
@@ -253,6 +254,12 @@ export default function (state = {}, action) {
             return {
                 ...state,
                 restricted: true
+            }
+        }
+        case FIND_LOCATION: {
+            return {
+                ...state,
+                matchlocation: action.payload
             }
         }
         default: return state;

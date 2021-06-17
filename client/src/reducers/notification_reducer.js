@@ -14,6 +14,7 @@ import {
           case NOTIFICATION_SEENALL:{
               return {...state, seenstatus: action.payload}
           }
+          
           default: return state;
       }
   }

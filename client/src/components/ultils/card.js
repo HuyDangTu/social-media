@@ -286,7 +286,7 @@ class  Card extends Component {
         })
         if (locationName)
         {
-            description += ` <b>- tại <b> <a> ${locationName} </a>`
+            description += ` <b>- tại <b> <a href="/location/${locationName}"> ${locationName} </a>`
         }
         return <div dangerouslySetInnerHTML={{ __html: description }} />
     }

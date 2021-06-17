@@ -35,7 +35,8 @@ import {
     DELETE_STORY,
     GET_RECOMMEND_POST,
     RESTRICTED,
-    GET_NATIONALITY
+    GET_NATIONALITY,
+    FIND_LOCATION
 } from './types';
 
 export function getPostDetail(id){
@@ -460,6 +461,7 @@ export function report(reportData, reportPolicy) {
                 reportAbout: reportPolicy,
                 post: reportData.post 
             }
+            break;
         case "comment":
             data = {
                 reportType: reportData.reportType,
@@ -467,17 +469,21 @@ export function report(reportData, reportPolicy) {
                 comment: reportData.comment,
                 post: reportData.post 
             }
+            break;
         case "user":
             data = {
                 reportType: reportData.reportType,
                 reportAbout: reportPolicy,
                 userId:  reportData.userId,
             }
+            break;
     }
 
     const request = axios.post(`${POST_SERVER}/report`,data)
     .then(response =>{
+        console.log(response)
         return response.data
+        
     })
     
     return {
@@ -576,3 +582,11 @@ function sortStory(stories,id){
     return stories;
 }
 
+export function findLocation(name){
+    const request = axios.get(`${POST_SERVER}/location/${name}`)
+    .then(response => response.data)
+    return {
+        type: FIND_LOCATION,
+        payload: request
+    }
+}

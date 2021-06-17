@@ -54,7 +54,7 @@ export default function(ComposedClass,reload,adminRoute = null){
                         }
                     }
                 }
-                this.setState({loading:false});
+               this.setState({loading:false});
             })
         }
 

@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { logoutUser, auth, acceptfollow, declinefollow} from '../../../actions/user_action'
 import NativeClickListener from '../../ultils/NativeClickListener';
 import { getConversation } from '../../../actions/message_action'
-import { getNotification, seenNotification, seenAllNotification } from '../../../actions/notification_action'
-
+import { getNotification, seenNotification, seenAllNotification,disablenotification } from '../../../actions/notification_action'
+import NotificationDetail from './notification';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Send, Notification, BrandSafari, User, Settings, Point } from 'tabler-icons-react'
 import faUser from '@fortawesome/fontawesome-free-solid/faUser';
@@ -146,82 +146,20 @@ class Header extends Component {
                                     {
                                         console.log(this.props.user)
                                     }
-                                    {/* {        
-                                        this.props.user.userData? this.props.user.userData.request? this.props.user.userData.request.map(data=>{
-                                         return( <div className="noti_wrapper">
-                                                 <div className="user_avt">
-                                                        <img src={data.avt?data.avt:"https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png"}></img>
-                                                    </div>
-                                                <div className="content">
-                                                    <p> {data.userName} Đã yêu cầu theo dõi bạn</p>
-                                                    <Button>Đồng ý</Button>
-                                                    <Button>Hủy</Button>
-                                                </div>
-                                            </div>
-                                        )}):'':''
-                                    } */}
+                
                                     {
                                         this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
                                             return (
-                                                data.type == "askfollow" ?
-                                                    data.disabled != true ?
-                                                        
-                                                            <div className={data.seenStatus ? "noti_wrapper seen" : "noti_wrapper"}>
-                                                                <div className="user_avt">
-                                                                    <img src={data.sentFrom.avt}></img>
-                                                                </div>
-                                                                <div className="content">
-                                                                    <p>
-                                                                        <h6>{data.sentFrom.userName}</h6>
-                                                                        <p> {data.userName} Đã yêu cầu theo dõi bạn</p>
-                                                                        <Button onClick={async()=>{await this.props.dispatch(acceptfollow(data.sentFrom._id)); await this.props.dispatch(getNotification())}}>Đồng ý</Button>
-                                                                        <Button onClick={async()=>{await this.props.dispatch(declinefollow(data.sentFrom._id)); await this.props.dispatch(getNotification())}}>Hủy</Button>
-                                                                    </p>
-                                                                    <h6>
-                                                                        <h6>{moment(data.createdAt).fromNow()} </h6>
-                                                                    </h6>
-                                                                </div>
-                                                                <div className="status">
-                                                                    <Point visibility={data.seenStatus ? "hidden" : ""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
-                                                                </div>
-                                                            </div>
-                                                        
-                                                        : null
-                                                    : null
+                                                <NotificationDetail handleSeenNoti={this.handleSeenNoti} handleDeleteNoti={this.handleDeleteNoti} data={data} acceptfollow={this.acceptfollow} declinefollow={this.declinefollow} handleNotiClick={this.handleNotiClick}></NotificationDetail>
                                             )
                                         }) : null : null
                                     }
                                     {
                                         this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
-                                            return (
-                                                data.type != "askfollow" ?
-                                                <div className={data.seenStatus ? "noti_wrapper seen" : "noti_wrapper"} onClick={() => this.handleNotiClick(data._id, data.type, data.link)}>
-                                                    <div className="user_avt">
-                                                        <img src={data.sentFrom.role == 0 ? data.sentFrom.avt : "https://res.cloudinary.com/dlikyyfd1/image/upload/v1610771639/logo2x_lzjmtn.png"}></img>
-                                                    </div>
-                                                    <div className="content">
-                                                        <p>
-                                                            <h6>{data.sentFrom.role == 0 ? data.sentFrom.userName : "Stunning "}</h6>
-                                                            {
-                                                                data.type == "follow" ? ' đã theo dõi bạn' :
-                                                                    data.type == "likepost" ? ' đã thích bài viết của bạn' :
-                                                                        data.type == 'comment' ? ' đã bình luận về bài viết của bạn' :
-                                                                            data.type == 'likecomment' ? ' đã thích bình luận của bạn' :
-                                                                                data.type == 'discardReport' ? 'Nội dung bạn báo cáo chưa vi phạm chính sách cộng đồng' :
-                                                                                    data.type == 'deletePost' ? 'Bài viết của bạn đã bị xoá vì vi phạm chính sách cộng đông' :
-                                                                                        data.type == 'deleteComment' ? 'Bình luận của bạn đã bị xoá vì vi phạm chính sách cộng đồng ' : 
-                                                                                        data.type == 'acceptfollow' ? 'đã chấp nhập lời theo dõi của bạn':''
-                                                            }
-                                                        </p>
-                                                        <h6>
-                                                            <h6>{moment(data.createdAt).fromNow()} </h6>
-                                                        </h6>
-                                                    </div>
-                                                    <div className="status">
-                                                        <Point visibility={data.seenStatus ? "hidden" : ""} size={24} strokeWidth={5} color="#7166F9" fill="#7166F9"></Point>
-                                                    </div>
-                                                </div>:''
+                                            return(
+                                                <NotificationDetail handleSeenNoti={this.handleSeenNoti} handleDeleteNoti={this.handleDeleteNoti} data={data} acceptfollow={this.acceptfollow} declinefollow={this.declinefollow} handleNotiClick={this.handleNotiClick}></NotificationDetail>
                                             )
+                                
                                         }) : '' : ''
                                     }
                                 </div>
@@ -240,6 +178,7 @@ class Header extends Component {
                     >
                         {
                             this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist[0] ?
+                            
                                 <div className="snack_noti">
                                     <div className="noti_wrapper" onClick={() => this.handleNotiClick(this.props.notification.notifylist[0]._id, this.props.notification.notifylist[0].type, this.props.notification.notifylist[0].link)}>
                                         <div className="user_avt">
@@ -251,13 +190,15 @@ class Header extends Component {
                                             <p>
                                                 <h6>{this.props.notification.notifylist[0].sentFrom.userName}</h6>
                                                 {
-                                                    this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè m shak sssh' :
+                                                    this.props.notification.notifylist[0].type == "follow" ? ' đã theo dõi bạn nè' :
                                                         this.props.notification.notifylist[0].type == "likepost" ? ' đã thích bài viết của bạn' :
-                                                            this.props.notification.notifylist[0].type == "comment" ? 'đã bình luận về bài viết của bạn' :
+                                                            this.props.notification.notifylist[0].type == "comment" ? ' đã bình luận về bài viết của bạn' :
                                                                 this.props.notification.notifylist[0].type == "likecomment" ? 'đã thích bình luận của bạn' :
                                                                     this.props.notification.notifylist[0].type == "discardReport" ? 'Báo cáo của bạn chưa phù hợp' :
                                                                         this.props.notification.notifylist[0].type == "deletePost" ? 'Bài viết của bạn đã vi phạm chính sách' :
-                                                                            this.props.notification.notifylist[0].type == "deleteComment" ? 'Báo cáo của bạn đã vi phạm chính sách' : ''
+                                                                            this.props.notification.notifylist[0].type == "deleteComment" ? 'Báo cáo của bạn đã vi phạm chính sách' :
+                                                                                this.props.notification.notifylist[0].type == "askfollow" ? ' đã yêu cầu theo dõi bạn' : 
+                                                                                this.props.notification.notifylist[0].type == 'acceptfollow' ? ' đã chấp nhập lời theo dõi của bạn' : ''
                                                 }
                                             </p>
                                             <h6>
@@ -270,6 +211,7 @@ class Header extends Component {
                                     </div>
                                 </div>
                                 : '' : '' : ''
+                                
                         }
                     </Snackbar>
                 </div>
@@ -356,7 +298,14 @@ class Header extends Component {
         this.props.dispatch(getNotification());
         console.log(this.props.notification)
     }
-
+    acceptfollow = async(id)=>{
+        await this.props.dispatch(acceptfollow(id));
+        await this.props.dispatch(getNotification())
+    }
+    declinefollow = async(id)=>{
+        await this.props.dispatch(declinefollow(id)); 
+        await this.props.dispatch(getNotification());
+    }
     handleNotiClick = (id, type, link) => {
         this.props.dispatch(seenNotification(id))
         console.log('Đã xem thông báo', id)
@@ -376,6 +325,15 @@ class Header extends Component {
             this.props.history.push(`/postDetail/${link}`)
         }
         this.props.dispatch(getNotification())
+    }
+
+    handleDeleteNoti = async (id)=>{
+        await this.props.dispatch(disablenotification(id))
+       await  this.props.dispatch(getNotification())
+    }
+    handleSeenNoti = async (id)=>{
+        await this.props.dispatch(seenNotification(id))
+       await  this.props.dispatch(getNotification())
     }
 
     showLinks = (type) => {

@@ -448,15 +448,15 @@ class Profile extends Component {
                           
                         </div>
                         :
-                        <PostRow typelist={typelist}></PostRow>
+                        <PostRow history={this.props.history} typelist={typelist}></PostRow>
                         :
-                        <PostRow typelist={typelist}></PostRow>
+                        <PostRow history={this.props.history}  typelist={typelist}></PostRow>
                         :
-                        <PostRow typelist={typelist}></PostRow>
+                        <PostRow  history={this.props.history}  typelist={typelist}></PostRow>
                         :
-                        <PostRow typelist={typelist}></PostRow>
+                        <PostRow history={this.props.history}  typelist={typelist}></PostRow>
                         :
-                        <PostRow typelist={typelist}></PostRow>
+                        <PostRow history={this.props.history}  typelist={typelist}></PostRow>
                         }
                     </div>
                 </div>

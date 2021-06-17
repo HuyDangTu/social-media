@@ -167,7 +167,7 @@
                    display: block;
                    margin:0px;
                     // display: block;
-                    width: 75%;
+                    width: 67%;
                    p{
                        margin-bottom: 8px;
                        h6{
@@ -176,7 +176,10 @@
                    }                 
                 }
                 .status{
-                    //    width: 5%;
+                    width: 10%;
+                    justify-content: center;
+                    align-items: center;
+                    justify-content: space-between;
                 }
             }
           .seen{
@@ -287,7 +290,7 @@
                    display: block;
                    margin:0px;
                     // display: block;
-                    width: 75%;
+                    width: 67%;
                    p{
                        margin-bottom: 8px;
                        h6{
@@ -296,7 +299,11 @@
                    }                 
                 }
                 .status{
-                  display: none;
+                    width: 10%;
+                    justify-content: center;
+                    align-items: center;
+                    justify-content: space-between;
+                  
                 }
             }
             }

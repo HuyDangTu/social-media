@@ -195,3 +195,21 @@ export function seenGroupMess(id){
         payload:request
 }
 }
+
+export function disableGroupMess(id){
+    const request = axios.post(`${MESS_SERVER}/group/disable/${id}`)
+    .then(response=>response.data);
+    return{
+        type: SEEN_GROUP,
+        payload:request
+}
+}
+
+export function seenAll(){
+    const request = axios.post(`${MESS_SERVER}/group/seenall`)
+    .then(response=>response.data);
+    return{
+        type: SEEN_GROUP,
+        payload:request
+}
+}
