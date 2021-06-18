@@ -3,13 +3,13 @@ import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
 import Skeleton from '@material-ui/lab/Skeleton'
 import Portal from '@material-ui/core/Portal';
-import { getMessage, getConversation, sendMessage, seenMessage, sendimg, getGroup,seenAll, getGroupMessage, sendGroupMessage, createGroup, findPersonal ,editTitle, addMember, removeMember, changegroupimg, uploadgroupimg, seenGroupMess, disableGroupMess } from '../../../src/actions/message_action'
-import { follow, unfollow,auth } from '../../../src/actions/user_action'
+import { getMessage, getConversation, sendMessage, seenMessage, sendimg, getGroup, seenAll, getGroupMessage, sendGroupMessage, createGroup, findPersonal, editTitle, addMember, removeMember, changegroupimg, uploadgroupimg, seenGroupMess, disableGroupMess } from '../../../src/actions/message_action'
+import { follow, unfollow, auth } from '../../../src/actions/user_action'
 import GroupMess from './groupmess';
 import './Message.scss';
 import { update, generateData } from '../ultils/Form/FormActions';
 import { Link, withRouter } from 'react-router-dom';
-import { Settings, Dots, Heart, Pencil, Search,Phone, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck, User, Users } from 'tabler-icons-react';
+import { Settings, Dots, Heart, Pencil, Search, Phone, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck, User, Users } from 'tabler-icons-react';
 import SearchBar from './SearchBar/index'
 import Pusher, { Members } from 'pusher-js'
 import { Button, Dialog, LinearProgress, Checkbox, Chip, Avatar, ClickAwayListener } from '@material-ui/core';
@@ -57,138 +57,11 @@ class Message extends Component {
         sendinguserlistid: [],
         view: 'ls',
         editmess: false,
-        onlineusers:[],
-        calling:false
-    }
-    constructor(props){
-        super(props)
-        this.sessionDesc=null;
-        this.currentcaller=null;
-        this.room=null;
-        this.caller=null;
-        this.localUserMedia=null;
-        this.id=null;
-        this.channel=null;
-    }
-    prepareCaller= ()=>{
-        //Initializing a peer connection
-        this.caller = new window.RTCPeerConnection();
-        //Listen for ICE Candidates and send them to remote peers
-        this.caller.onicecandidate = (evt)=> {
-            if (!evt.candidate) return;
-            console.log("onicecandidate called");
-            this.onIceCandidate(this.caller, evt);
-        };
-        //onaddstream handler to receive remote feed and show in remoteview video element
-        this.caller.onaddstream = (evt)=> {
-            console.log("onaddstream called");
-            if (window.URL) {
-                ReactDOM.findDOMNode(this.remoteview).srcObject = evt.stream;   
-                ReactDOM.findDOMNode(this.remoteview).play()
-            } else {
-                ReactDOM.findDOMNode(this.remoteview).src = evt.stream;
-                ReactDOM.findDOMNode(this.remoteview).play()
-            }
-        };
-    }
-    getCam = () => {
-        //Get local audio/video feed and show it in selfview video element 
-        return navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true
-        });
-    }
-
-    GetRTCIceCandidate= () =>{
-        window.RTCIceCandidate = window.RTCIceCandidate || window.webkitRTCIceCandidate ||
-            window.mozRTCIceCandidate || window.msRTCIceCandidate;
-
-        return window.RTCIceCandidate;
-    }
-
-    GetRTCPeerConnection=() =>{
-        window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection ||
-            window.mozRTCPeerConnection || window.msRTCPeerConnection;
-        return window.RTCPeerConnection;
-    }
-
-    GetRTCSessionDescription= ()=> {
-        window.RTCSessionDescription = window.RTCSessionDescription || window.webkitRTCSessionDescription ||
-            window.mozRTCSessionDescription || window.msRTCSessionDescription;
-        return window.RTCSessionDescription;
-    }
-
-    //Create and send offer to remote peer on button click
-    callUser = (user) => {
-       
-        this.getCam()
-            .then(stream => {
-                if (window.URL) {
-                    ReactDOM.findDOMNode(this.selfview).srcObject = stream;
-                    ReactDOM.findDOMNode(this.selfview).play()
-                    // document.getElementById("selfview").srcObject  =  stream;
-                } else {
-                    ReactDOM.findDOMNode(this.selfview).src = stream;
-                    ReactDOM.findDOMNode(this.selfview).play()
-                }
-                this.toggleEndCallButton();
-                this.caller.addStream(stream);
-                this.localUserMedia = stream;
-                this.caller.createOffer().then((desc) => {
-                    this.caller.setLocalDescription(new RTCSessionDescription(desc));
-                    this.channel.trigger("client-sdp", {
-                        "sdp": desc,
-                        "room": user,
-                        "from": this.id
-                    });
-                    this.room = user;
-                });
-            
-            })
-            .catch(error => {
-                console.log('an error occured', error);
-            })
-    };
-
-    endCall = ()=>{
-        this.room = null;
-        this.caller.close();
-        // ReactDOM.findDOMNode(this.remoteview).stop()
-        // ReactDOM.findDOMNode(this.selfview).stop()
-        for (let track of this.localUserMedia.getTracks()) { track.stop() }
-        this.prepareCaller();
-        this.toggleEndCallButton();
-    }
-
-   endCurrentCall= ()=>{
-        this.channel.trigger("client-endcall", {
-                "room": this.room
-            });
-        this.endCall();
-    }
-    onIceCandidate = (peer, evt)=> {
-        if (evt.candidate) {
-            this.channel.trigger("client-candidate", {
-                "candidate": evt.candidate,
-                "room": this.room
-            });
-        }
-    }
-
-    toggleEndCallButton= ()=>{
-        if(document.getElementById("endCall").style.display == 'block'){
-            document.getElementById("endCall").style.display = 'none';
-        }else{
-            document.getElementById("endCall").style.display = 'block';
-        }
+     
     }
 
     componentDidMount() {
-        const script = document.createElement("script");
-        const list = this.state.onlineusers;
-        script.src = "https://js.pusher.com/4.1/pusher.min.js";
-        script.async = true;
-        document.body.appendChild(script);
+        
         this.props.dispatch(getGroup())
         /// Bind với pusher để làm realtime
         const pusher = new Pusher('c0e96b0fff8d0edac17d', {
@@ -196,143 +69,8 @@ class Message extends Component {
             encrypted: true,
             authEndpoint: `http://localhost:3002/api/pusher/auth/${this.props.user.userData._id}`,
         });
-        var usersOnline,  users = [],
-        sessionDesc,
-        caller, localUserMedia;
-        this.channel = pusher.subscribe('presence-videocall');
-        this.channel.bind('pusher:subscription_succeeded', (members) => {
-        var me = this.channel.members.me;
-        usersOnline = this.channel.members.count;
-        this.id = me.id;
-        console.log(this.channel)
         
-      //  document.getElementById('myid').innerHTML = ` My caller id is : ` + id;
-        this.channel.members.each((member) => {      
-            if (member.id != me.id) {               
-                list.push(member.info);             
-            } 
-            console.log(list)
-        });
-        this.setState({onlineusers:list})
-    })
-
-    this.channel.bind('pusher:member_added', (member) => {
-        list.push(member.info)
-        this.setState({onlineusers:list})
-    });
-    this.channel.bind('pusher:member_removed', (member) => {
-        // for remove member from list:
-        var index = users.indexOf(member.id);
-        list.splice(index, 1);
-        // if(member.id==room){
-        //     endCall();
-        // }
-        this.setState({onlineusers:list})
-    });
-
-    this.GetRTCPeerConnection();
-    this.GetRTCSessionDescription();
-    this.GetRTCIceCandidate();
-    this.prepareCaller();
-
-this.channel.bind("client-candidate", (msg)=> {
-      
-        if(msg.room==this.room){
-            console.log("candidate received");
-           this.caller.addIceCandidate(new RTCIceCandidate(msg.candidate));
-        }
-    });
-
-    //Listening for Session Description Protocol message with session details from remote peer
-    this.channel.bind("client-sdp", (msg) =>{
-        if(msg.room == this.id){
-            var sessionDesc = new RTCSessionDescription(msg.sdp);
-                    this.caller.setRemoteDescription(sessionDesc);
-            console.log("sdp received");
-            var answer = window.confirm("You have a call from: "+ msg.from + "Would you like to answer?");
-            if(!answer){
-                return this.channel.trigger("client-reject", {"room": msg.room, "rejected":this.id});
-            }
-            this.room = msg.room;
-            this.getCam()
-                .then(stream => {
-                    this.localUserMedia = stream;
-                    this.toggleEndCallButton();
-                    if (window.URL) {
-                        document.getElementById("selfview").srcObject = stream;
-                        document.getElementById("selfview").play()
-                    } else {
-                        document.getElementById("selfview").src = stream;
-                        document.getElementById("selfview").play()
-                    }
-                    this.caller.addStream(stream);
-
-                    this.caller.createAnswer().then((sdp)=> {
-                        this.caller.setLocalDescription(new RTCSessionDescription(sdp));
-                        this.channel.trigger("client-answer", {
-                            "sdp": sdp,
-                            "room": this.room
-                        });
-                    });
-
-                })
-                .catch(error => {
-                    console.log('an error occured', error);
-                })
-        }
-        
-
-    });
-
-    //Listening for answer to offer sent to remote peer
-    this.channel.bind("client-answer", (answer) => {
-        if(answer.room==this.room){
-            console.log("answer received");
-            this.caller.setRemoteDescription(new RTCSessionDescription(answer.sdp));
-        }
-    });
-
-    this.channel.bind("client-reject", (answer)=> {
-        if(answer.room==this.room){
-            console.log("Call declined");
-            alert("call to " + answer.rejected + "was politely declined");
-            this.endCall();
-        }
-        
-    });
-
-     this.channel.bind("client-endcall", (answer) =>{
-        if(answer.room==this.room){
-            console.log("Call Ended");
-            this.endCall();
-        }
-        
-    });
-
-  
-  
-
-    
-
-    this.channel.bind("client-reject", (answer)=> {
-        if(answer.room==this.room){
-            console.log("Call declined");
-            alert("call to " + answer.rejected + "was politely declined");
-            this.endCall();
-        }
-        
-    });
-    this.channel.bind("client-endcall", answer=> {
-        if(answer.room==this.room){
-            console.log("Call Ended");
-            this.endCall();
-            
-        }
-    });
-
-
-
-    const channel5 = pusher.subscribe('messages');
+        const channel5 = pusher.subscribe('messages');
         channel5.bind('newMessage', data => {
             if (data.change.fullDocument.sentTo == this.props.user.userData._id || data.change.fullDocument.sentBy == this.props.user.userData._id) {
                 this.props.dispatch(getConversation())
@@ -356,8 +94,8 @@ this.channel.bind("client-candidate", (msg)=> {
                     this.props.dispatch(getGroup())
                 }
             })
-            if(data.change.operationType=="update"){
-                if(data.change.updateDescription?data.change.updateDescription.updatedFields?data.change.updateDescription.updatedFields.user?data.change.updateDescription.updatedFields.user.includes(this.props.user.userData._id):'':'':''){
+            if (data.change.operationType == "update") {
+                if (data.change.updateDescription ? data.change.updateDescription.updatedFields ? data.change.updateDescription.updatedFields.user ? data.change.updateDescription.updatedFields.user.includes(this.props.user.userData._id) : '' : '' : '') {
                     this.props.dispatch(getGroup())
                 }
             }
@@ -459,14 +197,12 @@ this.channel.bind("client-candidate", (msg)=> {
         listid.splice(this.state.sendinguserlistid.indexOf(id), 1);
         this.setState({ sendinguserlistid: listid });
     };
-    createGroup  = (list) => {
+    createGroup = (list) => {
         console.log('clicked');
-        if(list.length<=1)
-        {
+        if (list.length <= 1) {
             this.props.dispatch(findPersonal(list[0])).then(data => this.props.history.push(`/message/inbox/${this.props.messages.conversationinfo._id}`));
         }
-        else
-        {
+        else {
             list.push(this.props.user.userData._id);
             this.props.dispatch(createGroup(list)).then(data => this.props.history.push(`/message/inbox/${this.props.messages.newgroup._id}`));
         }
@@ -485,7 +221,7 @@ this.channel.bind("client-candidate", (msg)=> {
     }
     editTitle = (id, title) => {
         this.props.dispatch(editTitle(id, title))
-        this.setState({editmess:false})
+        this.setState({ editmess: false })
     }
     createGroupEvent = (des) => {
         this.setState({ sending: true });
@@ -497,11 +233,11 @@ this.channel.bind("client-candidate", (msg)=> {
     }
     addMember = (id, userlist, userlistid) => {
         this.props.dispatch(addMember(id, userlist, userlistid))
-        this.setState({editmess:false})
+        this.setState({ editmess: false })
     }
     removeMember = (id, uid) => {
         this.props.dispatch(removeMember(id, uid))
-        this.setState({editmess:false})
+        this.setState({ editmess: false })
     }
     onGroupImgChange = async (event) => {
         this.setState({ sending: true })
@@ -510,10 +246,10 @@ this.channel.bind("client-candidate", (msg)=> {
             .then(response => {
                 console.log(response)
                 if (response.payload.success == false) {
-                    this.setState({ loading: false,editmess:false })
+                    this.setState({ loading: false, editmess: false })
                 }
                 else {
-                    this.setState({ loading: false,editmess:false })
+                    this.setState({ loading: false, editmess: false })
                 }
             })
     }
@@ -523,19 +259,19 @@ this.channel.bind("client-candidate", (msg)=> {
     disableGroupMess = async (id) => {
         await this.props.dispatch(disableGroupMess(id))
         await this.props.dispatch(getGroupMessage(this.props.match.params.id))
-        this.setState({editmess:false})
+        this.setState({ editmess: false })
     }
     outGroup = async (id, uid) => {
         await this.props.dispatch(removeMember(id, uid))
         await this.props.history.push('/message/inbox')
         await this.props.dispatch(getGroupMessage(this.props.match.params.id))
-        this.setState({editmess:false})
+        this.setState({ editmess: false })
     }
-    follow = async (id) =>{
+    follow = async (id) => {
         await this.props.dispatch(follow(id))
         await this.props.dispatch(auth())
     }
-    unfollow = async (id) =>{
+    unfollow = async (id) => {
         await this.props.dispatch(unfollow(id))
         await this.props.dispatch(auth())
     }
@@ -554,9 +290,8 @@ this.channel.bind("client-candidate", (msg)=> {
                 <div className="message_container">
                     <div className="message_wrapper">
                         <div className="row no-gutters">
-                            <div className="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1 left_contain">
-                            </div>
-                            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 left_contain">
+
+                            <div className="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 left_contain">
                                 <div className="chat_info">
                                     <div className="chat_settings">
                                         <h2> Trò chuyện</h2>
@@ -572,9 +307,9 @@ this.channel.bind("client-candidate", (msg)=> {
                                         <input type="text" placeholder="Tìm kiếm" />
 
                                     </div>
-                                    <div className="seenall" onClick={()=>this.props.dispatch(seenAll())}>
+                                    <div className="seenall" onClick={() => this.props.dispatch(seenAll())}>
                                         <h6>Đánh dấu tất cả là đã đọc</h6>
-                                        
+
                                     </div>
 
                                 </div>
@@ -595,54 +330,54 @@ this.channel.bind("client-candidate", (msg)=> {
                                 </Group>
 
                             </div>
-                            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-9 right_contain">
+                            <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 right_contain">
                                 <div className="top_info">
 
                                     <div className="user_info">
                                         {
-                                           this.props.messages.groupmesslist ? this.props.messages.groupmesslist.type == 'personal' ?
-                                           this.props.messages.groupmesslist.user.map(users => {
-                                               return (
-                                                   users._id == yourProfile._id ? '' : <img src={users.avt}></img>
-                                               )
+                                            this.props.messages.groupmesslist ? this.props.messages.groupmesslist.type == 'personal' ?
+                                                this.props.messages.groupmesslist.user.map(users => {
+                                                    return (
+                                                        users._id == yourProfile._id ? '' : <img src={users.avt}></img>
+                                                    )
 
-                                           }):
-                                            this.props.messages.groupmesslist ? this.props.messages.groupmesslist.groupimg ?
-                                                <img src={this.props.messages.groupmesslist.groupimg}></img>
-                                                :
-                                                <AvatarGroup max={3}>
-                                                    {
-                                                        this.props.messages.groupmesslist ? this.props.messages.groupmesslist.user ? this.props.messages.groupmesslist.user.map(users => {
-                                                            return (
-                                                                <Avatar src={users ? users.avt : ''}></Avatar>
-                                                            )
-                                                        }) : '' : ''
-                                                    }
-                                                </AvatarGroup>
-                                                : '':''
+                                                }) :
+                                                this.props.messages.groupmesslist ? this.props.messages.groupmesslist.groupimg ?
+                                                    <img src={this.props.messages.groupmesslist.groupimg}></img>
+                                                    :
+                                                    <AvatarGroup max={3}>
+                                                        {
+                                                            this.props.messages.groupmesslist ? this.props.messages.groupmesslist.user ? this.props.messages.groupmesslist.user.map(users => {
+                                                                return (
+                                                                    <Avatar src={users ? users.avt : ''}></Avatar>
+                                                                )
+                                                            }) : '' : ''
+                                                        }
+                                                    </AvatarGroup>
+                                                    : '' : ''
                                         }
                                         {
-                                             this.props.messages.groupmesslist ? this.props.messages.groupmesslist.type == 'personal' ?
-                                             this.props.messages.groupmesslist.user.map(users => {
-                                                 return (
-                                                     users._id == yourProfile._id ? '' : <h2>{users.userName}</h2>
-                                                 )
-  
-                                             }):
-                                            this.props.messages.groupmesslist ? this.props.messages.groupmesslist.title ?
-                                                <h2>{this.props.messages.groupmesslist.title}</h2>
-                                                :
-                                                this.props.messages.groupmesslist ? this.props.messages.groupmesslist.user ? this.props.messages.groupmesslist.user.map(users => {
+                                            this.props.messages.groupmesslist ? this.props.messages.groupmesslist.type == 'personal' ?
+                                                this.props.messages.groupmesslist.user.map(users => {
                                                     return (
-                                                        <h2>{users.userName},</h2>
+                                                        users._id == yourProfile._id ? '' : <h2>{users.userName}</h2>
                                                     )
-                                                }) : '' : '' : '':''
+
+                                                }) :
+                                                this.props.messages.groupmesslist ? this.props.messages.groupmesslist.title ?
+                                                    <h2>{this.props.messages.groupmesslist.title}</h2>
+                                                    :
+                                                    this.props.messages.groupmesslist ? this.props.messages.groupmesslist.user ? this.props.messages.groupmesslist.user.map(users => {
+                                                        return (
+                                                            <h2>{users.userName},</h2>
+                                                        )
+                                                    }) : '' : '' : '' : ''
 
                                         }
 
                                     </div>
-                                   
-                                        <Dots size={24} strokeWidth={0} fill="black" onClick={() => this.setState({ editmess: true })}></Dots>
+
+                                    <Dots size={24} strokeWidth={0} fill="black" onClick={() => this.setState({ editmess: true })}></Dots>
 
                                 </div>
                                 {
@@ -674,7 +409,7 @@ this.channel.bind("client-candidate", (msg)=> {
 
                                                 this.props.messages.groupmesslist ? this.props.messages.groupmesslist.seenBy ? this.props.messages.groupmesslist.seenBy.map(seen => {
                                                     return (
-                                                        <img className="seen_avt" src={seen.avt?seen.avt:''}></img>
+                                                        <img className="seen_avt" src={seen.avt ? seen.avt : ''}></img>
                                                     )
                                                 }
                                                 ) : '' : ''
@@ -693,93 +428,49 @@ this.channel.bind("client-candidate", (msg)=> {
 
                                 {
 
-                                    this.state.mess.sentTo?
-                                    <form onSubmit={(event) => this.submitForm(event)}>
+                                    this.state.mess.sentTo ?
+                                        <form onSubmit={(event) => this.submitForm(event)}>
 
-                                        <div className="chat_box">
-                                            <div className="chat_area">
+                                            <div className="chat_box">
+                                                <div className="chat_area">
 
-                                                {/* <input value={this.state.mess.sentTo} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input>
+                                                    {/* <input value={this.state.mess.sentTo} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input>
                                           <input value={this.state.mess.sentBy} hidden="true" type="text" placeholder="Nhập tin nhắn...."></input> */}
-                                                <input id="description_textarea" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
-                                                <div className="action_icon" onClick={this.sendHeartIcon}>
-                                                    <Heart size={32} strokeWidth={1} color="black"></Heart>
+                                                    <input id="description_textarea" type="text" value={this.state.content} placeholder="Nhập tin nhắn...." onChange={(event) => { this.handleChange(event) }}></input>
+                                                    <div className="action_icon" onClick={this.sendHeartIcon}>
+                                                        <Heart size={32} strokeWidth={1} color="black"></Heart>
+                                                    </div>
+                                                    <div className="action_icon" onClick={this.GifIconClick}>
+                                                        <Ghost size={32} strokeWidth={1} color="black"> </Ghost>
+                                                    </div>
                                                 </div>
-                                                <div className="action_icon" onClick={this.GifIconClick}>
-                                                    <Ghost size={32} strokeWidth={1} color="black"> </Ghost>
+                                                <div className="img_upload">
+                                                    <label className="custom-file-upload">
+                                                        <input type="file" onChange={(event) => this.onFileChange(event)} />
+                                                        <Photo size={32} strokeWidth={1} color="black"></Photo>
+
+                                                    </label>
+                                                </div>
+                                                <div className="emoji_icon">
+                                                    <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
+
+                                                    {
+                                                        this.state.emojiToggle ?
+                                                            <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
+                                                            : null
+                                                    }
+
+
+                                                </div>
+                                                <div id="sent_btn" className="send_icon" onClick={(event) => { this.submitForm(event) }}>
+                                                    <Send size={32} strokeWidth={1} color="white"></Send>
                                                 </div>
                                             </div>
-                                            <div className="img_upload">
-                                                <label className="custom-file-upload">
-                                                    <input type="file" onChange={(event) => this.onFileChange(event)} />
-                                                    <Photo size={32} strokeWidth={1} color="black"></Photo>
-
-                                                </label>
-                                            </div>
-                                            <div className="emoji_icon">
-                                                <Sticker onClick={this.emojiClick} size={32} strokeWidth={1} color="black"></Sticker>
-
-                                                {
-                                                    this.state.emojiToggle ?
-                                                        <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
-                                                        : null
-                                                }
-
-
-                                            </div>
-                                            <div id="sent_btn" className="send_icon" onClick={(event) => { this.submitForm(event) }}>
-                                                <Send size={32} strokeWidth={1} color="white"></Send>
-                                            </div>
-                                        </div>
-                                    </form>:''
+                                        </form> : ''
                                 }
 
                             </div>
-                            <div className="col-xl-2 col-lg-2 col-md-2 col-sm-2 active_col">
-                            <div className="chat_settings">
-                                        <h2> Đang hoạt động</h2>
-                                        <div className="chat_icon">
-                                        </div>
-                                    </div>
-                        <div className="user_contain">
-
-                                {
-                                    this.state.onlineusers.map(user=>{
-                                        return(
-                                            <div className="uinfo">
-                                         
-                                            <img src={user.avt}></img>
-                                            <a>{user.userName}</a>
-                                            <Phone onClick={()=>{
-                                                console.log(this.state.onlineusers)
-                                                this.setState({calling:true})
-                                                this.state.onlineusers.forEach(user => {
-                                                    this.callUser(user.id)
-                                                });
-                                                
-                                            }}  size={24} strokeWidth={0.5} color="black"></Phone>
-    
-                                           </div>
-                
-                                        )
-                                
-                                    })
-                                }
-                                <div id="app">
-                    <span id="myid"> </span>
-                    <video id="selfview"  ref={(n) => this.selfview = n} autoplay></video>
-                    <video id="remoteview"   ref={(n) => this.remoteview = n} autoplay></video>
-                    <button id="endCall" onclick={()=>this.endCurrentCall()}>End Call </button>
-                    <div id="list">
-                        <ul id="users">
-            
-                        </ul>
-                    </div>
-                    </div>
-                                
-                            </div>
-                                    
-                            </div>      
+                            
                         </div>
                     </div>
                 </div>
@@ -849,11 +540,11 @@ this.channel.bind("client-candidate", (msg)=> {
                                         }) : '' : ''
                             }
                         </div> */}
-                       
-                   
-                
+
+
+
                     </div>
-                  
+
                 </Dialog>
                 {
                     <Dialog open={this.state.editmess} onClose={() => this.setState({ editmess: false })}>
@@ -862,7 +553,7 @@ this.channel.bind("client-candidate", (msg)=> {
                     </Dialog>
                 }
 
-             
+
             </Layout>
         );
     }

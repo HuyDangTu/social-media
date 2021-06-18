@@ -12,31 +12,168 @@ $primaryColor:#154100;
 
 .footer{
     @include text-font();
-    background-color: $secondcolor;
+    background-color: transparent;
     color: $primaryColor;
-    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: fit-content;
+    // color: transparent
+    width: 90%;
+    z-index: 100;
 }
 
 .footer__container{
     @include default();
     width: 80%;
     margin: auto;
+    
 }
-
-.footer__container__left,.footer__container__right{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-    .tag{
-        font-size: 15px;
+#videocall_contain{
+    background-color:rgba(0,0,0,0.4);
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    width: 100%;
+    z-index:99;
+    .videocall{
+        width: fit-content;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50vw;
+        height: 80vh;    
+        margin: 15vh 25vw 15vh 25vw;
+        border-radius:10px;
+        z-index:99;
+        #remoteview {
+            z-index: 4;
+            /* video border */
+            position: absolute;
+            width: fit-content;
+            height: fit-content;
+            border-radius: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 50vw;
+            height: 70vh;    
+            margin: 15vh 25vw 15vh 25vw;
+            display: flex;
+            z-index: 1;
+            
+                -moz-transition: all 1s ease-in-out;
+                -webkit-transition: all 1s ease-in-out;
+                -o-transition: all 1s ease-in-out;
+                -ms-transition: all 1s ease-in-out;
+                transition: all 1s ease-in-out;
+              
+            /* tranzitionstransitions applied to the vodeovideo element */
+            
+        }
+        #selfview {
+        
+            position: absolute;
+            display: flex;
+            bottom: 1vh;
+            right:0;
+            width: 18vw;
+            height: 20vh;
+            z-index: 4;
+            /* video border */
+           
+          
+            margin: 15vh 25vw 15vh 25vw;
+            border-radius: 20px;
+            /* tranzitionstransitions applied to the vodeovideo element */
+            -moz-transition: all 1s ease-in-out;
+            -webkit-transition: all 1s ease-in-out;
+            -o-transition: all 1s ease-in-out;
+            -ms-transition: all 1s ease-in-out;
+            transition: all 1s ease-in-out;
+        }
+        .action_button{
+            z-index: 10;
+            position: absolute;
+            bottom: 1vh;
+            width: 40vh;
+            padding:8px;
+            margin: 10vh 20vw 10vh 20vw;
+            display: inherit;
+            justify-content: center;
+            #video_button{
+                margin:0px 8px;
+                padding:6px;
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
+                background: #7166F9;
+            }
+            #audio_button{
+                margin:0px 8px;
+                padding:10px;
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
+                background: #7166F9;
+            }
+            #exit_button{
+                margin:0px 8px;
+                padding:10px;
+                width: 58px;
+                height: 58px;
+                border-radius: 50%;
+                background: #d9534f;
+            }
+        }
+       
     }
 }
-
-.bussiness-info {
-    display: flex;
-    flex-direction: column;
-    .tag{
-        padding-top: 5px
+.footer__container__left{
+    background-color: white;
+    .active_footer{
+        .title_footer
+        {
+            display: flex;
+            justify-content: space-between;
+            h4{
+                color:rgb(37, 37, 37);
+                font-size: 16px;
+            }
+        }
+        hr{
+            margin:8px 0px;
+        }
+        .uinfo{
+            margin: 8px 0px;
+            justify-content: space-between;
+                img{
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    margin-right: 16px;
+                }
+                a{
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            .phone_icon{
+                justify-self: flex-end;
+                float: right;
+            }
+            
+        }
+        align-items: flex-start;
+        padding:10px 10px 5px 20px; 
+        height: 300px;
     }
+   
+    // border-top: black solid 0.5px;
+    // border-left: black solid 0.5px;
+    // border-right: black solid 0.5px;
+    // border-radius: 5px;
 }

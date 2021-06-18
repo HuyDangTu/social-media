@@ -125,7 +125,7 @@ $theGoldenRatio: 1.61803398875;
     }
 }
 .message_container{
-    width: 100%;
+    width: 70%;
     height: 85vh;
     margin: auto;
     margin-top: 32px;
@@ -524,7 +524,7 @@ $theGoldenRatio: 1.61803398875;
                 margin-bottom:8px;
                 .dialog_mess{
                     position: absolute;
-                    z-index: 100;
+                    z-index: 50;
                     background-color: black;
            
                     top: -10px;
@@ -593,7 +593,7 @@ $theGoldenRatio: 1.61803398875;
     form{
         position:absolute;
         bottom: 0;
-        z-index: 100;
+        z-index: 50;
         width: 100%;
     }
     .chat_box{
@@ -676,7 +676,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 1200px){
     .message_container{
-        width: 100%;
+        width: 70%;
         height: 91vh;
         margin: 0;
         border: none;
@@ -700,7 +700,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 768px){
     .message_container{
-        width: 100%;
+        width: 70%;
         height: 91vh;
         margin: 0;
         border: none;
@@ -772,7 +772,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 576px){
     .message_container{
-        width: 100%;
+        width: 70%;
         height: 92vh;
         margin: 0;
         border: none;
@@ -819,7 +819,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 500px){
     .message_container{
-        width: 100%;
+        width: 70%;
         height: 91vh;
         margin: 0;
         border: none;
