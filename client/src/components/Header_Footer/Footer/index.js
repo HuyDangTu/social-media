@@ -27,6 +27,8 @@ class Footer extends Component {
         this.caller = null;
         this.localUserMedia = null;
         this.id = null;
+        this.userName = null;
+        this.avt=null;
         this.channel = null;
         this.usersOnline = 0;
     }
@@ -45,11 +47,11 @@ class Footer extends Component {
             if (window.URL) {
                 ReactDOM.findDOMNode(this.remoteview).srcObject = evt.stream;   
                 ReactDOM.findDOMNode(this.remoteview).play();
-                ReactDOM.findDOMNode(this.remoteview).muted=false;
+              //  ReactDOM.findDOMNode(this.remoteview).muted=false;
             } else {
                 ReactDOM.findDOMNode(this.remoteview).src = evt.stream;
                 ReactDOM.findDOMNode(this.remoteview).play();
-                ReactDOM.findDOMNode(this.remoteview).muted=false;
+               // ReactDOM.findDOMNode(this.remoteview).muted=false;
             }
         };
     }
@@ -101,7 +103,9 @@ class Footer extends Component {
                     this.channel.trigger("client-sdp", {
                         "sdp": desc,
                         "room": user,
-                        "from": this.id
+                        "from": this.id,
+                        "userName": this.props.user.userData.userName,
+                        "avt": this.props.user.userData.avt
                     });
                     this.room = user;
                 });
@@ -163,7 +167,8 @@ class Footer extends Component {
             var me = this.channel.members.me;
             this.usersOnline = this.channel.members.count;
             this.id = me.id;
-            console.log(this.channel)
+           
+            console.log(this.channel.members.me)
 
             //  document.getElementById('myid').innerHTML = ` My caller id is : ` + id;
             this.channel.members.each((member) => {
@@ -207,7 +212,7 @@ this.channel.bind("client-candidate", (msg)=> {
             var sessionDesc = new RTCSessionDescription(msg.sdp);
                     this.caller.setRemoteDescription(sessionDesc);
             console.log("sdp received");
-            var answer = window.confirm("You have a call from: "+ msg.from + "Would you like to answer?");
+            var answer = window.confirm("Bạn có cuộc gọi từ: "+ msg.userName + " bạn có muốn nhận?");
             if(!answer){
                 return this.channel.trigger("client-reject", {"room": msg.room, "rejected":this.id});
             }
@@ -216,11 +221,11 @@ this.channel.bind("client-candidate", (msg)=> {
             this.getCam()
                 .then(stream => {
                     this.localUserMedia = stream;
-                  
                     if (window.URL) {
                         document.getElementById("selfview").srcObject = stream;
                         document.getElementById("selfview").play()
                     } else {
+
                         document.getElementById("selfview").src = stream;
                         document.getElementById("selfview").play()
                     }
@@ -298,7 +303,7 @@ this.channel.bind("client-candidate", (msg)=> {
                                         <Card >
                                             <div className="active_footer">
                                                 <div className="title_footer">
-                                                    <h4>Đang hoạt động ({this.usersOnline})</h4>
+                                                    <h4>Đang hoạt động ({this.state.onlineusers.length})</h4>
                                                     <Point size={20} strokeWidth={7} color="#5fdba7" fill="#5fdba7"></Point>
 
                                                 </div>
