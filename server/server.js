@@ -3976,7 +3976,8 @@ app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
 })
 
 
-const port = process.env.PORT || 3002;
+// const port = process.env.PORT || 3002;
+app.set('port', (process.env.PORT || 3002));
 app.listen(port, () => {
     {
         console.log(`Server is running at ${port}`);
