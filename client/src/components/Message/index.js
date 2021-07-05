@@ -21,7 +21,7 @@ import Picker2 from 'react-giphy-component'
 import styled from 'styled-components'
 import moment from 'moment';
 import Group from './group';
-
+import { default as SearchBox} from '.././SearchMess';
 const GifPicker = styled(Picker2)`
 `;
 const StyleLink = styled(Link)`
@@ -294,7 +294,7 @@ class Message extends Component {
                             <div className="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 left_contain">
                                 <div className="chat_info">
                                     <div className="chat_settings">
-                                        <h2> Trò chuyện</h2>
+                                        <h2 > Trò chuyện</h2>
                                         <div className="chat_icon">
                                             <Pencil onClick={() => this.setState({ newmess: true })} size={32} strokeWidth={1} color="black"></Pencil>
 
@@ -302,13 +302,12 @@ class Message extends Component {
 
                                         </div>
                                     </div>
-                                    <div className="search_box">
-                                        <Search size={22} strokeWidth={1} color="grey" ></Search>
-                                        <input type="text" placeholder="Tìm kiếm" />
+                                  
+                                        <SearchBox></SearchBox>
 
-                                    </div>
+    
                                     <div className="seenall" onClick={() => this.props.dispatch(seenAll())}>
-                                        <h6>Đánh dấu tất cả là đã đọc</h6>
+                                        <h6>Read all</h6>
 
                                     </div>
 
@@ -328,6 +327,7 @@ class Message extends Component {
                                     seenGroupMess={this.seenGroupMess}
                                 >
                                 </Group>
+                               
 
                             </div>
                             <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 right_contain">
@@ -456,7 +456,7 @@ class Message extends Component {
 
                                                     {
                                                         this.state.emojiToggle ?
-                                                            <Picker style={{ position: "absolute", right: 0, top: "20%" }} onSelect={this.addEmoji} />
+                                                            <Picker style={{ position: "absolute", right: 0, bottom: "10vh" }} onSelect={this.addEmoji} />
                                                             : null
                                                     }
 
@@ -483,7 +483,7 @@ class Message extends Component {
                             <h6 className={this.state.sendinguserlist.length > 0 ? "active" : "disable"} onClick={() => this.createGroup(this.state.sendinguserlistid)}>Tiếp</h6>
                         </div>
                         <hr></hr>
-                        <div className="search">
+                        <div className="searchbar">
 
                             {
                                 this.state.sendinguserlist.map(sendlist => {

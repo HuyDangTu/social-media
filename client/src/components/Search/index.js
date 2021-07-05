@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Settings, Dots, Heart, Pencil, Phone, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck, User, Users } from 'tabler-icons-react';
+import { default as SearchBar } from 'tabler-icons-react/dist/icons/search'
 
 class Search extends React.Component {
     constructor(props) {
@@ -56,7 +58,7 @@ class Search extends React.Component {
                     <div className="content">
                         <form className="comment_form" onSubmit={(e) => this.searchHandle(e)}>
                             <div className="wrapper">
-                                <FontAwesomeIcon icon={faSearch} />
+                            <SearchBar size={22} strokeWidth={1} color="grey" ></SearchBar>
                                     <input
                                         type="text"
                                         placeholder="Search..."

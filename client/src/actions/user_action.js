@@ -115,6 +115,13 @@ export function searchUser(keyword) {
     return request
 }
 
+export function searchMess(keyword) {
+    let data = { keyword }
+    const request = axios.post(`${USER_SERVER}/searchmess`,data)
+        .then(response => response.data);
+    return request
+}
+
 export function findProfile(_id) {
     const request = axios.get(`${USER_SERVER}/${_id}`)
         .then(response => {

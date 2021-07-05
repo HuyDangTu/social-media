@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { ClickAwayListener } from '@material-ui/core';
 import { Button, Dialog, LinearProgress, Checkbox, Chip } from '@material-ui/core';
 import { Settings, Dots, Heart, Pencil, Search, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck } from 'tabler-icons-react';
 
@@ -23,7 +24,9 @@ class Popup extends React.Component {
         //Do not show popup
         if (!isOpen) return null;
         return (
+           
             <div className="new_popup">
+                
                 <div className="container">
                     <div className="content">
                         {items &&

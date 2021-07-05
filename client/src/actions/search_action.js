@@ -46,6 +46,45 @@ export function search(keyword,skip,limit,prevState=[]) {
     }
 }
 
+export function searchmess(keyword,skip,limit,prevState=[]) {
+    console.log(keyword, skip, limit, prevState );
+    if(keyword==""){
+        return {
+            type: SEARCH_RESULT,
+            payload: {
+                users: [],
+                tags: [],
+            }
+        }
+    }
+    else{
+        console.log(prevState);
+        let data = { keyword,skip, limit }
+        const request = axios.post(`${USER_SERVER}/searchmess`, data)
+            .then(response => {
+                let newUsers = [
+                    ...prevState.users,
+                    ...response.data.users
+                ]
+                let newGroups = [
+                    ...prevState.groups, 
+                    ...response.data.groups
+                ]
+                return { 
+                    users: newUsers,
+                    groups: newGroups,
+                    userSize: response.data.users.length,
+                    tagSize: response.data.groups.length,
+                }
+            });
+
+        return {
+            type: SEARCH_RESULT,
+            payload: request
+        }
+    }
+}
+
 
 export function loadmoreUser(keyword, skip, limit, prevState = []) {
     console.log(keyword, skip, limit, prevState);

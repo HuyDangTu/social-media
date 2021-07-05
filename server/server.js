@@ -2661,6 +2661,34 @@ app.post('/api/users/search', auth, (req, res) => {
         })
 })
 
+app.post('/api/users/searchmess', auth, (req, res) => {
+
+    let limit = req.body.limit ? parseInt(req.body.limit) : 3;
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+
+    const matchRegex = new RegExp(req.body.keyword);
+    console.log(matchRegex)
+    User.find({ userName: { $regex: matchRegex }, _id: {$nin: req.user.blockedUsers} })
+        .skip(skip)
+        .limit(limit)
+        .select("_id avt userName blockedUsers")
+        .exec((err, users) => {
+            let filteredUsers = [...users]
+            filteredUsers = filteredUsers.filter(item => 
+                !item.blockedUsers.includes(req.user._id)
+            )
+            console.log(filteredUsers)
+            Group.find({ $and: [ {title: { $regex: matchRegex }, user:{$in: req.user._id}}] })
+                .skip(skip)
+                .limit(limit)
+                .select("_id title groupimg user")
+                .exec((err, groups) => {
+                    if (err) res.status(400).json(err);
+                    res.status(200).json({ users: filteredUsers, groups });
+                })
+        })
+})
+
 app.post('/api/users/searchUser', auth, (req, res) => {
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 3;

@@ -34,7 +34,8 @@ class Footer extends Component {
     }
     prepareCaller= ()=>{
         //Initializing a peer connection
-        this.caller = new window.RTCPeerConnection();
+        var servers = { 'iceServers': [{ 'url': 'stun:stun.1.google.com:19302' }] };
+        this.caller = new window.RTCPeerConnection(servers);
         //Listen for ICE Candidates and send them to remote peers
         this.caller.onicecandidate = (evt)=> {
             if (!evt.candidate) return;
@@ -45,12 +46,12 @@ class Footer extends Component {
         this.caller.onaddstream = (evt)=> {
             console.log("onaddstream called");
             if (window.URL) {
-                ReactDOM.findDOMNode(this.remoteview).srcObject = evt.stream;   
-                ReactDOM.findDOMNode(this.remoteview).play();
+                document.getElementById("remoteview").srcObject = evt.stream;   
+                document.getElementById("remoteview").play();
               //  ReactDOM.findDOMNode(this.remoteview).muted=false;
             } else {
-                ReactDOM.findDOMNode(this.remoteview).src = evt.stream;
-                ReactDOM.findDOMNode(this.remoteview).play();
+                document.getElementById("remoteview").src = evt.stream;
+                document.getElementById("remoteview").play();
                // ReactDOM.findDOMNode(this.remoteview).muted=false;
             }
         };
@@ -88,12 +89,12 @@ class Footer extends Component {
         this.getCam()
             .then(stream => {
                 if (window.URL) {
-                    ReactDOM.findDOMNode(this.selfview).srcObject = stream;
-                    ReactDOM.findDOMNode(this.selfview).play()
+                    document.getElementById("selfview").srcObject = stream;
+                    document.getElementById("selfview").play()
                     // document.getElementById("selfview").srcObject  =  stream;
                 } else {
-                    ReactDOM.findDOMNode(this.selfview).src = stream;
-                    ReactDOM.findDOMNode(this.selfview).play()
+                    document.getElementById("selfview").src = stream;
+                    document.getElementById("selfview").play()
                 }
                
                 this.caller.addStream(stream);
@@ -167,7 +168,6 @@ class Footer extends Component {
             var me = this.channel.members.me;
             this.usersOnline = this.channel.members.count;
             this.id = me.id;
-           
             console.log(this.channel.members.me)
 
             //  document.getElementById('myid').innerHTML = ` My caller id is : ` + id;
@@ -280,7 +280,7 @@ this.channel.bind("client-candidate", (msg)=> {
             <div>
                 <div  id="videocall_contain" ref={(n) => this.videocall_contain = n} >
                     <div className="videocall">
-                        <video muted="muted" id="selfview" ref={(n) => this.selfview = n} autoplay></video>
+                        <video muted="muted"  id="selfview" ref={(n) => this.selfview = n} autoplay></video>
                         <video muted="muted" id="remoteview" ref={(n) => this.remoteview = n} autoplay></video>
                         <div className="action_button">
                             <Video strokeWidth={1} fill="white" color="#7166F9" id="video_button" size={30}> </Video>
@@ -294,10 +294,10 @@ this.channel.bind("client-candidate", (msg)=> {
                     <div className="footer__container container-fluid">
 
                         <div className="row no-gutters">
-                            <div className="col-xl-9 no-gutters">
+                            <div className="col-lg-9 col-md-6 col-sm-4 col-4 no-gutters">
 
                             </div>
-                            <div className="col-xl-3 no-gutters">
+                            <div className="col-lg-3 col-md-6 col-sm-8 col-8  no-gutters">
                                 <div className="footer__container__left">
                                     <Collapse onClick={() => this.setState({ checked: !this.state.checked })} in={this.state.checked} collapsedHeight={40}>
                                         <Card >

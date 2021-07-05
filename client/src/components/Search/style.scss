@@ -27,9 +27,11 @@ $result-text-color: #424444;
       width: 100%;
       display: flex;
       align-items: center;
-      border-radius: 30px;
+        height: 5vh;
       padding: 5px 10px 5px 10px;
-      background-color: #ebebeb;
+      color: #BDBAC2;
+      background: #F5F5F5;
+      border-radius: 50px;
       input {
         width: 100%;
         border: 0;
@@ -53,8 +55,9 @@ $result-text-color: #424444;
 }
 //Popup
 .popup {
-  width: inherit;
+  width: 100%;
   min-height: 5em;
+
   display: flex;
   flex-direction: column;
   background-color: #fff;

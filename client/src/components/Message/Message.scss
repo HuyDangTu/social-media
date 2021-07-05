@@ -19,7 +19,7 @@ $theGoldenRatio: 1.61803398875;
     hr{
         margin: 0px;
     }
-    .search{
+    .searchbar{
         input{
             border: none;
             padding: 16px 8px;
@@ -263,6 +263,7 @@ $theGoldenRatio: 1.61803398875;
                 height: 100px;
                 align-items: center;
                 justify-content: center;
+               
                 .avt{
                     // width: 56px !important;
                     // height: 56px;
@@ -601,6 +602,7 @@ $theGoldenRatio: 1.61803398875;
         display: flex;
         align-items: center;
         height: 10vh;
+        background-color: white;
         .chat_area{
             display: flex;
             justify-content: space-between;
@@ -676,7 +678,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 1200px){
     .message_container{
-        width: 70%;
+      width: 100%;
         height: 91vh;
         margin: 0;
         border: none;
@@ -693,6 +695,9 @@ $theGoldenRatio: 1.61803398875;
                       height: 75vh;
 
                 }
+                .chat_box{
+                    z-index: 200;
+                }
             }
         }        
     }
@@ -700,10 +705,10 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 768px){
     .message_container{
-        width: 70%;
+     
         height: 91vh;
         margin: 0;
-        border: none;
+   
         .message_wrapper{
             height:100%;
             .left_contain{
@@ -732,35 +737,38 @@ $theGoldenRatio: 1.61803398875;
             }
         }
             .right_contain{
+                
                 form{
+                    z-index: 120;
                     .chat_box{
+                        
                         .chat_area{
                             .action_icon{
                                  svg{
-                                    width:20px !important;
-                                    height: 20px !important;
+                                    width: 25px !important;
+                                    height: 25px !important;
                                 }
                             }
                         }
                         .img_upload{
                             .custom-file-upload{
                                  svg{
-                                    width:20px !important;
-                                    height: 20px !important;
+                                    width: 25px !important;
+                                    height: 25px !important;
                                 }
                             }
                         }
                         .emoji_icon{
                              svg{
-                                    width:20px !important;
-                                    height: 20px !important;
+                                width: 25px !important;
+                                height: 25px !important;
                                 }
                             
                         }
                         .send_icon{
                              svg{
-                                    width:20px !important;
-                                    height: 20px !important;
+                                width: 25px !important;
+                                height: 25px !important;
                                 }
                         }
                     }
@@ -772,7 +780,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 576px){
     .message_container{
-        width: 70%;
+        width: 100%;
         height: 92vh;
         margin: 0;
         border: none;
@@ -786,7 +794,8 @@ $theGoldenRatio: 1.61803398875;
                     height: fit-content;
                     width: fit-content;
                     .chat_settings{
-                        h2{font-size: 1rem;}
+                        h2{font-size: 1.3rem;}
+                        display: block;
                     }
                     .search_box{
                         display: none;
@@ -819,7 +828,7 @@ $theGoldenRatio: 1.61803398875;
 
 @media screen and (max-width: 500px){
     .message_container{
-        width: 70%;
+        
         height: 91vh;
         margin: 0;
         border: none;
@@ -829,14 +838,28 @@ $theGoldenRatio: 1.61803398875;
                 height:100%;
                 border: none;
                 .chat_info{
+                    justify-content: center;
+                   display: block;
                     height: fit-content;
-                    width: fit-content;
+                    width: 100%;
+                    padding: 8px;
+                   
                     .chat_settings{
-                        h2{font-size: 0.7rem;}
+                        h2{font-size: 1.1rem; margin: 0px;}
+                        
+                        text-align: left;
+                        display: flex;
+                        align-items: center;
+                        .icon{
+                           width: 24px;
+                           height: 24px;
+                        }
                     }
+                   
                     .search_box{
                         display: none;
                     }
+                   
                 }
                 .message_box{
                     width: 100%;
@@ -869,6 +892,7 @@ $theGoldenRatio: 1.61803398875;
                 }
             }
                    .right_contain{
+                 
                 form{
                     .chat_box{
                         .chat_area{
@@ -879,18 +903,19 @@ $theGoldenRatio: 1.61803398875;
                                 }
                             }
                         }
+                      
                         .img_upload{
                             .custom-file-upload{
                                 svg{
-                                    width:15px !important;
-                                    height: 15px !important;
+                                    width:22px !important;
+                                    height: 22px !important;
                                 }
                             }
                         }
                         .emoji_icon{
                          svg{
-                                    width:15px !important;
-                                    height: 15px !important;
+                            width:22px !important;
+                            height: 22px !important;
                                 }
                             
                         }

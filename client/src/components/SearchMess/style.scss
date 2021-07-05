@@ -1,10 +1,16 @@
 @import "./common.scss";
-@import '../../ultils/initial.scss';
+@import '../ultils/initial.scss';
 
 $hover-input-color: rgba(88, 159, 207, 0.835);
 $solid-color: rgba(15, 15, 15, 0.2);
 $result-text-color: #424444;
-.searchbar {
+@media only screen and (max-width : 768px){
+    .search{
+     visibility: hidden;
+    }
+}
+.search {
+  width: 100%;
   .search-container{
   display: flex;
   flex-direction: column;
@@ -18,15 +24,20 @@ $result-text-color: #424444;
   }
   .content {
     width: 100%;
-    .wrapper2{
-      display: block;
+    .wrapper{
+      width: 100%;
+      display: flex;
       align-items: center;
-      padding: 16px 5px;
-      background-color: white;
+     height: 5vh;
+      padding: 5px 10px 5px 10px;
+      color: #BDBAC2;
+      background: #F5F5F5;
+      border-radius: 50px;
       input {
         width: 100%;
         border: 0;
-        padding: 0px;
+        border-radius: 3px;
+        padding: 0 10px;
         font-size: 15px;
         background: transparent;
         outline: 0;
@@ -43,12 +54,15 @@ $result-text-color: #424444;
   }
 }
 }
+
 //Popup
-.new_popup {
-  width: 100%;
-  height: 100%;
-  display: block;
+.messpopup {
+  width: 93%;
+  padding:16px;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
+  box-shadow: 0px 0px 15px 2px $solid-color;
   margin-top: 7px;
   // border-radius: 0px 0px 5px 5px;
   justify-content: center;
@@ -59,17 +73,25 @@ $result-text-color: #424444;
     padding:0;
     .content {
       height: 100%;
-      height: fit-content;
+      padding: 0 0 30px 0;
+      h5{
+       
+        color: $primaryColor;
+      }
       .item {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        
+        justify-content: center;
+        align-items: flex-start;
+
         color: $result-text-color;
-        transition: all, 230ms ease-in;  
+        transition: all, 230ms ease-in;
         &:last-child {
+          cursor: pointer;
         }
-        cursor: pointer;
+        &:hover {
+          background-color: #aacbe06e;
+        }
         .user_infor_wrapper{
           display: flex;
           align-items: center;
@@ -90,10 +112,23 @@ $result-text-color: #424444;
             padding: 0px 10px;
           }
          }
-      
+        }
+        .tag_infor_wrapper{
+          width:100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          h6{
+              margin:0;
+          }
+          p{
+            margin:0;
+            color: $base-color;
+          }
         }
       }
     }
- 
+   
   }
 }
