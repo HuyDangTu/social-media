@@ -3977,7 +3977,17 @@ app.get('/api/statistics/percentageOfAge', auth, admin, async (req, res) => {
 
 
 // const port = process.env.PORT || 3002;
-app.set('port', (process.env.PORT || 3002));
+if(process.env.NODE_ENV === 'production'){
+    const path = require('path');
+    app.get('/*',(req,res)=>{
+        res.sendfile(path.resolve(__dirname,'../client','build','index.html'))
+    })
+}
+
+// app.use(function (req, res, next) {
+//     res.status(404).send('Unable to find the requested resource!');
+// });
+const port = process.env.PORT || 3002;
 app.listen(port, () => {
     {
         console.log(`Server is running at ${port}`);
