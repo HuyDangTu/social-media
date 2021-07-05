@@ -22,7 +22,7 @@ import {
     FIND_PERSONAL,
 } from './types';
 export function getMessage(id) {
-    const request = axios.get(`${MESS_SERVER}/get/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/get/${id}`)
         .then(response => response.data);
 
     return {
@@ -32,7 +32,7 @@ export function getMessage(id) {
 }
 
 export function getConversation(){
-    const request = axios.get(`${MESS_SERVER}/conversations`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/conversations`)
     .then(response=> response.data);
     return{
         type: GET_CONVERSATION,
@@ -40,7 +40,7 @@ export function getConversation(){
     }
 }
 export function sendMessage(datatoSubmit){
-    const request = axios.post(`${MESS_SERVER}/save`,datatoSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/save`,datatoSubmit)
     .then(response=>response.data);
     return{
         type: SEND_MESS,
@@ -49,13 +49,13 @@ export function sendMessage(datatoSubmit){
 }
 
 export function replyStory(datatoSubmit){
-    const request = axios.post(`${MESS_SERVER}/group/replyStory`,datatoSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/replyStory`,datatoSubmit)
     .then(response=>response.data);
     return request
 }
 
 export function seenMessage(id) {
-    const request = axios.get(`${MESS_SERVER}/seen/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/seen/${id}`)
         .then(response => response.data);
     return {
         type: SEEN_MESS,
@@ -70,7 +70,7 @@ export function sendimg(file) {
         header: { 'content-type': 'multipart/form-data' }
     }
     formData.append("file", file)
-    const request = axios.post(`${MESS_SERVER}/uploadimage`, formData, config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/uploadimage`, formData, config)
         .then(response => response.data);
     return {
         type: UPLOAD_IMG,
@@ -79,7 +79,7 @@ export function sendimg(file) {
 }
 
 export function getGroupMessage(id) {
-    const request = axios.get(`${MESS_SERVER}/group/get/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/get/${id}`)
         .then(response => response.data);
     return {
         type: GET_GROUPMESS,
@@ -88,7 +88,7 @@ export function getGroupMessage(id) {
 }
 
 export function getGroup() {
-    const request = axios.get(`${MESS_SERVER}/group/find`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/find`)
     .then(response=> response.data);
     return {
         type: GET_GROUP,
@@ -97,7 +97,7 @@ export function getGroup() {
 }
 
 export function sendGroupMessage(datatoSubmit){
-    const request = axios.post(`${MESS_SERVER}/group/save`,datatoSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/save`,datatoSubmit)
     .then(response=>response.data);
     return{
         type: SEND_GROUP_MESS,
@@ -109,7 +109,7 @@ export function createGroup(userlist){
     const config = {
         "Content-Type": "application/json"
     }
-    const request = axios.post(`${MESS_SERVER}/group/create`,{"user":userlist},config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/create`,{"user":userlist},config)
     .then(response=>response.data);
     return{
         type: CREATE_GROUP,
@@ -120,7 +120,7 @@ export function editTitle(id,title){
   const config = {
         "Content-Type": "application/json"
     }
-    const request = axios.post(`${MESS_SERVER}/group/edittitle/${id}`,{"title":title},config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/edittitle/${id}`,{"title":title},config)
     .then(response=>response.data);
     return{
         type: EDIT_TITLE,
@@ -132,7 +132,7 @@ export function addMember(id,userlist,userlistid)
     const config = {
         "Content-Type": "application/json"
     }
-    const request = axios.post(`${MESS_SERVER}/group/addmember/${id}`,{"user":userlist,"userid":userlistid},config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/addmember/${id}`,{"user":userlist,"userid":userlistid},config)
     .then(response=>response.data);
     return{
         type: ADD_MEMBER,
@@ -144,7 +144,7 @@ export function removeMember(id,uid){
     const config = {
         "Content-Type": "application/json"
     }
-    const request = axios.post(`${MESS_SERVER}/group/remove/${id}`,{"uid":uid},config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/remove/${id}`,{"uid":uid},config)
     .then(response=>response.data);
     return{
         type: REMOVE_MEMBER,
@@ -156,7 +156,7 @@ export function changegroupimg(id,url) {
     const config = {
         "Content-Type": "application/json"
     }
-    const request = axios.post(`${MESS_SERVER}/group/updatepic`, {"id":id,"url":url},config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/updatepic`, {"id":id,"url":url},config)
         .then(response => response.data)
     return {
         type: CHANGE_GROUPIMG,
@@ -165,7 +165,7 @@ export function changegroupimg(id,url) {
 }
 
 export function findPersonal(id) {
-    const request = axios.post(`${MESS_SERVER}/group/person/find/${id}`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/person/find/${id}`)
     .then(response=> response.data);
     return {
         type: FIND_PERSONAL,
@@ -179,7 +179,7 @@ export function uploadgroupimg(file) {
         header: { 'content-type': 'multipart/form-data' }
     }
     formData.append("file", file)
-    const request = axios.post(`${USER_SERVER}/uploadimage`, formData, config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/uploadimage`, formData, config)
         .then(response => response.data);
     return {
         type: UPLOAD_GROUPIMG,
@@ -188,7 +188,7 @@ export function uploadgroupimg(file) {
 }
 
 export function seenGroupMess(id){
-    const request = axios.post(`${MESS_SERVER}/group/seen/${id}`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/seen/${id}`)
     .then(response=>response.data);
     return{
         type: SEEN_GROUP,
@@ -197,7 +197,7 @@ export function seenGroupMess(id){
 }
 
 export function disableGroupMess(id){
-    const request = axios.post(`${MESS_SERVER}/group/disable/${id}`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/disable/${id}`)
     .then(response=>response.data);
     return{
         type: SEEN_GROUP,
@@ -206,7 +206,7 @@ export function disableGroupMess(id){
 }
 
 export function seenAll(){
-    const request = axios.post(`${MESS_SERVER}/group/seenall`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/messages/group/seenall`)
     .then(response=>response.data);
     return{
         type: SEEN_GROUP,

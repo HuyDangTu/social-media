@@ -31,7 +31,7 @@ import {
     } from './types';
 
 export function registerUser(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}/register`,dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/register`,dataToSubmit)
     .then(response => response.data);
     return {
         type: REGISTER_USER,
@@ -40,7 +40,7 @@ export function registerUser(dataToSubmit){
 }
 
 export function loginUser(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}login`,dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/login`,dataToSubmit)
     .then(response => response.data);
     console.log(request);
     return{
@@ -50,7 +50,7 @@ export function loginUser(dataToSubmit){
 }
 
 export function loginAdmin(dataToSubmit) {
-    const request = axios.post(`${USER_SERVER}/loginAdmin`, dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/loginAdmin`, dataToSubmit)
         .then(response => response.data);
     console.log(request);
     return {
@@ -63,7 +63,7 @@ export function loginAdmin(dataToSubmit) {
 
 export function loginByFaceGoogle(email) {
     let data = {email}
-    const request = axios.post(`${USER_SERVER}/loginByFaceGoogle`, data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/loginByFaceGoogle`, data)
         .then(response => response.data);
     console.log(request);
     return {
@@ -80,7 +80,7 @@ export function storeInfoForRegister(data) {
 }
 
 export function auth(){
-    const request = axios.get(`${USER_SERVER}/auth`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/auth`)
     .then(response => response.data);
 
     return {
@@ -90,7 +90,7 @@ export function auth(){
 }
 
 export function logoutUser() {
-    const request = axios.get(`${USER_SERVER}/logout`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/logout`)
         .then(response => response.data);
 
     return {
@@ -100,7 +100,7 @@ export function logoutUser() {
 }
 
 export function addToCart(_id){
-    const request = axios.post(`${USER_SERVER}/addToCart?productId=${_id}`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/addToCart?productId=${_id}`)
     .then(response => response.data);
     return  {
         type: ADD_TO_CART,
@@ -110,20 +110,20 @@ export function addToCart(_id){
 
 export function searchUser(keyword) {
     let data = { keyword }
-    const request = axios.post(`${USER_SERVER}/search`,data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/search`,data)
         .then(response => response.data);
     return request
 }
 
 export function searchMess(keyword) {
     let data = { keyword }
-    const request = axios.post(`${USER_SERVER}/searchmess`,data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/searchmess`,data)
         .then(response => response.data);
     return request
 }
 
 export function findProfile(_id) {
-    const request = axios.get(`${USER_SERVER}/${_id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/${_id}`)
         .then(response => {
             return {
                 userProfile: response.data.user,
@@ -138,7 +138,7 @@ export function findProfile(_id) {
     }
 }
 export function findTagged(id) {
-    const request = axios.get(`${USER_SERVER}/tagged/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/tagged/${id}`)
         .then(response => response.data.posts)
     return {
         type: GET_TYPE,
@@ -147,7 +147,7 @@ export function findTagged(id) {
 }
 
 export function findPosted(id) {
-    const request = axios.get(`${USER_SERVER}/posted/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/posted/${id}`)
         .then(response => response.data.posts)
     return {
         type: GET_TYPE,
@@ -155,7 +155,7 @@ export function findPosted(id) {
     }
 }
 export function getNationality() {
-    const request = axios.get(`${USER_SERVER}/nationality`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/nationality`)
         .then(response => {
             console.log(response.data)
             return response.data
@@ -166,7 +166,7 @@ export function getNationality() {
     }
 }
 export function requestfollow(followId) {      
-    const request = axios.put(`${USER_SERVER}/askfollow/${followId}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/askfollow/${followId}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -177,7 +177,7 @@ return{
         }
 }
 export function undorequestfollow(followId) {      
-    const request = axios.put(`${USER_SERVER}/undoaskfollow/${followId}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/undoaskfollow/${followId}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -189,7 +189,7 @@ return{
 }
 export function follow(followId) {
     
-    const request = axios.put(`${USER_SERVER}/follow/${followId}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/follow/${followId}`)
         .then(response => {
             if(response.data.restricted){
                 return {
@@ -208,7 +208,7 @@ export function follow(followId) {
 }
 
 export function unfollow(unfollowId) {
-    const request = axios.put(`${USER_SERVER}/unfollow/${unfollowId}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/unfollow/${unfollowId}`)
         .then(response => {
             if(response.data.restricted){
                 return {
@@ -231,7 +231,7 @@ export function updateprofileimgfile(file) {
         header: { 'content-type': 'multipart/form-data' }
     }
     formData.append("file", file)
-    const request = axios.post(`${USER_SERVER}/uploadimage`, formData, config)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/uploadimage`, formData, config)
         .then(response => response.data);
     return {
         type: UPDATE_IMG,
@@ -240,7 +240,7 @@ export function updateprofileimgfile(file) {
 }
 
 export function changeProfile(id, dataToSubmit) {
-    const request = axios.put(`${USER_SERVER}/update/${id}`, dataToSubmit)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/update/${id}`, dataToSubmit)
         .then(response => response.data);
     console.log(request);
     return {
@@ -254,7 +254,7 @@ export function updateprofileimg(url) {
     {
         url
     }
-    const request = axios.put(`${USER_SERVER}/updatepic`, config)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/updatepic`, config)
         .then(response => response.data)
     return {
         type: CHANGE_IMG,
@@ -263,7 +263,7 @@ export function updateprofileimg(url) {
 }
 
 export function updateprofile(id) {
-    const request = axios.get(`${USER_SERVER}/profile/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/profile/${id}`)
         .then(response => response.data)
     return {
         type: UPDATE_PRO,
@@ -272,7 +272,7 @@ export function updateprofile(id) {
 }
 
 export function changePassword(dataToSubmit){
-    const request = axios.post(`${USER_SERVER}/changePassword`, dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/changePassword`, dataToSubmit)
         .then(response => response.data)
     return {
         type: UPDATE_PRO,
@@ -281,7 +281,7 @@ export function changePassword(dataToSubmit){
 }
 
 export function findSaved(id) {
-    const request = axios.post(`${USER_SERVER}/getSavedPost`)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/getSavedPost`)
         .then(response => { console.log(response.data.posts); return response.data.posts})
     return {
         type: GET_TYPE,
@@ -290,7 +290,7 @@ export function findSaved(id) {
 }
 
 export function getHighLightStory(id){
-    const request = axios.get(`${STORY_SERVER}/getHighlightStory/${id}`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/story/getHighlightStory/${id}`)
     .then(response =>{
         console.log(response)
         return response.data
@@ -302,7 +302,7 @@ export function getHighLightStory(id){
 }
 
 export function createHighLightStory(dataToSubmit){
-    const request = axios.post(`${STORY_SERVER}/createHighlightStory`,dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/story/createHighlightStory`,dataToSubmit)
     .then(response =>{
         console.log(response)
         return response.data
@@ -314,7 +314,7 @@ export function createHighLightStory(dataToSubmit){
 }
 
 export function getAllStories(){
-    const request = axios.get(`${STORY_SERVER}/getAllStories`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/story/getAllStories`)
     .then(response =>{
         return response.data
     })
@@ -327,7 +327,7 @@ export function getAllStories(){
 
 export function deleteHighLightStory(storyId){
     const data = {storyId}
-    const request = axios.post(`${STORY_SERVER}/deleteHighLightStory`,data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/story/deleteHighLightStory`,data)
     .then(response =>{
         return response.data
     })
@@ -339,7 +339,7 @@ export function deleteHighLightStory(storyId){
 
 export function editHighLightStory(dataToSubmit){
    
-    const request = axios.post(`${STORY_SERVER}/editHighLightStory`,dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/story/editHighLightStory`,dataToSubmit)
     .then(response =>{
         return response.data
     })
@@ -351,7 +351,7 @@ export function editHighLightStory(dataToSubmit){
 
 export function getRecommendPost(limit,skip, previousState = []){
     const data={limit,skip}
-    const request = axios.post(`${USER_SERVER}/getRecommendPost`,data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/getRecommendPost`,data)
         .then(response => {
             let newState = [
                 ...previousState,
@@ -370,7 +370,7 @@ export function getRecommendPost(limit,skip, previousState = []){
 
 export function blockUser(id){
 
-    const request = axios.put(`${USER_SERVER}/block/${id}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/block/${id}`)
         .then(response => {
             return response.data
         })
@@ -382,7 +382,7 @@ export function blockUser(id){
 
 export function unBlockUser(id){
 
-    const request = axios.put(`${USER_SERVER}/unblock/${id}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/unblock/${id}`)
         .then(response => {
             return response.data
         })
@@ -395,7 +395,7 @@ export function unBlockUser(id){
 
 export function getBlockedUsers(){
 
-    const request = axios.get(`${USER_SERVER}/blockedUsers`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/users/blockedUsers`)
     .then(response =>{
         return response.data
     })
@@ -409,7 +409,7 @@ export function changePrivate(privateMode) {
     const config = {
         "Content-Type": "application/json"
     }
-    const request = axios.put(`${USER_SERVER}/updatePrivate`, {"privateMode":privateMode},config)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/updatePrivate`, {"privateMode":privateMode},config)
         .then(response => response.data)
     return {
         type: CHANGE_IMG,
@@ -418,7 +418,7 @@ export function changePrivate(privateMode) {
 }
 
 export function acceptfollow(id) {      
-    const request = axios.put(`${USER_SERVER}/acceptfollow/${id}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/acceptfollow/${id}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -430,7 +430,7 @@ return{
 }
 
 export function declinefollow(id) {      
-    const request = axios.put(`${USER_SERVER}/declinefollow/${id}`)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/users/declinefollow/${id}`)
     .then(response => {
         console.log(response.data)
         return response.data
