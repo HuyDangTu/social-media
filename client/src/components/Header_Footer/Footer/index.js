@@ -34,7 +34,31 @@ class Footer extends Component {
     }
     prepareCaller= ()=>{
         //Initializing a peer connection
-        var servers = { 'iceServers': [{ 'url': 'stun:stun.1.google.com:19302' }] };
+        var servers = { 'iceServers': [
+            {
+              url: 'stun:global.stun.twilio.com:3478?transport=udp',
+              urls: 'stun:global.stun.twilio.com:3478?transport=udp'
+            },
+            {
+              url: 'turn:global.turn.twilio.com:3478?transport=udp',
+              username: '9e482cec1ec8358b881a8306dfe15894c4b2663a685c40e590c4e55103ea489a',
+              urls: 'turn:global.turn.twilio.com:3478?transport=udp',
+              credential: 'R6IfARpj8EaPjYhv4rvsJQ9VDg9CoCQrr9TzW4EhGCY='
+            },
+            {
+              url: 'turn:global.turn.twilio.com:3478?transport=tcp',
+              username: '9e482cec1ec8358b881a8306dfe15894c4b2663a685c40e590c4e55103ea489a',
+              urls: 'turn:global.turn.twilio.com:3478?transport=tcp',
+              credential: 'R6IfARpj8EaPjYhv4rvsJQ9VDg9CoCQrr9TzW4EhGCY='
+            },
+            {
+              url: 'turn:global.turn.twilio.com:443?transport=tcp',
+              username: '9e482cec1ec8358b881a8306dfe15894c4b2663a685c40e590c4e55103ea489a',
+              urls: 'turn:global.turn.twilio.com:443?transport=tcp',
+              credential: 'R6IfARpj8EaPjYhv4rvsJQ9VDg9CoCQrr9TzW4EhGCY='
+            }
+          ]
+                  };
         this.caller = new window.RTCPeerConnection(servers);
         //Listen for ICE Candidates and send them to remote peers
         this.caller.onicecandidate = (evt)=> {
@@ -153,7 +177,21 @@ class Footer extends Component {
        await this.callUser(userid)
     }
 
+  
     componentDidMount() {
+    const script = document.createElement("script");
+    script.src = "https://js.pusher.com/4.1/pusher.min.js";
+    script.async = true;
+
+  
+    //For head
+    document.head.appendChild(script);
+
+    // For body
+    document.body.appendChild(script);
+
+    // For component
+ //   this.div.appendChild(script);
         const list = this.state.onlineusers;
         const pusher = new Pusher('c0e96b0fff8d0edac17d', {
             cluster: 'mt1',
@@ -179,7 +217,7 @@ class Footer extends Component {
             });
             this.setState({ onlineusers: list })
         })
-
+        
         this.channel.bind('pusher:member_added', (member) => {
             list.push(member.info)
             this.setState({ onlineusers: list })
@@ -194,9 +232,10 @@ class Footer extends Component {
             this.setState({ onlineusers: list })
         });
         this.GetRTCPeerConnection();
-    this.GetRTCSessionDescription();
-    this.GetRTCIceCandidate();
-    this.prepareCaller();
+        this.GetRTCSessionDescription();
+        this.GetRTCIceCandidate();
+        this.prepareCaller();
+      
 
 this.channel.bind("client-candidate", (msg)=> {
       
