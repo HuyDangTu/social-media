@@ -38,36 +38,36 @@ const Routes = () =>{
   return(
     <Switch> 
         {/* Client route */}  
-        <Route path="https://myreactsocialnetwork.herokuapp.com//post/create_post" exact component={Auth(UserDashboard, true)} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//postDetail/:id" exact component={Auth(PostDetail, true)}/> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//story" exact component={Auth(StoryPage, true)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//" exact component={Auth(Home, true)} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//register_login" exact component={Auth(RegisterLogin, false)} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//register" exact component={Auth(Register, false)} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//newfeed" exact component={Auth(Newfeed, true)} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//tag/:id" exact component={Auth(Tag, true)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//location/:name" exact component={Auth(Location, true)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//search/:keyword" exact component={Auth(SearchResult, true)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//post/edit" exact component={Auth(PostEdit, true)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//reset_password" exact component={Auth(ResetUser, false)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//reset_password/:token" exact component={Auth(ResetPass, false)} /> 
-        <Route path="https://myreactsocialnetwork.herokuapp.com//user/:id" exact component={Auth(Profile, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//message/inbox" exact component={Auth(Message, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//profile" exact component={Auth(UserProfile, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//message/inbox/:id" component={Auth(Message, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//message/inbox/:id" component={Auth(Message, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//explore" component={Auth(Explore, true)}></Route>
-        <Route path="https://myreactsocialnetwork.herokuapp.com//notfound" component={Auth(NotFoundPage, true)}></Route>
+        <Route path="/post/create_post" exact component={Auth(UserDashboard, true)} />
+        <Route path="/postDetail/:id" exact component={Auth(PostDetail, true)}/> 
+        <Route path="/story" exact component={Auth(StoryPage, true)} /> 
+        <Route path="/" exact component={Auth(Home, true)} />
+        <Route path="/register_login" exact component={Auth(RegisterLogin, false)} />
+        <Route path="/register" exact component={Auth(Register, false)} />
+        <Route path="/newfeed" exact component={Auth(Newfeed, true)} />
+        <Route path="/tag/:id" exact component={Auth(Tag, true)} /> 
+        <Route path="/location/:name" exact component={Auth(Location, true)} /> 
+        <Route path="/search/:keyword" exact component={Auth(SearchResult, true)} /> 
+        <Route path="/post/edit" exact component={Auth(PostEdit, true)} /> 
+        <Route path="/reset_password" exact component={Auth(ResetUser, false)} /> 
+        <Route path="/reset_password/:token" exact component={Auth(ResetPass, false)} /> 
+        <Route path="/user/:id" exact component={Auth(Profile, true)}></Route>
+        <Route path="/message/inbox" exact component={Auth(Message, true)}></Route>
+        <Route path="/profile" exact component={Auth(UserProfile, true)}></Route>
+        <Route path="/profilesettings" exact component={Auth(ProfileSettings, true)}></Route>
+        <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
+        <Route path="/message/inbox/:id" component={Auth(Message, true)}></Route>
+        <Route path="/explore" component={Auth(Explore, true)}></Route>
+        <Route path="/notfound" component={Auth(NotFoundPage, true)}></Route>
         {/* <Route path="/photoEdit" component={Auth(photoEditor, true)}></Route> */}
         {/* Admin route */}
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/Dashboard" exact component={Auth(Dashboard, true, "/Admin/login")} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/Home" exact component={Auth(AdminHome, true, "/Admin/login")} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/ReportDetail/:id" exact component={Auth(ReportDetail, true, "/Admin/login")} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/Account" exact component={Auth(AccountPage, true, "/Admin/login")} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/Account/add_new" exact component={Auth(AddAccount, true, "/Admin/login")} />
-        <Route path="https://myreactsocialnetwork.herokuapp.com//Admin/EditAccount" exact component={Auth(EditAccount, true, "/Admin/login")} />
+        <Route path="/Admin/login" exact component={Auth(AdminLogin, false, "/Admin/login")} />
+        <Route path="/Admin/Dashboard" exact component={Auth(Dashboard, true, "/Admin/login")} />
+        <Route path="/Admin/Home" exact component={Auth(AdminHome, true, "/Admin/login")} />
+        <Route path="/Admin/ReportDetail/:id" exact component={Auth(ReportDetail, true, "/Admin/login")} />
+        <Route path="/Admin/Account" exact component={Auth(AccountPage, true, "/Admin/login")} />
+        <Route path="/Admin/Account/add_new" exact component={Auth(AddAccount, true, "/Admin/login")} />
+        <Route path="/Admin/EditAccount" exact component={Auth(EditAccount, true, "/Admin/login")} />
 
     </Switch>
   )
