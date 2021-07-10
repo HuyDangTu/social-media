@@ -31,3 +31,13 @@ export function seenAllNotification(){
         payload: request,
     }
 }
+
+
+export function disablenotification(id){
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/disable/${id}`)
+    .then(response => response.data);
+    return{
+        type: NOTIFICATION_DETAIL,
+        payload:request
+    }
+}
