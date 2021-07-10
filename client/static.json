@@ -1,0 +1,7 @@
+{
+    "root": "src/",
+    "clean_urls": false,
+    "routes": {
+      "/**": "index.js"
+    }
+}
