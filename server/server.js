@@ -6,6 +6,7 @@ const app = express();
 const Pusher = require("pusher");
 // const bodyParser = require('body-parser');
 app.use(cors())
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -3983,7 +3984,6 @@ if(process.env.NODE_ENV === 'production'){
         res.sendFile(path.resolve(__dirname,'../client','src','index.js'))
     })
 }
-
 // app.use(function (req, res, next) {
 //     res.status(404).send('Unable to find the requested resource!');
 // });
