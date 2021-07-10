@@ -14,7 +14,7 @@ export function getAll(limit, skip, prevState = []) {
         limit,
     }
     console.log(data);
-    const request = axios.post(`${ACCOUNT_SERVER}/getAll`, data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp/api/accounts/getAll`, data)
         .then(response => {
             console.log(response.data.accounts);
             let newState = [

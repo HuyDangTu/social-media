@@ -12,7 +12,7 @@ import {
 } from './types';
 
 export function getAllTags() {
-    const request = axios.get(`${TAG_SERVER}/getAllTags`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/tags/getAllTags`)
     .then(response => response.data)
     return {
         type: GET_ALL_TAGS,
@@ -21,7 +21,7 @@ export function getAllTags() {
 }
 
 export function getUserTag() {
-    const request = axios.get(`${TAG_SERVER}/getFollowers`)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/tags/getFollowers`)
         .then(response => response.data)
     return {
         type: GET_USER_TAG,
@@ -34,7 +34,7 @@ export function getTopTenTags(skip,limit,previousState=[]) {
         skip,
         limit
     };
-    const request = axios.get(`${TAG_SERVER}/getTop10Tags`, data)
+    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/tags/getTop10Tags`, data)
     .then(response => {
         let newState = [
             ...previousState,
@@ -48,7 +48,7 @@ export function getTopTenTags(skip,limit,previousState=[]) {
     }
 }
 export function addTag(dataToSubmit, existingTag) {
-    const request = axios.post(`${TAG_SERVER}/addTag`, dataToSubmit)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/tags/addTag`, dataToSubmit)
         .then(response => {
             let tags = [
                 ...existingTag,
@@ -71,7 +71,7 @@ export function getTag(id,skip, limit, previousState = []){
         skip,
         limit,
     }
-    const request = axios.post(`${TAG_SERVER}/getTag`, data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/tags/getTag`, data)
         .then(response => {
             console.log(response.data);
             let newState = {
@@ -90,7 +90,7 @@ export function followTag(tagId, previousState=[]) {
     
     const data = { tagId }
     
-    const request = axios.put(`${TAG_SERVER}/follow`, data)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/tags/follow`, data)
     .then( response => {
         console.log(response.data);
         return {
@@ -110,7 +110,7 @@ export function unfollowTag(tagId, previousState = []){
 
     const data = { tagId }
 
-    const request = axios.put(`${TAG_SERVER}/unfollow`, data)
+    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/tags/unfollow`, data)
         .then(response => {
             console.log(response.data);
             return {
@@ -130,7 +130,7 @@ export function unfollowTag(tagId, previousState = []){
 export function getTagId(hashtag) {
     console.log(hashtag)
     const data = {hashtag}
-    const request = axios.post(`${TAG_SERVER}/getTagId`, data)
+    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/tags/getTagId`, data)
         .then(response => {
             console.log(response.data);
             return response.data
