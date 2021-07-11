@@ -6,6 +6,7 @@ import {
     LOAD_MORE_USER
 } from './types';
 
+
 export function search(keyword,skip,limit,prevState=[]) {
     console.log(keyword, skip, limit, prevState );
     if(keyword==""){
@@ -20,7 +21,7 @@ export function search(keyword,skip,limit,prevState=[]) {
     else{
         console.log(prevState);
         let data = { keyword,skip, limit }
-        const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/search`, data)
+        const request = axios.post(`${USER_SERVER}/search`, data)
             .then(response => {
                 let newUsers = [
                     ...prevState.users,
@@ -59,7 +60,7 @@ export function searchmess(keyword,skip,limit,prevState=[]) {
     else{
         console.log(prevState);
         let data = { keyword,skip, limit }
-        const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/searchmess`, data)
+        const request = axios.post(`${USER_SERVER}/searchmess`, data)
             .then(response => {
                 let newUsers = [
                     ...prevState.users,
@@ -101,7 +102,7 @@ export function loadmoreUser(keyword, skip, limit, prevState = []) {
     else {
         console.log(prevState);
         let data = { keyword, skip, limit }
-        const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/searchUser`, data)
+        const request = axios.post(`${USER_SERVER}/searchUser`, data)
             .then(response => {
                 let newUsers = [
                     ...prevState.users,
@@ -137,7 +138,7 @@ export function loadmoreTag(keyword, skip, limit, prevState = []) {
     else {
         console.log(prevState);
         let data = { keyword, skip, limit }
-        const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/searchTag`, data)
+        const request = axios.post(`${USER_SERVER}/searchTag`, data)
             .then(response => {
                 console.log(response.data.tags)
                 let newTags = [

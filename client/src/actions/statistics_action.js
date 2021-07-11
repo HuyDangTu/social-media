@@ -14,7 +14,7 @@ import {
 } from './types';
 
 export function getGrowthOfUsers(year) {
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/growthOfUser?year=${year})`)
+    const request = axios.get(`${STATISTICS_SERVER}/growthOfUser?year=${year})`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -26,7 +26,7 @@ export function getGrowthOfUsers(year) {
 }
 
 export function getPercentageOfAge(year) {
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/percentageOfAge?year=${year}`)
+    const request = axios.get(`${STATISTICS_SERVER}/percentageOfAge?year=${year}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -39,7 +39,7 @@ export function getPercentageOfAge(year) {
 
 
 export function unusedAccountSinceBeginOfThisYear() {
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/unusedAccountSinceBeginOfThisYear`)
+    const request = axios.get(`${STATISTICS_SERVER}/unusedAccountSinceBeginOfThisYear`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -54,7 +54,7 @@ export function newPostThisMonth(date) {
     const month = date.getMonth();
     const year = date.getFullYear();
     console.log(month, year);
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/newPostThisMonth?year=${year}&month=${month}`)
+    const request = axios.get(`${STATISTICS_SERVER}/newPostThisMonth?year=${year}&month=${month}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -69,7 +69,7 @@ export function newAccountThisMonth(date) {
     const month = date.getMonth();
     const year = date.getFullYear();
     console.log(month, year);
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/newAccountThisMonth?year=${year}&month=${month}`)
+    const request = axios.get(`${STATISTICS_SERVER}/newAccountThisMonth?year=${year}&month=${month}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -82,7 +82,7 @@ export function newAccountThisMonth(date) {
 
 export function numOfAccount(year) {
     // console.log(year.getFullYear())
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/numOfAccount?year=${year.getFullYear()}`)
+    const request = axios.get(`${STATISTICS_SERVER}/numOfAccount?year=${year.getFullYear()}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -94,7 +94,7 @@ export function numOfAccount(year) {
 }
 
 export function getUserBehaviors(year){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/userBehaviors?year=${year}`)
+    const request = axios.get(`${STATISTICS_SERVER}/userBehaviors?year=${year}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -106,7 +106,7 @@ export function getUserBehaviors(year){
 }
 
 export function getUsersNationality(year){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/userNationalities?year=${year}`)
+    const request = axios.get(`${STATISTICS_SERVER}/userNationalities?year=${year}`)
     .then(response => {
         console.log(response.data)
         return response.data
@@ -118,7 +118,7 @@ export function getUsersNationality(year){
 }
 
 export function getTop10Users(){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/statistics/getTop10Users`)
+    const request = axios.get(`${STATISTICS_SERVER}/getTop10Users`)
     .then(response => {
         console.log(response.data)
         return response.data

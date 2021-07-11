@@ -5,18 +5,16 @@ import {
     NOTIFICATION_DETAIL,
     NOTIFICATION_SEENALL,
 } from './types';
-
 export function getNotification() {
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/notify/getall`)
+    const request = axios.get(`${NOTIFY_SERVER}/getall`)
         .then(response => response.data);
     return {
         type: GET_NOTIFICATION,
         payload: request,
     }
 }
-
 export function seenNotification(id){
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/notify/seen/${id}`)
+    const request = axios.post(`${NOTIFY_SERVER}/seen/${id}`)
     .then(response => response.data);
     return{
         type: NOTIFICATION_DETAIL,
@@ -24,7 +22,7 @@ export function seenNotification(id){
     }
 }
 export function seenAllNotification(){
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/notify/seenall`)
+    const request = axios.post(`${NOTIFY_SERVER}/seenall`)
     .then(response=>response.data);
     return {
         type: NOTIFICATION_SEENALL,
@@ -32,12 +30,14 @@ export function seenAllNotification(){
     }
 }
 
-
 export function disablenotification(id){
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/disable/${id}`)
+    const request = axios.post(`${NOTIFY_SERVER}/disable/${id}`)
     .then(response => response.data);
     return{
         type: NOTIFICATION_DETAIL,
         payload:request
     }
 }
+
+
+

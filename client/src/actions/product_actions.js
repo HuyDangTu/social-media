@@ -40,7 +40,7 @@ import {
 } from './types';
 
 export function getPostDetail(id){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/product/postDetail?id=${id}&type=single`)
+    const request = axios.get(`${POST_SERVER}/postDetail?id=${id}&type=single`)
     .then(response=>{
        return response.data
     })
@@ -53,7 +53,7 @@ export function getPostDetail(id){
 export function getProductsBySell(){
     
     //articles?sortBy=sold&order=desc&limit=4
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/product/articles?sortBy=sold&order=desc&limit=4`)
+    const request = axios.get(`${POST_SERVER}/articles?sortBy=sold&order=desc&limit=4`)
         .then(response => response.data);
     console.log(request)
     return {
@@ -63,7 +63,7 @@ export function getProductsBySell(){
 }
 
 export function getProductsByArrival(){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/product/articles?sortBy=createAt&order=desc&limit=4`)
+    const request = axios.get(`${POST_SERVER}/articles?sortBy=createAt&order=desc&limit=4`)
         .then(response => response.data);
     console.log(request)
     return {
@@ -79,7 +79,7 @@ export function getProductsToShop(skip, limit, filters =[],previousState = []){
         limit,
         filters
     }
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/users/newfeed`,data)
+    const request = axios.post(`${USER_SERVER}/newfeed`,data)
     .then(response =>{
         let newState = [
             ...previousState,
@@ -117,7 +117,7 @@ export function getWoods() {
 
 export function createPost(dataToSubmit){
 
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/product/create_post`,dataToSubmit)
+    const request = axios.post(`${POST_SERVER}/create_post`,dataToSubmit)
     .then(response => {
         if(response.data.restricted){
             return {
@@ -136,7 +136,7 @@ export function createPost(dataToSubmit){
 }
 
 export function updatePost(dataToSubmit,Actiontype) {
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/product/update_post`, dataToSubmit)
+    const request = axios.post(`${POST_SERVER}/update_post`, dataToSubmit)
         .then(response => {
             return  response.data
         });
@@ -219,7 +219,7 @@ export function savePost(postId) {
     const data = {
         postId
     }
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/save`, data)
+    const request = axios.put(`${POST_SERVER}/save`, data)
         .then(response => {
             if(response.data.restricted){
                 return {
@@ -243,7 +243,7 @@ export function unSavePost(postId) {
     }
 
     let type = SAVE_POST;
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/unSave`, data)
+    const request = axios.put(`${POST_SERVER}/unSave`, data)
         .then(response => {
             console.log(response.data)
             if(response.data.restricted){
@@ -266,7 +266,7 @@ export function likePost(postId, ActionType){
         postId
     }
     let type = ActionType == "detail" ? LIKE_DETAIL : LIKE_POST;
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/like`,data)
+    const request = axios.put(`${POST_SERVER}/like`,data)
     .then( response =>{
         console.log(response.data)
         if(response.data.restricted){
@@ -289,7 +289,7 @@ export function unlikePost(postId, ActionType){
     }
     let type = ActionType == "detail" ? LIKE_DETAIL : LIKE_POST;
     console.log(type)
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/unlike`,data)
+    const request = axios.put(`${POST_SERVER}/unlike`,data)
     .then( response =>{
         console.log(response.data)
         if(response.data.restricted){
@@ -312,7 +312,7 @@ export function unlikePost(postId, ActionType){
 //         postId
 //     }
 //     let type = ActionType == "detail" ? LIKE_DETAIL : LIKE_POST;
-//     const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/unlike`,data)
+//     const request = axios.put(`${POST_SERVER}/unlike`,data)
 //     .then( response =>{
 //         console.log(response.data)
 //         if(response.data.restricted){
@@ -336,7 +336,7 @@ export function makeComment(postId, content, Actiontype) {
         content
     }
 
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/product/comment`, data)
+    const request = axios.post(`${POST_SERVER}/comment`, data)
         .then(response => {
             if(response.data.restricted){
                 return {
@@ -360,7 +360,7 @@ export function likeComment(postId,commentId,ActionType) {
         commentId,
         postId
     }
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/likeComment`, data)
+    const request = axios.put(`${POST_SERVER}/likeComment`, data)
         .then(response => {
             if(response.data.restricted){
                 
@@ -383,7 +383,7 @@ export function unLikeComment(postId, commentId, ActionType) {
         commentId,
         postId
     }
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/unLikeComment`, data)
+    const request = axios.put(`${POST_SERVER}/unLikeComment`, data)
         .then(response => {
             if(response.data.restricted){
                 return {
@@ -405,7 +405,7 @@ export function hidePost(postId, ActionType){
     const data = {
         postId,
     }
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/hidePost`, data)
+    const request = axios.put(`${POST_SERVER}/hidePost`, data)
     .then(response => {
         return response.data;
     })
@@ -422,7 +422,7 @@ export function deleteComment(postId, commentId) {
         postId,
         commentId
     }
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/product/deleteComment`, data)
+    const request = axios.put(`${POST_SERVER}/deleteComment`, data)
     .then(response => {
         return response.data[0];
     })
@@ -437,7 +437,7 @@ export function deletePost(id) {
     const data = {
         id
     }
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/product/delete_post`, data)
+    const request = axios.post(`${POST_SERVER}/delete_post`, data)
     .then(response => {
         console.log(response.data)
         return response.data;
@@ -479,7 +479,7 @@ export function report(reportData, reportPolicy) {
             break;
     }
 
-    const request = axios.post(`https://myreactsocialnetwork.herokuapp.com/api/product/report`,data)
+    const request = axios.post(`${POST_SERVER}/report`,data)
     .then(response =>{
         console.log(response)
         return response.data
@@ -493,7 +493,7 @@ export function report(reportData, reportPolicy) {
 }
 
 export function getStory(id){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/story/getAll`)
+    const request = axios.get(`${STORY_SERVER}/getAll`)
         .then(response => {
             console.log(response.data);
             return sortStory(response.data,id);
@@ -508,7 +508,7 @@ export function getStory(id){
 export function viewStory(id){
     let data={id}
     console.log(id)
-    const request = axios.put(`https://myreactsocialnetwork.herokuapp.com/api/story/view`,data)
+    const request = axios.put(`${STORY_SERVER}/view`,data)
         .then(response => {
             console.log(response.data);
             return response.data
@@ -583,7 +583,7 @@ function sortStory(stories,id){
 }
 
 export function findLocation(name){
-    const request = axios.get(`https://myreactsocialnetwork.herokuapp.com/api/product/location/${name}`)
+    const request = axios.get(`${POST_SERVER}/location/${name}`)
     .then(response => response.data)
     return {
         type: FIND_LOCATION,
