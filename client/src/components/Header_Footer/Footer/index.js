@@ -34,31 +34,31 @@ class Footer extends Component {
     }
     prepareCaller= ()=>{
         //Initializing a peer connection
-        var servers = { 'iceServers': [
-            {
-              url: 'stun:global.stun.twilio.com:3478?transport=udp',
-              urls: 'stun:global.stun.twilio.com:3478?transport=udp'
-            },
-            {
-              url: 'turn:global.turn.twilio.com:3478?transport=udp',
-              username: '9e482cec1ec8358b881a8306dfe15894c4b2663a685c40e590c4e55103ea489a',
-              urls: 'turn:global.turn.twilio.com:3478?transport=udp',
-              credential: 'R6IfARpj8EaPjYhv4rvsJQ9VDg9CoCQrr9TzW4EhGCY='
-            },
-            {
-              url: 'turn:global.turn.twilio.com:3478?transport=tcp',
-              username: '9e482cec1ec8358b881a8306dfe15894c4b2663a685c40e590c4e55103ea489a',
-              urls: 'turn:global.turn.twilio.com:3478?transport=tcp',
-              credential: 'R6IfARpj8EaPjYhv4rvsJQ9VDg9CoCQrr9TzW4EhGCY='
-            },
-            {
-              url: 'turn:global.turn.twilio.com:443?transport=tcp',
-              username: '9e482cec1ec8358b881a8306dfe15894c4b2663a685c40e590c4e55103ea489a',
-              urls: 'turn:global.turn.twilio.com:443?transport=tcp',
-              credential: 'R6IfARpj8EaPjYhv4rvsJQ9VDg9CoCQrr9TzW4EhGCY='
-            }
-          ]
-                  };
+        
+        var servers = { iceServers: [
+                {
+                    url: 'stun:global.stun.twilio.com:3478?transport=udp',
+                    urls: 'stun:global.stun.twilio.com:3478?transport=udp'
+                    },
+                {
+                    url: 'turn:global.turn.twilio.com:3478?transport=udp',
+                    username: 'caabde24dcf7a4c45c3b6b51eac66befebad7fae44cff21309daaf76a3bb01d1',
+                urls: 'turn:global.turn.twilio.com:3478?transport=udp',
+                    credential: '/iauvwB/wLERfRKJtPGPvpmK4xlQJkJBh7p4wyrEznc='
+                },
+                {
+                    url: 'turn:global.turn.twilio.com:3478?transport=tcp',
+                username: 'caabde24dcf7a4c45c3b6b51eac66befebad7fae44cff21309daaf76a3bb01d1',
+                urls: 'turn:global.turn.twilio.com:3478?transport=tcp',
+                credential: '/iauvwB/wLERfRKJtPGPvpmK4xlQJkJBh7p4wyrEznc='
+                },
+                {
+                    url: 'turn:global.turn.twilio.com:443?transport=tcp',
+                    username: 'caabde24dcf7a4c45c3b6b51eac66befebad7fae44cff21309daaf76a3bb01d1',
+                urls: 'turn:global.turn.twilio.com:443?transport=tcp',
+                    credential: '/iauvwB/wLERfRKJtPGPvpmK4xlQJkJBh7p4wyrEznc='
+                }]         
+            };
         this.caller = new window.RTCPeerConnection(servers);
         //Listen for ICE Candidates and send them to remote peers
         this.caller.onicecandidate = (evt)=> {
@@ -334,7 +334,6 @@ this.channel.bind("client-candidate", (msg)=> {
 
                         <div className="row no-gutters">
                             <div className="col-lg-9 col-md-6 col-sm-4 col-4 no-gutters">
-
                             </div>
                             <div className="col-lg-3 col-md-6 col-sm-8 col-8  no-gutters">
                                 <div className="footer__container__left">

@@ -112,7 +112,8 @@ class FormField extends Component{
             case('select'):
                 formTemplate = (
                     <div className="formBlock" >
-                        {  formData.showlabel ?
+                        {  
+                            formData.showlabel ?
                             <div className="label_input">{formData.config.label}</div>
                             : null
                         }
@@ -121,15 +122,21 @@ class FormField extends Component{
                             onBlur={(event) => change({ event, id, blur: true })}
                             onChange={(event) => change({ event, id })}
                         >
-                            <option value="">Select one</option>
+                            <option value="">
+                                {
+                                    id == "nationality"? "Quốc tịch":
+                                    "Select one"
+                                }
+                            </option>
                             {
                                 formData.config.options.map(item => (
-                                    <option 
-                                    key={item.key}
-                                    value={item.key}>
-                                    {item.value}
-                                    </option>
-                                ))
+                                        <option 
+                                            key={item.key}
+                                            value={item.key}
+                                        >
+                                            {item.value}
+                                        </option>
+                                   ))
                             }
                         </select>
                          <div className="error_label" style={{ height: '20px', fontSize: '15px', marginTop: '5px', marginBottom: '5px', color: 'red', textTransform: 'capitalize' }}>

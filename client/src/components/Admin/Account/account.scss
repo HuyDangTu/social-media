@@ -33,11 +33,17 @@
     }
     .report-list{
         width: 100%;
-        .name,
-        .role,
-        .userName,
-        .email{
+        .name{
+            width: 15%;
+        }
+        .role{
+            width: 15%;
+        }
+        .userName{
             width: 25%;
+        }
+        .email{
+            width: 35%;
         }
         .table-header{
             th{
@@ -70,3 +76,68 @@
         margin: 20px;
     }
 }
+
+@media screen and (max-width: 922px){
+ .report-list{
+    .table-header{
+            th{
+                 font-size: 0.6em;
+            }
+        }
+        .table-content{
+            td{
+                font-size: 0.8em;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px){
+    .page_container{
+        .account{
+            .report-list{
+                .table-header{
+                    
+                }
+                .table-content{
+                   
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px){
+    .page_container{
+        .account{
+            .report-list{
+                .table-header{
+                    width: 100%;
+                    .userName{
+                        width: 25%;
+                    }
+                    .email{
+                        width: 55%;
+                    }
+                    .hidden{
+                        display: none;
+                    }
+                }
+                .table-content{
+                    width: 100%;
+                    .userName{
+                        width: 25%;
+                    }
+                    .email{
+                        width: 55%;
+                    }
+                    .hidden{
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+

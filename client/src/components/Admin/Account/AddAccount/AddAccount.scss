@@ -170,3 +170,51 @@
         }
     }
 }}}
+
+
+@media screen and (max-width: 768px){
+.create_account{
+   .register__container{
+     .register__form{
+            position: unset;
+            width: 100%;
+            margin: 0 auto;
+            top: 0; 
+            left: 0;
+            transform: unset;
+            .register__row2{
+                .formField_container{
+                        .formBlock{
+                            input{
+                                height: calc_width(150);
+                            }
+                    }
+                }
+            }
+        .register__button{
+            height: calc_width(150);
+            background-color: $primaryColor;
+            color: white;
+            border: none;
+        }
+    }
+}}}
+
+@media screen and (max-width: 576px){
+.create_account{
+   .register__container{
+     .register__form{
+            .register__row2{
+                .formField_container{
+                        .formBlock{
+                            input{
+                                height: calc_width(200);
+                            }
+                    }
+                }
+            }
+        .register__button{
+            height: calc_width(200);
+        }
+    }
+}}}

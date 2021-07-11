@@ -44,42 +44,47 @@ class StoryPage extends Component {
         header: ""
     }
     componentDidMount(){
-        const id = this.props.location.state.id;
-        this.setState({storiId:id});   
-        this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
-            const storyToShow = this.props.products.storyList.find(element => element._id === id);
-            const index = this.props.products.storyList.indexOf(storyToShow);
-            // tìm vị trí stories cuối cùng chưa đc xem bởi người dùng, khi xem hết story này sẽ direct qua trang NewFeed
-            let end = this.endPosition(this.props.products.storyList);
-            console.log("END INDEX",end);
-            // Vị trí story bắt đầu của storyToShow
-            let startIndex = this.startIndex(storyToShow.stories)
-            // Id của Stories tiếp theo
-            let nextStoryId = -1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-            if (index < this.props.products.storyList.length - 1) {
-                nextStoryId = this.props.products.storyList[index + 1]._id;
-            }
-            let previousStoryId = 0;
-            // Id của story phía trước
-            if (index > 0) {
-                previousStoryId = this.props.products.storyList[index - 1]._id;
-            }
-            this.setState({ 
-                storyToShow: storyToShow,
-                currentDisplay: index,
-                nextStoryId: nextStoryId,
-                startIndex: startIndex,
-                previousStoryId: previousStoryId,
-                end: end,
-                mess: {
-                    ...this.state.mess,
-                    sentTo: this.props.products.storyList[index]._id,
-                    sentBy: this.props.user.userData._id,
-                    attachment: this.props.products.storyList[index].stories[this.state.startIndex]._id,
+        if(this.props.location.state == undefined){
+            this.props.history.push(`/newfeed`)
+        }else{
+            const id = this.props.location.state.id;
+            this.setState({storiId:id});   
+            this.props.dispatch(getStory(this.props.user.userData._id)).then(()=>{
+                const storyToShow = this.props.products.storyList.find(element => element._id === id);
+                const index = this.props.products.storyList.indexOf(storyToShow);
+                // tìm vị trí stories cuối cùng chưa đc xem bởi người dùng, khi xem hết story này sẽ direct qua trang NewFeed
+                let end = this.endPosition(this.props.products.storyList);
+                console.log("END INDEX",end);
+                // Vị trí story bắt đầu của storyToShow
+                let startIndex = this.startIndex(storyToShow.stories)
+                console.log("START INDEX",startIndex);
+                // Id của Stories tiếp theo
+                let nextStoryId = -1;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                if (index < this.props.products.storyList.length - 1) {
+                    nextStoryId = this.props.products.storyList[index + 1]._id;
                 }
-            });
-            // console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
-        })
+                let previousStoryId = 0;
+                // Id của story phía trước
+                if (index > 0) {
+                    previousStoryId = this.props.products.storyList[index - 1]._id;
+                }
+                this.setState({ 
+                    storyToShow: storyToShow,
+                    currentDisplay: index,
+                    nextStoryId: nextStoryId,
+                    startIndex: startIndex,
+                    previousStoryId: previousStoryId,
+                    end: end,
+                    mess: {
+                        ...this.state.mess,
+                        sentTo: this.props.products.storyList[index]._id,
+                        sentBy: this.props.user.userData._id,
+                        attachment: this.props.products.storyList[index].stories[this.state.startIndex]._id,
+                    }
+                });
+                // console.log(this.state.currentDisplay, this.state.storyToShow, this.state.nextStoryId);
+            })
+        }
     }
     // tìm vị trí stories cuối cùng chưa đc xem bởi người dùng, khi xem hết story này sẽ direct qua trang NewFeed
     endPosition = (list) => {
@@ -90,7 +95,10 @@ class StoryPage extends Component {
     }
 
     startIndex = (stories) => { 
-        let index = stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)});
+        //tìm story 
+        // let index = stories.findIndex(item => {return !item.viewedBy.includes(this.props.user.userData._id)});
+
+        let index = stories.findIndex(item => {return !item.viewedBy.some(item => item._id == this.props.user.userData._id)});
         if(index === -1){
             return 0;
         }else{
@@ -101,6 +109,7 @@ class StoryPage extends Component {
     handleChange = (event) => {
         this.setState({mess: {...this.state.mess,content: event.target.value}});
     }
+
     nextStory = () => {
         try{
         if(this.state.nextStoryId!=-1)
@@ -202,17 +211,26 @@ class StoryPage extends Component {
     close = () => {
         console.log("close")
     }
+
+    // playStory(){
+    //     const overlay = document.getElementById("playStoryButton");
+    //     console.log(overlay)
+    // }
+
     pauseStory(){
         const reply = document.querySelector(".reply-wrapper");
+        // const overlay = document.querySelector(".overlay");
         if (reply.classList.contains("displayed")){
             reply.classList.remove("displayed")
+            // overlay.classList.remove("overlay-displayed")
             this.setState({isStoryPlaying: true})
         }else{
             reply.classList.add("displayed");
+            // overlay.classList.add("overlay-displayed")
             this.setState({isStoryPlaying: false})
         }
     }
-    customCollapsedComponent = ({ toggleMore, action }) =>{
+    customCollapsedComponent = ({ toggleMore, action }) => {
         return <div className="story-overlay">
             {
                 this.state.isStoryPlaying ?
@@ -224,10 +242,11 @@ class StoryPage extends Component {
                 <PlayerPlay onClick={() => {
                     action('play');
                     this.pauseStory();
-                }} size={40} strokeWidth={2} color="white"/>
+                }} size={40} strokeWidth={2} color="white" id="playStoryButton"/>
             }
         </div>
     }
+
     storyCreate = (obj) => {
         
         return obj.stories.map((item)=>{
@@ -347,6 +366,8 @@ class StoryPage extends Component {
                 </div>
                 <div className="current_story">
                     <div className="story_wrapper">
+                            {
+                            this.state.isStoryPlaying ?
                             <ArrowLeft onClick={() => {
                                 if(this.state.startIndex != 0){ 
                                     this.setState({ 
@@ -356,6 +377,8 @@ class StoryPage extends Component {
                                     this.previousStory();
                                 }
                             }} size={40} strokeWidth={2} color="white"/>
+                            : ""
+                            }
                             <Stories
                                 stories={this.storyCreate(this.state.storyToShow)}
                                 defaultInterval={5000}
@@ -367,6 +390,8 @@ class StoryPage extends Component {
                                 onStoryEnd={()=>{this.increaseStartIndex()}}
                                 onAllStoriesEnd={() => this.nextStory()}
                             />
+                            {
+                            this.state.isStoryPlaying ?
                             <ArrowRight onClick={() => {
                                 console.log(this.state.startIndex,this.state.storyToShow.stories.length)
                                 if(this.state.startIndex != this.state.storyToShow.stories.length-1){
@@ -377,36 +402,38 @@ class StoryPage extends Component {
                                     this.nextStory()
                                 }
                             }} size={40} strokeWidth={2} color="white"/>
+                            :""}
                     </div>
                 </div>
-                    <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "reply-wrapper space" : "reply-wrapper end"}>
-                        <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "main display" : "hiden"}>
-                            <div className="user-list">
-                                <div className="users-view-story">
-                                   <Eye size={30} strokeWidth={2} color="black"/>
-                                    {this.state.storyToShow.stories[this.state.startIndex].viewedBy.length != 0 ?
-                                        <p>{this.state.storyToShow.stories[this.state.startIndex].viewedBy.length} người đã xem </p>
-                                    :<p>Chưa có người xem</p>   
-                                    }
-                                </div>
-                                <ul>
-                                    {
-                                        this.state.storyToShow.stories[this.state.startIndex].viewedBy.map((item,idx) =>{
-                                            return <div className="item" key={idx}>
-                                                <div onClick={() => {
-                                                    // this.LinkTo("user",item._id)
-                                                }} className="user_infor_wrapper">
-                                                    <img src={item.avt} />
-                                                    <p>{item.userName}</p>
-                                                </div>
-                                            </div>
-                                        })
-                                    }
-                                </ul>
+                {/* <div className="overlay" onClick={this.playStory}></div> */}
+                <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "reply-wrapper space" : "reply-wrapper end"}>
+                    <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "main display" : "hiden"}>
+                        <div className="user-list">
+                            <div className="users-view-story">
+                                <Eye size={30} strokeWidth={2} color="black"/>
+                                {this.state.storyToShow.stories[this.state.startIndex].viewedBy.length != 0 ?
+                                    <p>{this.state.storyToShow.stories[this.state.startIndex].viewedBy.length} người đã xem </p>
+                                :<p>Chưa có người xem</p>   
+                                }
                             </div>
-                            <Trash onClick={this.deleteStory} size={25} strokeWidth={2} color="black"/>
+                            <ul>
+                                {
+                                    this.state.storyToShow.stories[this.state.startIndex].viewedBy.map((item,idx) =>{
+                                        return <div className="item" key={idx}>
+                                            <div onClick={() => {
+                                                // this.LinkTo("user",item._id)
+                                            }} className="user_infor_wrapper">
+                                                <img src={item.avt} />
+                                                <p>{item.userName}</p>
+                                            </div>
+                                        </div>
+                                    })
+                                }
+                            </ul>
                         </div>
-                        <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "hiden" : "display"}>
+                        <Trash onClick={this.deleteStory} size={25} strokeWidth={2} color="black"/>
+                    </div>
+                    <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "hiden" : "display"}>
                             <Reaction/>
                             <form  onSubmit={(event) => this.submitForm(event)}>
                             <div className="chat_box">
@@ -428,6 +455,7 @@ class StoryPage extends Component {
                         </form>
                     </div>
                 </div>
+                
                  {
                 <Snackbar
                     anchorOrigin={{

@@ -22,6 +22,7 @@
             justify-content: space-between;
             border: none;
             .header__logo{
+                width: auto;
                 .Logo_stunn{
                         width: 3rem;
                 }
@@ -46,6 +47,11 @@
                 margin-right: 35px;
             }
         }
+    }
+    .message{
+        margin: 2rem;
+        font-size: 1.2rem;
+        display: none;
     }
 }
 
@@ -83,4 +89,27 @@
     background-color: $blueColor !important;
     border: none !important;
     color: black !important;
+}
+
+
+@media screen and (max-width: 1024px){
+    .tui-image-editor-header{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+@media screen and (max-width: 768px){
+    .photoEditor{
+        .header{
+           display: none;
+        }
+        .tui-image-editor-container{
+            display: none;
+        }
+        .message{
+            display: block;
+        }
+    }
 }

@@ -25,6 +25,7 @@
         }
     }
 }
+
 .metric-wrapper{
     margin-left: 1rem;
     margin-bottom: 1rem;
@@ -56,8 +57,13 @@
             color: rgb(250, 227, 25);
             font-weight: 600;
         }
+        .hidden{
+            visibility: hidden;
+            opacity: 0;
+        }
     }
 }
+
 .chart{
     margin-left: 1rem;
     display: flex;
@@ -109,10 +115,45 @@
     }
 }
 
+@media screen and (max-width: 1024px){
+    .report-list{
+            .table-content{
+                td{
+                    font-size: 0.68em;
+                }
+            }
+        }
+        .page_container{
+            .metric-wrapper{
+                .metric{
+                    margin-bottom: 1rem;
+                }
+            }
+            .chart{
+                flex-direction: column;
+                margin:0;
+                .wrapper{
+                    height: 300px;
+                    width: 100%;
+                    border-radius: 0px;
+                    margin-right: 0;
+                    border: 1px solid #ddd;
+                }
+            }
+            .top-ten-uesrs{
+                .user-list{
+                    margin-right: 1rem;
+                }
+                .wrapper{
+                    height: 300px;
+                }
+            }
+    }
+}
 
 @media screen and (max-width: 922px){
- .report-list{
-     .table-header{
+    .report-list{
+        .table-header{
             th{
                  font-size: 0.6em;
              }
@@ -123,6 +164,7 @@
             }
         }
     }
+   
 }
 
 @media screen and (max-width: 768px){
@@ -133,4 +175,69 @@
                 }
             }
         }
+        .page_container{
+            .title{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        .metric-wrapper{
+            .metric{
+                margin-bottom: 1rem;
+            }
+        }
+        .chart{
+            flex-direction: column;
+            margin:0;
+            .wrapper{
+                width: 100%;
+                border-radius: 0px;
+                margin-right: 0;
+                border: 1px solid #ddd;
+            }
+        }
+        .top-ten-uesrs{
+            .user-list{
+                margin-right: 1rem;
+            }
+        }
+    }
+}
+
+
+
+@media screen and (max-width: 576px){
+    .metric-wrapper{
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    .metric{
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-right: 1rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        .content{
+            font-weight: bold;
+            color: $primaryColor;
+            font-size: 1.5rem;
+            margin-left: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            p{
+                color: rgb(145, 145, 145);
+                font-size: 1rem;
+                margin: 0;
+            }
+        }
+        .Difference{
+            margin-left: unset;
+            flex-direction: row;
+            align-items: center;
+            }
+        }
+    }
 }

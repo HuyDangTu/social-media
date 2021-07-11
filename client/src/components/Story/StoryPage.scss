@@ -125,10 +125,9 @@
             img{
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
+                object-fit: contain;
             }
             .story-overlay{
-
                 height: 100vh;
                 display: flex;
                 flex-direction: column;
@@ -142,6 +141,17 @@
     .end{
       justify-content: flex-end;
     }
+    .overlay{
+        position: absolute;
+        z-index: 9997;
+        background-color: rgba(0,0,0,0.25);
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+    .overlay-displayed{
+        display: block;
+    }
     .reply-wrapper{
         transform: translatex(100%);
         visibility: hidden;
@@ -149,7 +159,7 @@
         background: #fff;
         display: flex;
         flex-direction: column;
-  
+        z-index: 10000;
         // form{
         //     position: absolute;
         //     bottom: 0;
@@ -288,4 +298,65 @@
     }
 }::-webkit-scrollbar {
     display: none;
+}
+
+
+@media screen and (max-width : 768px){
+    .storyPage{
+        .storyPage__header{
+            display: none;
+        }
+        .current_story{
+            width: 100%;
+            .story_wrapper{
+                width: 100%;
+                justify-content: center;
+                .story-overlay{
+                    
+                }
+            }
+        }
+        .reply-wrapper{
+           position: fixed;
+            height: 100vh;
+            
+            right: 0;
+        }
+    }
+}
+
+
+@media screen and (max-width : 600px){
+    .storyPage{
+        .storyPage__header{
+            display: none;
+        }
+        .reply-wrapper{
+        }
+    }
+}
+
+@media screen and (max-width : 600px){
+    .storyPage{
+        .storyPage__header{
+            display: none;
+        }
+        .current_story{
+            .story_wrapper{
+                svg:first-child{
+                    position: absolute;
+                    left: 0;
+                    z-index: 10000;
+                }
+                svg:last-child{
+                    position: absolute;
+                    right: 0;
+                    z-index: 10000;
+                }
+            }
+        }
+        .reply-wrapper{
+            z-index: 10001;
+        }
+    }
 }

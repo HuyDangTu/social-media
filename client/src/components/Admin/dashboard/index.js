@@ -197,7 +197,7 @@ class Dashboard extends Component {
                                     <tr className="table-content" onClick={()=>this.toDetail(item)}>
                                         <td className="report">
                                         <div className="wrapper">
-                                            <img className="avt" src={item.sentBy[0].avt} />
+                                            <div className="avt"><img src={item.sentBy[0].avt}/></div>
                                             <div className="report_info">
                                                 {this.renderReportContent(item)}
                                                 {/* <p className="date">{item.dateDifference >= 30 ? item.createdAt : this.postedDate(item.dateDifference)}</p> */}
@@ -229,7 +229,9 @@ class Dashboard extends Component {
                                 <LinearProgress />
                             :
                             reports.size >= this.state.limit ?
-                                <button className="loadmore" onClick={()=>{this.loadmore()}}>Load more</button>
+                                <div className="loadmore">
+                                    <button className="loadmore-btn" onClick={()=>{this.loadmore()}}>Load more</button>
+                                </div>
                                 : ""
                         }
                     </div>

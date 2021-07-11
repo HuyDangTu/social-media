@@ -199,8 +199,6 @@ class EditAccount extends Component {
             passwordData: newFormdata
         });
     }
-
-
     updateFields = (newFormData) => {
         this.setState({
             formData: newFormData
@@ -264,7 +262,16 @@ class EditAccount extends Component {
                         <h3>Cài đặt tài khoản</h3>
                     </div>
                     <div className="title">
-                        <h5>Thông tin</h5>
+                        <div className="title-wrapper">
+                            <div className="title-icon">
+                                <User
+                                    size={24}
+                                    strokeWidth={2}
+                                    color={'white'}
+                                />
+                            </div>
+                            <p>Personal Infomation</p>
+                        </div>
                     </div>
                     <div className="row  no-gutters ">
                         <form className="col-xl-12 no-gutters setting_detail" onSubmit={(event) => this.submitForm(event)}>
@@ -346,7 +353,16 @@ class EditAccount extends Component {
                                 </form>
                     </div>
                     <div className="title">
-                        <h5 >Mật khẩu</h5>
+                        <div className="title-wrapper">
+                            <div className="title-icon">
+                                <Lock
+                                    size={24}
+                                    strokeWidth={2}
+                                    color={'white'}
+                                />
+                            </div>
+                            <p>Password</p>
+                        </div>
                     </div>
                     <div className="row  no-gutters ">
                         <form className="col-xl-12 no-gutters setting_detail" onSubmit={(event) => this.changePassword(event)}>

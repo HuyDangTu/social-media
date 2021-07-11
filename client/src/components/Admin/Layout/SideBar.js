@@ -5,17 +5,27 @@ import './SideBar.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faCog from '@fortawesome/fontawesome-free-solid/faCog';
 import { logoutUser } from '../../../actions/user_action'
-import { AlertOctagon , User, Home2 } from 'tabler-icons-react'
+import { AlertOctagon , User, Home2, Settings } from 'tabler-icons-react'
+import NativeClickListener from '../../ultils/NativeClickListener';
 
 class SideBar extends Component {
+    state = {
+        dropdown: false,
+    }
 
     logoutHandler = () => {
         this.props.dispatch(logoutUser())
-            .then(response => {
-                if (response.payload.success) {
-                    this.props.history.push('/Admin/login')
-                }
-            })
+        .then(response => {
+            if (response.payload.success) {
+                this.props.history.push('/Admin/login')
+            }
+        })
+    }
+
+    handleDropdown = () =>{
+        this.setState({
+            dropdown: !this.state.dropdown
+        })
     }
 
     render() {
@@ -41,13 +51,36 @@ class SideBar extends Component {
                         </li>
                     </ul>
                 </div>
+
                 {
                     this.props.user.userData? 
                         <div className="info">
-                            <div className="wrapper" onClick={() => this.props.history.push("/Admin/EditAccount")}>
-                                <img className="avt" src={this.props.user.userData.avt} />
-                                <p className="name" >{this.props.user.userData.name}</p>
-                            </div> 
+                            <div className="wrapper">
+                                <img className="avt" src={this.props.user.userData.avt} onClick={this.handleDropdown} />
+                                {
+                                    this.state.dropdown ?
+                                    <NativeClickListener onClick={() => this.setState({ dropdown: false })}>
+                                        <div className="dropdown" onClick={this.handleBodyClick}>
+                                            <div className="user_navigation">
+                                                <div>
+                                                    <User size={22} strokeWidth={1.5} color="grey"></User>
+                                                    <Link to={`/Admin/EditAccount`}>Profile</Link>
+                                                </div>
+                                                {/* <div>
+                                                    <Settings size={22} strokeWidth={1.5} color="grey"></Settings>
+                                                    <Link to={`/profilesettings`}>Setting</Link>
+                                                </div> */}
+                                            </div>
+                                            <div className="logout">
+                                                <Link onClick={this.logoutHandler}>Log out</Link>
+                                            </div>
+                                        </div>
+                                    </NativeClickListener>
+                                : null
+                                }
+                                <p className="name" onClick={() => this.props.history.push("/Admin/EditAccount")} >{this.props.user.userData.name}</p>
+                            </div>
+                             
                             <div className="logout">
                                 <FontAwesomeIcon icon={faCog} />
                                 <Link key={1} onClick={this.logoutHandler}>Log out</Link>

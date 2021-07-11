@@ -102,8 +102,8 @@ class AccountPage extends Component {
                                 <table className="report-list">
                                     <tr className="table-header">
                                         <th className="img"></th>
-                                        <th className="name">Tên</th>
-                                        <th className="role">Vai trò</th>
+                                        <th className="name hidden">Tên</th>
+                                        <th className="role hidden">Vai trò</th>
                                         <th className="userName" >Username</th>
                                         <th className="email" >Email</th>
                                     </tr>
@@ -111,10 +111,10 @@ class AccountPage extends Component {
                                         accounts.list.map((item) => (
                                             <tr className="table-content" onClick={() => this.toDetail(item)}>
                                                 <td><img className="avt" src={item.avt} /></td>
-                                                <td className="name">
+                                                <td className="name hidden">
                                                     {item.name}
                                                 </td>
-                                                <td className="role">Admin</td>
+                                                <td className="role hidden">Admin</td>
                                                 <td className="userName">  {item.userName}</td>
                                                 <td className="email">{item.email}</td>
                                             </tr>

@@ -283,10 +283,7 @@
 }
 
 
-
-
-
-@media screen and (max-width: 568px){
+@media screen and (max-width: 576px){
     .Admin_signin__container{
         .signin__form{
             .signin__logo{
@@ -305,7 +302,7 @@
                     input{
                         padding: 10px;
                         width: 100%;
-                        height: calc_width(140);
+                        height: calc_width(180);
                         font-size: 15px;
                         border-radius: 5px;
 
@@ -323,6 +320,53 @@
                 padding: 10px;
                 width: 100%;
                 height: calc_width(140);
+                font-size: 15px;
+                border-radius: 5px;
+
+                background-color: $primaryColor;
+                color: white;
+                border: none;
+            }
+            .or_label{
+                margin-top: 15px;
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width: 500px){
+    .Admin_signin__container{
+        .signin__form{
+            .formField_container{
+                width: 100%;
+                .formBlock{
+                    input{
+                        padding: 10px;
+                        width: 100%;
+                        height: calc_width(210);
+                        font-size: 15px;
+                        border-radius: 5px;
+
+                        color: black;
+                        border: 1px solid #CBCBCB;
+                    }
+                    .label_input{
+                        font-size: 0.8rem;
+                        color: $linkColor;
+                        margin-bottom: 2.5px;
+                    }
+                }
+            }
+            .password_container{
+              font-size: 0.8rem;
+            }
+            .signin__button{
+                
+                padding: 10px;
+                width: 100%;
+                height: calc_width(210);
                 font-size: 15px;
                 border-radius: 5px;
 

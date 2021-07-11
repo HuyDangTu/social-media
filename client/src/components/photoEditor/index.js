@@ -53,7 +53,7 @@ const PhotoEditor = (props) => {
                                 console.log("ERROR")
                             }
                         })
-                    }}>Post to story</button>
+                    }}>Add</button>
                 </div>
                 {
                     !isLoading ? ""
@@ -62,7 +62,7 @@ const PhotoEditor = (props) => {
                     </div>
                 }
             </div>
-            
+           
             <ImageEditor
                 includeUI={{
                     loadImage: {
@@ -86,6 +86,8 @@ const PhotoEditor = (props) => {
                 }}
                 usageStatistics={true}
             />
+    
+            <div className="message"> Photo editor is not support small screen device!</div>
         </div>
     );
 };

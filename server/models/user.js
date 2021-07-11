@@ -27,6 +27,10 @@ const userSchema = mongoose.Schema({
     dob:{
         type: Date,
     },
+    nationality:{
+        type: Schema.Types.ObjectId,
+        ref: "Nationality"
+    },
     avt:{
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ3F_4AEBUvIOQPFqcVFUsh5_eFIAHcdtExdA&usqp=CAU"

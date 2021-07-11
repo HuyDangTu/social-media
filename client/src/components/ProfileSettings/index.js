@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { Component, useEffect, useState } from 'react';
 import Layout from '../../hoc/layout';
 import { connect } from 'react-redux';
@@ -7,7 +8,7 @@ import FormField from '../ultils/Form/FormField';
 import './profilesetting.scss';
 import { populateOptionFields, update, ifFormValid, generateData, resetFields } from '../ultils/Form/FormActions';
 import { GridDots, User, Lock } from 'tabler-icons-react'
-import { updateprofileimgfile, updateprofileimg, changeProfile, changePassword,auth, getBlockedUsers, unBlockUser, blockUser,changePrivate } from '../../actions/user_action';
+import { updateprofileimgfile, updateprofileimg, changeProfile, changePassword,auth, getBlockedUsers, unBlockUser, blockUser,changePrivate, getNationality } from '../../actions/user_action';
 import { Link, withRouter, useParams } from 'react-router-dom';
 import { Button, CircularProgress, Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
@@ -96,6 +97,40 @@ class ProfileSettings extends Component {
                 validationMessage: '',
                 showlabel: false
             },
+            dob: {
+                element: 'input',
+                value: '',
+                valueAsNumber: "",
+                config: {
+                    label: 'Ngày sinh',
+                    name: 'dob',
+                    type: 'date',
+                    placeholder: 'ngày sinh'
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false,
+            },
+            nationality: {
+                element: 'select',
+                value: '',
+                config: {
+                    label: 'nationality',
+                    name: 'nationality',
+                    options: []
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: false
+            },
         },
         passwordData:{
             currentPassword: {
@@ -172,6 +207,7 @@ class ProfileSettings extends Component {
         event.preventDefault();
         this.state.formData.privateMode = this.state.privateMode;
         let dataToSubmit = generateData(this.state.formData, 'update_pro')
+        console.log(dataToSubmit)
         this.props.dispatch(changeProfile(this.props.user.userData._id, dataToSubmit))
             .then(response => {
                 console.log(response);
@@ -229,24 +265,25 @@ class ProfileSettings extends Component {
             }
         })
     }
-
     updateForm = (element) => {
         const newFormdata = update(element, this.state.formData, 'update_pro');
         this.setState({
             formError: false,
             formData: newFormdata
         });
-             if( JSON.stringify(this.state.formData.bio.value.trim()) != JSON.stringify(this.props.user.userData.bio.trim()) ||
-             JSON.stringify(this.state.formData.userName.value.trim()) != JSON.stringify(this.props.user.userData.userName.trim()) ||
-             JSON.stringify(this.state.formData.name.value.trim()) != JSON.stringify(this.props.user.userData.name.trim()) ||
-             JSON.stringify(this.state.formData.email.value.trim()) != JSON.stringify(this.props.user.userData.email.trim()))
-            {
-                this.setState({edited:true});
-            }
-            else
-            {
-                this.setState({edited:false});
-            }
+        if( JSON.stringify(this.state.formData.bio.value.trim()) != JSON.stringify(this.props.user.userData.bio.trim()) ||
+        JSON.stringify(this.state.formData.userName.value.trim()) != JSON.stringify(this.props.user.userData.userName.trim()) ||
+        JSON.stringify(this.state.formData.name.value.trim()) != JSON.stringify(this.props.user.userData.name.trim()) ||
+        JSON.stringify(this.state.formData.email.value.trim()) != JSON.stringify(this.props.user.userData.email.trim())||
+        JSON.stringify(this.state.formData.dob.value.trim()) != JSON.stringify(moment(this.props.user.userData.dob).format("YYYY-MM-DD")) ||
+        JSON.stringify(this.state.formData.nationality.value.trim()) != JSON.stringify(this.props.user.userData.nationality.trim()))
+        {
+            this.setState({edited:true});
+        }
+        else
+        {
+            this.setState({edited:false});
+        }
     }
 
     getUserForm() {
@@ -254,6 +291,10 @@ class ProfileSettings extends Component {
         this.state.formData.userName.value = this.props.user.userData.userName;
         this.state.formData.name.value = this.props.user.userData.name;
         this.state.formData.email.value = this.props.user.userData.email;
+        this.state.formData.email.value = this.props.user.userData.email;
+        this.state.formData.email.value = this.props.user.userData.email;
+        this.state.formData.nationality.value = this.props.user.userData.nationality;
+        this.state.formData.dob.value = moment(this.props.user.userData.dob).format("YYYY-MM-DD");
         const formData = this.state.formData;
         this.setState({edited:false});
         this.updateFields(formData);
@@ -261,8 +302,15 @@ class ProfileSettings extends Component {
 
     componentDidMount() {
         this.getUserForm();
+        console.log(this.props.user.userData)
         this.setState({privateMode:this.props.user.userData.privateMode?this.props.user.userData.privateMode:false})
         this.props.dispatch(getBlockedUsers());
+        const formData = this.state.formData;
+        this.props.dispatch(getNationality()).then(response =>{
+            console.log(response)
+            const newFormData = populateOptionFields(formData, response.payload,'nationality')
+            this.updateFields(newFormData)
+        })
     }
 
     handleSetting = (type) => {
@@ -370,6 +418,30 @@ class ProfileSettings extends Component {
                                 </div>
                             </div>
                             <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3 label">
+                                    <h3>Ngày sinh</h3>
+                                </div>
+                                <div className="col-xl-9 col-md-9 field">
+                                    <FormField
+                                    id={'dob'}
+                                    formData={this.state.formData.dob}
+                                    change={(element) => this.updateForm(element)}
+                                    />
+                                </div>
+                            </div>
+                             <div className="row setting_type">
+                                <div className="ol-xl-3 col-md-3 label">
+                                    <h3>Quốc tịch</h3>
+                                </div>
+                                <div className="col-xl-9 col-md-9 field">
+                                    <FormField
+                                        id={'nationality'}
+                                        formData={this.state.formData.nationality}
+                                        change={(element) => this.updateForm(element)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row setting_type">
                                 <div className="ol-xl-3 col-md-3  label">
                                     <h3>User name</h3>
                                 </div>
@@ -395,9 +467,9 @@ class ProfileSettings extends Component {
                                         change={(element) => this.updateForm(element)}
                                     />
                                 </div>
-                            </div>
+                            </div>                      
                             <div className="row setting_type">
-                                <div className="ol-xl-3 col-md-3 label">
+                                <div className="col-xl-3 col-md-3 label">
                                     <h3>Mô tả</h3>
                                 </div>
                                 <div className="col-xl-9 col-md-9 field">
@@ -428,7 +500,7 @@ class ProfileSettings extends Component {
                                     <div className="col-xl-9 col-md-9 field">
                                     <Button className="send_btn" onClick={(event) => { this.submitForm(event) }}>
                                         Gửi
-                                        </Button>
+                                    </Button>
                                 </div>
                                 :
                                 <div className="col-xl-9 col-md-9  field">

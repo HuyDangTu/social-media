@@ -25,7 +25,7 @@
         padding: 20px;
     }
     .title{
-        padding: 20px;
+        padding: 0px; 
     }
     .setting_detail{
         padding: 20px;
@@ -70,17 +70,19 @@
                 }
                 .formField_container{
                     width: 100%;
-                    input{
-                        padding: 5px;
-                        width: 100%;
-                        border-radius: 5px;
-                        border: 1px solid #d4d4d4;
-                    }
-                    textarea{
-                        padding: 5px;
-                        width: 100%;
-                        border-radius: 5px;
-                        border: 1px solid #d4d4d4;
+                    .formBlock{
+                        input{
+                            padding: 5px;
+                            width: 100%;
+                            border-radius: 5px;
+                            border: 1px solid #d4d4d4;
+                        }
+                        textarea{
+                            padding: 5px;
+                            width: 100%;
+                            border-radius: 5px;
+                            border: 1px solid #d4d4d4;
+                        }
                     }
                 }
                 .send_btn{
@@ -115,6 +117,29 @@
         }
         .field{
 
+        }
+    }
+}
+
+
+
+@media screen and (max-width: 576px){
+    .setting_detail{
+        display: flex;
+        flex-direction: column;
+        .setting_type{
+            .field{
+                .formField_container{
+                .formBlock{
+                    input{
+                        height: calc_width(200);
+                    }
+                }
+            }
+        }
+        }
+        .label{
+            width: fit-content;
         }
     }
 }

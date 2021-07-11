@@ -7,7 +7,7 @@ export const generateData = (formdata, formName) =>{
         if(key !== 'confirmPassword')
         {
             if(key === 'dob'){
-               dataToSubmit[key] = formdata[key].valueAsNumber; 
+                dataToSubmit[key] = formdata[key].valueAsNumber; 
             }else{
                 dataToSubmit[key] = formdata[key].value;
             }

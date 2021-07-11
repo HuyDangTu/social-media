@@ -212,7 +212,7 @@ class AddAccount extends Component {
                 <div className="create_account">
                 <h3 className="page_title">Thêm Admin </h3>
                 <div className="row no-gutters">
-                        <div className="col-xl-5 col-lg-7 col-md-8 no-gutters">
+                        <div className="col-xl-5 col-lg-7 col-md-12 no-gutters">
                             <div className="right">
                                 <div className="register">
                                     <div className='register__container'>

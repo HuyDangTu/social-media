@@ -13,11 +13,35 @@ class FileUpload extends Component {
         super()
         this.state = {
             uploadedFiles:[],
-            uploading: false,   
+            uploadedImages: [],
+            uploading: false,
+            imageTest: "",   
         }
     }
 
-    onDrop = (files) =>{
+    updateImageList = (image) => {
+        console.log(image)
+        this.setState({
+            uploadedImages: [
+                ...this.state.uploadedImages,
+                image
+            ]
+        },()=>{
+            this.props.imagesHandler(this.state.uploadedImages)
+        })
+    }
+
+    readFile(file, callback) {
+        var reader = new FileReader();
+        var baseString;
+        reader.onloadend = function () {
+            baseString = reader.result;
+            callback(baseString);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    onDrop = async (files) =>{
         console.log('files',files)
         this.setState({uploading: true});
         let formData = new FormData();
@@ -25,22 +49,15 @@ class FileUpload extends Component {
             header: {'content-type':'multipart/form-data'}
         }
         formData.append("file",files[0]);
-
-        axios.post('/api/users/uploadimage',formData,config)
-        .then(response => {
-            this.setState({
-                uploading: false,
-                uploadedFiles: [
-                    ...this.state.uploadedFiles,
-                    response.data
-                ]
-            });
-            console.log(this.state.uploadedFiles)
-            this.props.imagesHandler(this.state.uploadedFiles)
-        }, () => console.log(this.state.uploadedFiles),
-            () => this.props.imagesHandler(this.state.uploadedFiles)
-        )
-        //console.log(this.state.uploadedFiles);
+        this.setState({
+            uploading: false,
+            uploadedFiles: [
+                ...this.state.uploadedFiles,
+                URL.createObjectURL(files[0])
+            ]
+        })
+        
+        this.readFile(files[0],(image)=>this.updateImageList(image))
     }
 
     onRemove = (id) =>{
@@ -60,14 +77,14 @@ class FileUpload extends Component {
     }
 
     showUploadImages = () => (
-        this.state.uploadedFiles.map(item =>(
+        this.state.uploadedFiles.map((item,index) => (
             <div className='dropzone_UploadedImg_wrapper'
-                key={item.public_id} >
+                key={index} >
                 <FontAwesomeIcon className="delete_image_icon" onClick={() => this.onRemove(item.public_id)}
                     icon={faTimesCircle} />
-                <div className='uploaded_img'
-                    style={{ backgroundImage: `url(${item.url}) `}}
-                ></div>
+                <div className='uploaded_img'>
+                    <img className="uploaded_img" src={item} alt="photo"/>
+                </div>
             </div>
         ))
     )
@@ -79,11 +96,11 @@ class FileUpload extends Component {
         return null;
     }
 
-
     render() {
         return (
             <div className='dropzone clear'>
             <div className="dropzone_wrapper">
+            
                 <Dropzone 
                 onDrop={(e) => this.onDrop(e)}
                 multiple={false}>
@@ -106,6 +123,7 @@ class FileUpload extends Component {
                     </div>
                 : null
                 }
+           
             </div>
                 <div className="uploaded_image_display">
                 {

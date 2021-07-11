@@ -130,54 +130,54 @@ class Home extends Component {
                 "id": "comments",
                 "color": "hsl(67, 70%, 50%)",
                 "data": [
-                {
-                    "x": "plane",
-                    "y": 2
-                },
-                {
-                    "x": "helicopter",
-                    "y": 2
-                },
-                {
-                    "x": "boat",
-                    "y": 2
-                },
+                    {
+                        "x": "plane",
+                        "y": 2
+                    },
+                    {
+                        "x": "helicopter",
+                        "y": 2
+                    },
+                    {
+                        "x": "boat",
+                        "y": 2
+                    },
                 ]
             },
             {
                 "id": "stories",
                 "color": "hsl(162, 70%, 50%)",
                 "data": [
-                {
-                    "x": "plane",
-                    "y": 3
-                },
-                {
-                    "x": "helicopter",
-                    "y": 3
-                },
-                {
-                    "x": "boat",
-                    "y": 3
-                },
+                    {
+                        "x": "plane",
+                        "y": 3
+                    },
+                    {
+                        "x": "helicopter",
+                        "y": 3
+                    },
+                    {
+                        "x": "boat",
+                        "y": 3
+                    },
                 ]
             },
             {
                 "id": "reports",
                 "color": "hsl(103, 70%, 50%)",
                 "data": [
-                {
-                    "x": "plane",
-                    "y": 4
-                },
-                {
-                    "x": "helicopter",
-                    "y": 4
-                },
-                {
-                    "x": "boat",
-                    "y": 4
-                },
+                    {
+                        "x": "plane",
+                        "y": 4
+                    },
+                    {
+                        "x": "helicopter",
+                        "y": 4
+                    },
+                    {
+                        "x": "boat",
+                        "y": 4
+                    },
                 ]
             },
             ],
@@ -360,7 +360,7 @@ class Home extends Component {
             </div>
             <div className="metric-wrapper">
                 <div className="row no-gutters">
-                    <div className="col-xl-3 no-gutters">
+                    <div className="col-xl-3 col-lg-6 col-sm-6 col-12 no-gutters">
                         <div className="metric">
                             <UserPlus
                                 size={48}
@@ -397,7 +397,7 @@ class Home extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-3 no-gutters">
+                    <div className="col-xl-3 col-lg-6 col-sm-6 col-12 no-gutters">
                         <div className="metric">
                              <Photo
                                 size={48}
@@ -434,7 +434,7 @@ class Home extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-3 no-gutters">
+                    <div className="col-xl-3 col-lg-6 col-sm-6 col-12 no-gutters">
                         <div className="metric">
                             <Users
                                 size={48}
@@ -442,7 +442,7 @@ class Home extends Component {
                                 color={'black'}
                             />
                             <div className="content">
-                                <p>Accounts</p>
+                                <p>Total Accounts</p>
                                 {this.props.statistics.sumOfUsers?this.props.statistics.sumOfUsers.cnt:"0"}
                             </div>
                             <div className="Difference">
@@ -471,7 +471,7 @@ class Home extends Component {
                             </div>
                         </div>    
                     </div>
-                    <div className="col-xl-3 no-gutters">
+                    <div className="col-xl-3 col-lg-6 col-sm-6 col-12 no-gutters">
                         <div className="metric">
                            <UserExclamation
                                 size={48}
@@ -481,6 +481,13 @@ class Home extends Component {
                             <div className="content">
                                 <p>Unused Account</p>
                                 {this.props.statistics.unusedUsers?this.props.statistics.unusedUsers:"0"}
+                            </div>
+                            <div className="Difference hidden">
+                                <TrendingDown
+                                    size={25}
+                                    strokeWidth={2}
+                                    color={'black'}
+                                /> 
                             </div>
                         </div>
                     </div>
@@ -726,7 +733,7 @@ class Home extends Component {
             </div>
             <div className="top-ten-uesrs">
                 <div className="row no-gutters">
-                    <div className="col-xl-4 no-gutters">
+                    <div className="col-xl-4 col-lg-4 col-sm-12 col-12 no-gutters">
                         <ul className="user-list">
                             {
                                 this.props.statistics.top10Users?
@@ -766,48 +773,50 @@ class Home extends Component {
                             }
                         </ul>
                     </div>
-                    <div className="col-xl-8 no-gutters"> 
-                    <ResponsiveChoropleth
-                        data={this.state.nationality}
-                        features={countries.features}
-                        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                        colors="nivo"
-                        domain={[ 0, 1000000 ]}
-                        unknownColor="#666666"
-                        label="properties.name"
-                        valueFormat=".2s"
-                        projectionTranslation={[ 0.5, 0.5 ]}
-                        projectionRotation={[ 0, 0, 0 ]}
-                        enableGraticule={true}
-                        graticuleLineColor="#dddddd"
-                        borderWidth={0.5}
-                        borderColor="#152538"
-                        legends={[
-                            {
-                                anchor: 'bottom-left',
-                                direction: 'column',
-                                justify: true,
-                                translateX: 20,
-                                translateY: -100,
-                                itemsSpacing: 0,
-                                itemWidth: 94,
-                                itemHeight: 18,
-                                itemDirection: 'left-to-right',
-                                itemTextColor: '#444444',
-                                itemOpacity: 0.85,
-                                symbolSize: 18,
-                                effects: [
+                    <div className="col-xl-8 col-lg-8 col-sm-12 col-12 no-gutters"> 
+                        <div className="wrapper">
+                            <ResponsiveChoropleth
+                                data={this.state.nationality}
+                                features={countries.features}
+                                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                                colors="nivo"
+                                domain={[ 0, 1000000 ]}
+                                unknownColor="#666666"
+                                label="properties.name"
+                                valueFormat=".2s"
+                                projectionTranslation={[ 0.5, 0.5 ]}
+                                projectionRotation={[ 0, 0, 0 ]}
+                                enableGraticule={true}
+                                graticuleLineColor="#dddddd"
+                                borderWidth={0.5}
+                                borderColor="#152538"
+                                legends={[
                                     {
-                                        on: 'hover',
-                                        style: {
-                                            itemTextColor: '#000000',
-                                            itemOpacity: 1
-                                        }
+                                        anchor: 'bottom-left',
+                                        direction: 'column',
+                                        justify: true,
+                                        translateX: 20,
+                                        translateY: -100,
+                                        itemsSpacing: 0,
+                                        itemWidth: 94,
+                                        itemHeight: 18,
+                                        itemDirection: 'left-to-right',
+                                        itemTextColor: '#444444',
+                                        itemOpacity: 0.85,
+                                        symbolSize: 18,
+                                        effects: [
+                                            {
+                                                on: 'hover',
+                                                style: {
+                                                    itemTextColor: '#000000',
+                                                    itemOpacity: 1
+                                                }
+                                            }
+                                        ]
                                     }
-                                ]
-                            }
-                        ]}
-                    />     
+                                ]}
+                            />
+                        </div>     
                     </div>
                 </div>
             </div>

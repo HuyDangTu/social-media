@@ -18,3 +18,13 @@
         overflow: auto;
     }
 }
+
+@media screen and (max-width: 576px){
+    .layout{
+        .sideBar{
+            .sideBar_wrapper{
+                height: auto;
+            }
+        }
+    }
+}

@@ -94,8 +94,8 @@ class UserDashboard extends Component {
         alertFunctionIsRestricted: false,
 
         restrictedFunction: {}
-    }
-
+    } 
+    
     updateFields = (newFormData) => {
         this.setState({
             formData: newFormData
