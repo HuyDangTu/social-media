@@ -265,6 +265,7 @@ class Message extends Component {
         await this.props.dispatch(removeMember(id, uid))
         await this.props.history.push('/message/inbox')
         await this.props.dispatch(getGroupMessage(this.props.match.params.id))
+        await window.location.reload();
         this.setState({ editmess: false })
     }
     follow = async (id) => {
