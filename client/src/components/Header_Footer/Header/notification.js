@@ -54,7 +54,9 @@ class NotificationDetail extends Component {
                                                         this.props.data.type == 'discardReport' ? 'Nội dung bạn báo cáo chưa vi phạm chính sách cộng đồng' :
                                                             this.props.data.type == 'deletePost' ? 'Bài viết của bạn đã bị xoá vì vi phạm chính sách cộng đông' :
                                                                 this.props.data.type == 'deleteComment' ? 'Bình luận của bạn đã bị xoá vì vi phạm chính sách cộng đồng ' :
-                                                                    this.props.data.type == 'acceptfollow' ? ' đã chấp nhập lời theo dõi của bạn' : ''
+                                                                    this.props.data.type == 'acceptfollow' ? ' đã chấp nhập lời theo dõi của bạn' : 
+                                                                      this.props.data.type == 'restrictUserFunction' ? ' đã hạn chế một số tính năng của bạn':''
+                                                                    
                                     }
                                 </p>
                                 <h6>

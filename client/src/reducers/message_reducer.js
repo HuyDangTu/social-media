@@ -17,6 +17,7 @@ import {
     UPLOAD_GROUPIMG,
     SEEN_GROUP,
     FIND_PERSONAL,
+    GET_ICESERVERS
 } from '../actions/types';
 
 export default function(state={},action){
@@ -94,6 +95,12 @@ export default function(state={},action){
             return{
                 ...state,
                 conversationinfo:action.payload
+            }
+        }
+        case GET_ICESERVERS:{
+            return{
+                ...state,
+                iceServers:action.payload
             }
         }
 

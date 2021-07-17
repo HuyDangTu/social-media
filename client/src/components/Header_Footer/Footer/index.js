@@ -6,11 +6,13 @@ import faCompass from '@fortawesome/fontawesome-free-solid/faCompass';
 import faPhone from '@fortawesome/fontawesome-free-solid/faPhone';
 import faClock from '@fortawesome/fontawesome-free-solid/faClock';
 import faEnvelope from '@fortawesome/fontawesome-free-solid/faEnvelope';
+import { getIceServers } from '../../../actions/message_action'
 import Collapse from '@material-ui/core/Collapse'
 import { Point, Phone, Video, Microphone, MicrophoneOff, VideoOff, X } from 'tabler-icons-react'
 import Card from '@material-ui/core/Card';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import ReactDOM from 'react-dom'
 
 class Footer extends Component {
@@ -37,28 +39,28 @@ class Footer extends Component {
         
         var servers = { 'iceServers': [
             {
-              url: 'stun:global.stun.twilio.com:3478?transport=udp',
-              urls: 'stun:global.stun.twilio.com:3478?transport=udp'
+                "url": "stun:global.stun.twilio.com:3478?transport=udp",
+                "urls": "stun:global.stun.twilio.com:3478?transport=udp"
             },
             {
-              url: 'turn:global.turn.twilio.com:3478?transport=udp',
-              username: '82a4ba095072d36772b627702bac0cb55af1f231adc6164666ac858ba6b4f497',
-              urls: 'turn:global.turn.twilio.com:3478?transport=udp',
-              credential: 'QGaYzNHQ7JzVpc5n3032E1gHRELvW3vsWCe7+7dh1B4='
+                "url": "turn:global.turn.twilio.com:3478?transport=udp",
+                "username": "9ffe7eac330ff2dd11c09cd29070d679898dc341fa93cd9b6db77fc73dd7128a",
+                "urls": "turn:global.turn.twilio.com:3478?transport=udp",
+                "credential": "cU8ywPgD7GYMH/FFedZA5rWkhIKhq4oFPB5aoJQosNk="
             },
             {
-              url: 'turn:global.turn.twilio.com:3478?transport=tcp',
-              username: '82a4ba095072d36772b627702bac0cb55af1f231adc6164666ac858ba6b4f497',
-              urls: 'turn:global.turn.twilio.com:3478?transport=tcp',
-              credential: 'QGaYzNHQ7JzVpc5n3032E1gHRELvW3vsWCe7+7dh1B4='
+                "url": "turn:global.turn.twilio.com:3478?transport=tcp",
+                "username": "9ffe7eac330ff2dd11c09cd29070d679898dc341fa93cd9b6db77fc73dd7128a",
+                "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
+                "credential": "cU8ywPgD7GYMH/FFedZA5rWkhIKhq4oFPB5aoJQosNk="
             },
             {
-              url: 'turn:global.turn.twilio.com:443?transport=tcp',
-              username: '82a4ba095072d36772b627702bac0cb55af1f231adc6164666ac858ba6b4f497',
-              urls: 'turn:global.turn.twilio.com:443?transport=tcp',
-              credential: 'QGaYzNHQ7JzVpc5n3032E1gHRELvW3vsWCe7+7dh1B4='
+                "url": "turn:global.turn.twilio.com:443?transport=tcp",
+                "username": "9ffe7eac330ff2dd11c09cd29070d679898dc341fa93cd9b6db77fc73dd7128a",
+                "urls": "turn:global.turn.twilio.com:443?transport=tcp",
+                "credential": "cU8ywPgD7GYMH/FFedZA5rWkhIKhq4oFPB5aoJQosNk="
             }
-          ]};
+        ] };
         this.caller = new window.RTCPeerConnection(servers);
         //Listen for ICE Candidates and send them to remote peers
         this.caller.onicecandidate = (evt)=> {

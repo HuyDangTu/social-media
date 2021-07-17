@@ -147,3 +147,34 @@ app.listen(port, () => {
         console.log(`Server is running at ${port}`);
     }
 })
+
+app.post('/api/pusher/auth/:id', (req, res) => {
+    const socketId = req.body.socket_id;
+    const channel = req.body.channel_name;
+    let id = req.params.id
+    User.findById(id,(err,user)=>{
+        if(err) throw err;
+        
+        if(!user) return res.json({
+            isAuth: false,
+            error: true
+        });      
+        //use later
+        console.log(user);
+        var presenceData = {
+            user_id: user._id,
+            user_info: {
+                avt: user.avt,
+                userName: user.userName,
+                id:user._id
+            }
+        }
+        const auth = pusher.authenticate(socketId, channel, presenceData);
+        console.log(auth)
+        res.send(auth);
+    })
+});
+
+
+// const client = require('twilio')("AC4a646aa80898fb472a5f6e875787c5fb", "2122dfed4e52f1f1299d3992ce9e5f1d");
+// client.tokens.create().then(token => console.log(token.iceServers));

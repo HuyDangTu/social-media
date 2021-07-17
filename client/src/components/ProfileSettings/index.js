@@ -246,7 +246,7 @@ class ProfileSettings extends Component {
             }
         })
     }
-    handlePrivateChange = ()=> {
+    handlePrivateChange () {
         this.setState({ loading: true })
         this.setState({ privateMode: !this.state.privateMode })
         this.props.dispatch(changePrivate(this.state.privateMode))

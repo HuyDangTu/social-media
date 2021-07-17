@@ -377,8 +377,10 @@ class Message extends Component {
                                         }
 
                                     </div>
-
-                                    <Dots size={24} strokeWidth={0} fill="black" onClick={() => this.setState({ editmess: true })}></Dots>
+                                    {
+                                        this.props.messages.groupmesslist?this.props.messages.groupmesslist.messagelist ?    <Dots size={24} strokeWidth={0} fill="black" onClick={() => this.setState({ editmess: true })}></Dots>:'':''
+                                    }
+                                
 
                                 </div>
                                 {

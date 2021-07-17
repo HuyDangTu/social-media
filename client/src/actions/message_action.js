@@ -20,6 +20,7 @@ import {
     UPLOAD_GROUPIMG,
     SEEN_GROUP,
     FIND_PERSONAL,
+    GET_ICESERVERS
 } from './types';
 export function getMessage(id) {
     const request = axios.get(`${MESS_SERVER}/get/${id}`)
@@ -212,4 +213,15 @@ export function seenAll(){
         type: SEEN_GROUP,
         payload:request
 }
+
 }
+export function getIceServers(){
+    const request = axios.post(`${MESS_SERVER}/geticeServers`)
+    .then(response=>response.data);
+    return{
+        type: GET_ICESERVERS,
+        payload:request
+    }
+}
+
+

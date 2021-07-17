@@ -198,7 +198,10 @@ class Header extends Component {
                                                                         this.props.notification.notifylist[0].type == "deletePost" ? 'Bài viết của bạn đã vi phạm chính sách' :
                                                                             this.props.notification.notifylist[0].type == "deleteComment" ? 'Báo cáo của bạn đã vi phạm chính sách' :
                                                                                 this.props.notification.notifylist[0].type == "askfollow" ? ' đã yêu cầu theo dõi bạn' : 
-                                                                                this.props.notification.notifylist[0].type == 'acceptfollow' ? ' đã chấp nhập lời theo dõi của bạn' : ''
+                                                                                this.props.notification.notifylist[0].type == 'acceptfollow' ? ' đã chấp nhập lời theo dõi của bạn' :
+                                                                                this.props.notification.notifylist[0].type == 'restrictUserFunction' ? ' đã hạn chế tính năng của bạn' : ""
+                                                                            
+
                                                 }
                                             </p>
                                             <h6>

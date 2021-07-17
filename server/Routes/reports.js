@@ -7,7 +7,6 @@ app.use(cors())
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-
 const mailer = require('nodemailer');
 const moment = require("moment");
 const formidable = require('express-formidable');
@@ -40,7 +39,101 @@ const { Notification } = require('../models/notification');
 
 const { auth } = require('../middleware/auth');
 const { admin } = require('../middleware/admin');
-
+function findPost(postId, userHiddenPost, blockedUsers) {
+    console.log(userHiddenPost);
+    const post = Post.aggregate([
+        {
+            "$match": { "_id": ObjectId(postId) }
+        },
+        {
+            "$match": { "_id": { "$nin": userHiddenPost } }
+        },
+        {
+            $lookup: { from: 'users', localField: 'postedBy', foreignField: '_id', as: 'postedBy' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'likes', foreignField: '_id', as: 'likes' }
+        },
+        {
+            $lookup: { from: 'users', localField: 'userTag', foreignField: '_id', as: 'userTag' }
+        },
+        {
+            $lookup: { from: 'comments', localField: 'comments', foreignField: '_id', as: 'comments' },
+        },
+        {
+            $unwind: {
+                path: "$comments",
+                preserveNullAndEmptyArrays: true,
+            }
+        },
+        {
+            $lookup: { from: 'users', localField: 'comments.postedBy', foreignField: '_id', as: 'comments.postedBy' },
+        },
+        {
+            "$project": {
+                "_id": 1,
+                "dateDifference": { $trunc: { $divide: [{ $subtract: [new Date(), "$createdAt"] }, 1000 * 60 * 60 * 24] } },
+                "images": 1,
+                "comments": {
+                    "_id": 1,
+                    "content": 1,
+                    "likes": 1,
+                    "postedBy": {
+                        "_id": 1,
+                        "userName": 1,
+                        "avt": 1,
+                    },
+                    "hiden": 1,
+                    "createdAt": 1,
+                    "updatedAt": 1,
+                },
+                "likes": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,
+                },
+                "userTag": {
+                    "_id": 1,
+                    "userName": 1,
+                },
+                "hidden": 1,
+                "locationName": 1,
+                "description": 1,
+                "postedBy": {
+                    "_id": 1,
+                    "avt": 1,
+                    "userName": 1,
+                },
+                "createdAt": 1,
+                "updatedAt": 1,
+            }
+        }, {
+            "$sort": { "comments.createdAt": -1 }
+        },
+        {
+            "$group": {
+                _id: '$_id',
+                locationName: {$first :'$locationName'},
+                description: { $first: '$description' },
+                dateDifference: { $first: '$dateDifference' },
+                images: { $first: '$images' },
+                createdAt: { $first: '$createdAt' },
+                updatedAt: { $first: '$updatedAt' },
+                likes: { $first: '$likes' },
+                userTag: { $first: '$userTag' },
+                hidden: { $first: '$hidden' },
+                postedBy: { $first: '$postedBy' },
+                comments: {
+                    $push: '$comments'
+                }
+            }
+        }], function (err, post) {
+            if (err) return {} 
+            return post[0];
+        }
+    )
+    return post;
+}
 function findComment(id){
     const comment = Comment.aggregate([
         {
