@@ -53,7 +53,7 @@ class GroupMess extends Component {
                             this.props.mess.type == 'replyStory' ?
                                 <div className="message_content">
                                     <p onClick={()=>{}}>
-                                        Đã trả lời tin của bạn: {this.props.mess.content}
+                                        Đã trả lời story: {this.props.mess.content}
                                     </p>
                                 </div>
                             :""
