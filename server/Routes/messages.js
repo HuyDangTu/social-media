@@ -681,7 +681,7 @@ router.get('/api/messages/conversations', auth, (req, res) => {
         })
 })
 router.get('/api/messages/geticeServers', auth, (req, res) => {
-    const client = require('twilio')("AC4a646aa80898fb472a5f6e875787c5fb", "2122dfed4e52f1f1299d3992ce9e5f1d");
+    const client = require('twilio')("AC4a646aa80898fb472a5f6e875787c5fb", "05f8fb23eb82f914beefb8ba1fc018a0");
     client.tokens.create().then(token => 
         res.json(token.iceServers));
 });
