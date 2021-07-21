@@ -71,7 +71,7 @@ export function sendimg(file) {
         header: { 'content-type': 'multipart/form-data' }
     }
     formData.append("file", file)
-    const request = axios.post(`${MESS_SERVER}/uploadimage`, formData, config)
+    const request = axios.post(`${USER_SERVER}/uploadimage`, formData, config)
         .then(response => response.data);
     return {
         type: UPLOAD_IMG,

@@ -38,6 +38,7 @@ const { Post } = require('../../models/post');
 const { Tag } = require('../../models/tag');
 const { Notification } = require('../../models/notification');
 const { Nationality } = require('../../models/nationality');
+const {Group} = require('../../models/group');
 const { auth } = require('../../middleware/auth');
 
 function isRestricted(restrictedFunctions, func){
@@ -269,6 +270,35 @@ router.put('/api/users/updatepic', auth, (req, res) => {
             }
         })
 })
+
+router.post('/api/users/searchmess', auth, (req, res) => {
+
+    let limit = req.body.limit ? parseInt(req.body.limit) : 3;
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+
+    const matchRegex = new RegExp(req.body.keyword);
+    console.log(matchRegex)
+    User.find({ userName: { $regex: matchRegex }, _id: {$nin: req.user.blockedUsers} })
+        .skip(skip)
+        .limit(limit)
+        .select("_id avt userName blockedUsers")
+        .exec((err, users) => {
+            let filteredUsers = [...users]
+            filteredUsers = filteredUsers.filter(item => 
+                !item.blockedUsers.includes(req.user._id)
+            )
+            console.log(filteredUsers)
+            Group.find({ $and: [ {title: { $regex: matchRegex }, user:{$in: req.user._id}}] })
+                .skip(skip)
+                .limit(limit)
+                .select("_id title groupimg user")
+                .exec((err, groups) => {
+                    if (err) res.status(400).json(err);
+                    res.status(200).json({ users: filteredUsers, groups });
+                })
+        })
+})
+
 
 router.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
     let message = "", isValidUserName = false;
@@ -844,6 +874,19 @@ router.get('/api/users/nationality', (req,res)=>{
     Nationality.find({}).then((err,doc)=>{
         if(err) return res.json(err)
         return res.status(200).json({doc});
+    })
+})
+
+router.post('/api/users/uploadimage', auth, formidable(), (req, res) => {
+    cloudinary.uploader.upload(req.files.file.path, (result) => {
+        console.log(result);
+        res.status(200).send({
+            public_id: result.public_id,
+            url: result.url,
+        })
+    }, {
+        public_id: `${Date.now()}`,
+        resource_type: `auto`
     })
 })
 
