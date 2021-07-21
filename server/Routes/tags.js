@@ -34,6 +34,7 @@ mongoose.connect(process.env.DATABASE, {
 
 const { User } = require("../models/user");
 const { Tag } = require('../models/tag');
+const { Post } = require('../models/post');
 const { auth } = require('../middleware/auth');
 
 router.post('/api/tags/newTag', auth, (req, res) => {

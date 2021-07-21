@@ -8,7 +8,7 @@ const getEmailData = (to, name, token, template, actionData) =>{
     switch (template){
         case "reset_password":
             data = {
-                from: "huy311099@gmail.com",
+                from: "khoabinu3@gmail.com",
                 to,
                 subject: `Hey ${name}, reset your password`,
                 html: resetpass(actionData)
@@ -24,7 +24,7 @@ const sendEmail = (to, name, token, type, actionData= null) =>{
     const smtpTransport = mailer.createTransport({
         service: "Gmail",
         auth:{
-            user: "huy311099@gmail.com",
+            user: "khoabinu3@gmail.com",
             pass:  process.env.EMAIL_PASS
         }
     });

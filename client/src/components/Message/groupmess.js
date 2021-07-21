@@ -79,9 +79,9 @@ class GroupMess extends Component {
                     {
                         this.props.mess.type == 'text' ?
                        
-                    <p  onClick={()=>this.setState({show:!this.state.show})}>
-                        {this.props.mess.content}  
-                    </p>
+                        <p  onClick={()=>this.setState({show:!this.state.show})}>
+                            {this.props.mess.content}  
+                        </p>
             
                             :
                             this.props.mess.type == 'img' ?

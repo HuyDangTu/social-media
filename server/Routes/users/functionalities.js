@@ -40,6 +40,7 @@ const { Notification } = require('../../models/notification');
 const { Nationality } = require('../../models/nationality');
 const {Group} = require('../../models/group');
 const { auth } = require('../../middleware/auth');
+const { sendEmail } = require('../../ultils/mail/index');
 
 function isRestricted(restrictedFunctions, func){
     var today = moment().startOf('day').valueOf();

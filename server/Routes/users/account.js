@@ -42,6 +42,7 @@ mongoose.connect(process.env.DATABASE, {
 const { User } = require("../../models/user");
 const { auth } = require('../../middleware/auth');
 const { admin } = require('../../middleware/admin');
+const { sendEmail } = require('../../ultils/mail/index');
 
 
 router.get('/api/users/auth', auth, (req, res) => {

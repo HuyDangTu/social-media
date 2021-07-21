@@ -138,10 +138,10 @@ class ResetPass extends Component {
                         {
                         this.state.formSuccess ?
                             <div className="message">
-                                Done, check your email
-                            </div>
-                            : null
-                         }
+                               Done, check your email
+                        </div>
+                        : null
+                        }
                 </form>
                 </div>
                 </div>
