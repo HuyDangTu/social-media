@@ -43,21 +43,21 @@ class Footer extends Component {
             },
             {
                 "url": "turn:global.turn.twilio.com:3478?transport=udp",
-                "username": "1b3b3a4f9fef68765afb8bd3d3bd1cae8a57dfe4b00189e40ab8f4296204cf30",
+                "username": "e2e85dffbdccd5668ea97c54ebd60b7bc005e1b59ec1d1a5e1709f9281ea3508",
                 "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                "credential": "xFiSukmFcBw18Xb0KcoyckkUWxG1BjhZ3QzyGlBimOU="
+                "credential": "08BH+9BNC24frPWICgYaV1mOZlWFyROgpBp97/vgSSM="
             },
             {
                 "url": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "username": "1b3b3a4f9fef68765afb8bd3d3bd1cae8a57dfe4b00189e40ab8f4296204cf30",
+                "username": "e2e85dffbdccd5668ea97c54ebd60b7bc005e1b59ec1d1a5e1709f9281ea3508",
                 "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "credential": "xFiSukmFcBw18Xb0KcoyckkUWxG1BjhZ3QzyGlBimOU="
+                "credential": "08BH+9BNC24frPWICgYaV1mOZlWFyROgpBp97/vgSSM="
             },
             {
                 "url": "turn:global.turn.twilio.com:443?transport=tcp",
-                "username": "1b3b3a4f9fef68765afb8bd3d3bd1cae8a57dfe4b00189e40ab8f4296204cf30",
+                "username": "e2e85dffbdccd5668ea97c54ebd60b7bc005e1b59ec1d1a5e1709f9281ea3508",
                 "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                "credential": "xFiSukmFcBw18Xb0KcoyckkUWxG1BjhZ3QzyGlBimOU="
+                "credential": "08BH+9BNC24frPWICgYaV1mOZlWFyROgpBp97/vgSSM="
             }
         ]
         };
