@@ -16,6 +16,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 class PostEdit extends Component {
 
     state = {
+        editlocation: false,
         inputValue: "",
         formError: false,
         formSuccess: false,
@@ -240,7 +241,28 @@ class PostEdit extends Component {
                                 }
                                 {this.state.formData.description.value == "" ? <Skeleton variant="rect" width={'100%'} height={50}  /> :
                                 <div className="location_container">
-                                    <SearchLocationInput></SearchLocationInput>
+                                         {
+                                this.state.editlocation ?
+                                    <div className="edit_location">
+                                        <SearchLocationInput></SearchLocationInput>
+                                        <h5 onClick={() => this.setState({ editlocation: false })}>Hủy</h5>
+                                    </div> : 
+                                    this.props.locationName?
+                                    <div className="edit_location">
+                                        <div className="search-location-input">
+                                            <input
+                                                value={this.props.locationName}
+                                            />
+                                        </div>
+                                     
+                                        <h5 onClick={() => this.setState({ editlocation: true })}>Sửa</h5>
+                                    </div>
+                                    :
+                                    <div className="edit_location">
+                                        <SearchLocationInput></SearchLocationInput>
+                                        {/* <h5 onClick={() => this.setState({ editlocation: false })}>Hủy</h5> */}
+                                    </div>
+                            }
                                 </div>
                                 }
                                 <div className="field_container">

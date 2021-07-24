@@ -123,7 +123,7 @@ class Header extends Component {
                 <div className="notify">
                     <div>
                         {
-                            this.props.notification ? this.props.notification.notifylist ?
+                            this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.length>0 ?
                                 this.props.notification.notifylist.forEach(
                                     (item) => {
                                         console.log(item.seenStatus)
@@ -131,7 +131,7 @@ class Header extends Component {
                                             notinumber = notinumber + 1;
                                         }
                                     }
-                                ) : '' : ''
+                                ) : '' : '':''
                         }
                         <Badge badgeContent={notinumber} overlap="circle" color="secondary">
                             <Notification onClick={this.toggleNofifyDropdown} size={34} color="grey" strokeWidth={1} />

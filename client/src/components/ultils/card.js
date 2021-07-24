@@ -424,7 +424,7 @@ class  Card extends Component {
                             </div>
                             {
                                 this.state.showEditor ? 
-                                <PostEdit description={props.description} close={this.closeEditor} handleSnackBar={(mess)=>{this.props.handleSnackBar(mess)}} ActionType="newFeed" userTag={props.userTag} postId={props._id}/>
+                                <PostEdit  locationName={props.locationName}description={props.description} close={this.closeEditor} handleSnackBar={(mess)=>{this.props.handleSnackBar(mess)}} ActionType="newFeed" userTag={props.userTag} postId={props._id}/>
                                 :
                                 <div className="description">
                                     {this.handleDescription(props.description,props.userTag,props.locationName)}

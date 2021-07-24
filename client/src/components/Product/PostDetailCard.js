@@ -534,7 +534,7 @@ class PostDetailCard extends Component {
                                             handleSnackBar={(mess,res) => { this.handleSnackBar(mess,res) }} 
                                             ActionType="detail" 
                                             userTag={props.post.userTag} 
-                                            location={props.post.locationName}
+                                            locationName={props.post.locationName}
                                             postId={props.post._id}/>
                                             :this.handleDescription(props.post.description,props.post.userTag,props.post.locationName)
                                 }

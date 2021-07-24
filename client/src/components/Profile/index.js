@@ -28,6 +28,7 @@ class Profile extends Component {
     state = {
         setfollowerDiaglog: false,
         setfollowingDiaglog: false,
+        setSnackfollow:false,
         setSnack: false,
         setDialog: false,
         setType: 'posted',
@@ -139,7 +140,7 @@ class Profile extends Component {
         if(this.props.user.userProfile?this.props.user.userProfile.privateMode===true:'')
         {
             await this.props.dispatch(requestfollow(id)).then(response=>{
-                this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
+                this.setState({ setSnackfollow: true, setMessage: 'Đã theo dõi', severity: 'success' })
             })
         }
         else{
@@ -150,7 +151,7 @@ class Profile extends Component {
                 }else{
                     this.props.dispatch(findProfile(this.props.match.params.id))
                     this.props.dispatch(auth());
-                    this.setState({ setSnack: true, setMessage: 'Đã theo dõi', severity: 'success' })
+                    this.setState({ setSnackfollow: true, setMessage: 'Đã theo dõi', severity: 'success' })
                 }
             })
         }
@@ -172,7 +173,7 @@ class Profile extends Component {
                     }else{
                         this.props.dispatch(findProfile(this.props.match.params.id))
                         this.props.dispatch(auth());
-                        this.setState({ setSnack: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
+                        this.setState({ setSnackfollow: true, setMessage: 'Đã bỏ theo dõi', severity: 'success' })
                     }
                 })
         }  
@@ -323,8 +324,8 @@ class Profile extends Component {
                                             vertical: 'bottom',
                                             horizontal: 'center'
                                         }}
-                                        open={this.state.setSnack}
-                                        onClose={() => this.setState({ setSnack: false })}
+                                        open={this.state.setSnackfollow}
+                                        onClose={() => this.setState({ setSnackfollow: false })}
                                         autoHideDuration={1000}
                                     >
                                     <MuiAlert elevation={6} variant="filled" severity={this.state.severity} message={this.state.setMessage}>{this.state.setMessage}</MuiAlert>
