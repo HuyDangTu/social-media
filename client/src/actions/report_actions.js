@@ -5,10 +5,14 @@ import {
     SORT_REPORT,
     UPDATE_REPORT,
     DELETE_POST_REPORT,
+    DELETE_POST,
+    DELETE_COMMENT,
     GET_REPORT_DETAIL,
     CLEAR,
     RESTRICT_USER,
-    DELETE_RESTRICTED_FUNCTION
+    DELETE_RESTRICTED_FUNCTION,
+    DELETE_REPORT_POST,
+    DELETE_REPORT_COMMENT
 } from './types';
 
 
@@ -95,7 +99,6 @@ export function clearDetail(){
     }
 }
 
-
 export function updateReport(id){
     const data = { id }
     const request = axios.put(`${REPORT_SERVER}/updateReport`, data)
@@ -117,7 +120,7 @@ export function deletePost(postId,reportId, id){
             return response.data
         })
     return {
-        type: UPDATE_REPORT,
+        type: DELETE_REPORT_POST,
         payload: request
     }
 }
@@ -130,7 +133,7 @@ export function deleteComment(commentId, reportId) {
             return response.data
         })
     return {
-        type: UPDATE_REPORT,
+        type: DELETE_REPORT_COMMENT,
         payload: request
     }
 }
@@ -157,7 +160,7 @@ export function restrictUser(func,userId,reportId){
             return response.data
         })
     return {
-        type: UPDATE_REPORT,
+        type: RESTRICT_USER,
         payload: request
     }
 }

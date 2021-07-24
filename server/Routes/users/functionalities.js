@@ -229,7 +229,7 @@ router.get('/api/users/tagged/:id', auth, (req, res) => {
 router.post('/api/users/getSavedPost', auth, (req, res) => {
 
     Post.find({_id:{$in: req.user.saved}})
-    .sort({ "createdAt": -1 })
+    .sort({ "createdAt": 0 })
     .exec((err, posts) => {
         if (err) return res.status(422).json({ error: err })
         res.status(200).json({posts})
@@ -896,7 +896,6 @@ router.get('/api/users/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
         .populate("followers", "_id userName avt")
         .populate("followings", "_id userName avt")
-        
         .select("-password")
         .then(user => {
             if(!req.user.blockedUsers.includes(user._id) && !user.blockedUsers.includes(req.user._id)){

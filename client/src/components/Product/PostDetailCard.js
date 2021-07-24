@@ -432,7 +432,7 @@ class PostDetailCard extends Component {
         return <Report 
             isReportFormShow={this.state.isReportFormShow}
             reportData = {this.state.reportData}
-            handleSnackBar={(mess) => { this.handleSnackBar(mess) }}
+            handleSnackBar={(mess,res) => { this.handleSnackBar(mess,res) }}
             list={this.props.policies.policyList}
             closeReportForm = {()=>this.closeReportForm()}
         />
@@ -531,7 +531,7 @@ class PostDetailCard extends Component {
                                     this.state.showEditor?
                                     <PostEdit description={props.post.description} 
                                             close={this.closeEditor} 
-                                            handleSnackBar={(mess) => { this.handleSnackBar(mess) }} 
+                                            handleSnackBar={(mess,res) => { this.handleSnackBar(mess,res) }} 
                                             ActionType="detail" 
                                             userTag={props.post.userTag} 
                                             location={props.post.locationName}
@@ -590,13 +590,13 @@ class PostDetailCard extends Component {
                     this.showReportForm()
                 }
                 {
-                    <Dialog className="dialog_cont" 
-                        onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
-                        open={this.state.alertFunctionIsRestricted} >
-                        <div className="dialog_header">
-                            <h5>Bạn đã bị hạn chế chức năng này cho đến {moment(this.state.restrictedFunction.amountOfTime).format("L")}</h5>
-                        </div>
-                    </Dialog>
+                <Dialog className="dialog_cont" 
+                    onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 
+                    open={this.state.alertFunctionIsRestricted} >
+                    <div className="dialog_header">
+                        <h5>Bạn đã bị hạn chế chức năng này cho đến {moment(this.state.restrictedFunction.amountOfTime).format("L")}</h5>
+                    </div>
+                </Dialog>
                 }
                 <Snackbar
                     anchorOrigin={{
@@ -606,7 +606,7 @@ class PostDetailCard extends Component {
                     open={this.state.setSnack}
                     onClose={() => this.setState({ setSnack: false })}
                     autoHideDuration={3000}>
-                    <MuiAlert elevation={6} variant="filled" severity={this.state.handleSnackBar?"success":"warning"} message={this.state.SnackMess}>{this.state.SnackMess}</MuiAlert>
+                    <MuiAlert elevation={6} variant="filled" severity={this.state.reportSuccess?"success":"warning"} message={this.state.SnackMess}>{this.state.SnackMess}</MuiAlert>
                 </Snackbar>
             </div>
         );

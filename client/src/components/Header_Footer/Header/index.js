@@ -301,14 +301,17 @@ class Header extends Component {
         this.props.dispatch(getNotification());
         console.log(this.props.notification)
     }
+
     acceptfollow = async(id)=>{
         await this.props.dispatch(acceptfollow(id));
         await this.props.dispatch(getNotification())
     }
+
     declinefollow = async(id)=>{
         await this.props.dispatch(declinefollow(id)); 
         await this.props.dispatch(getNotification());
     }
+
     handleNotiClick = (id, type, link) => {
         this.props.dispatch(seenNotification(id))
         console.log('Đã xem thông báo', id)
@@ -332,11 +335,11 @@ class Header extends Component {
 
     handleDeleteNoti = async (id)=>{
         await this.props.dispatch(disablenotification(id))
-       await  this.props.dispatch(getNotification())
+        await  this.props.dispatch(getNotification())
     }
     handleSeenNoti = async (id)=>{
         await this.props.dispatch(seenNotification(id))
-       await  this.props.dispatch(getNotification())
+        await  this.props.dispatch(getNotification())
     }
 
     showLinks = (type) => {

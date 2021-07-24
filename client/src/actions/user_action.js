@@ -282,7 +282,7 @@ export function changePassword(dataToSubmit){
 
 export function findSaved(id) {
     const request = axios.post(`${USER_SERVER}/getSavedPost`)
-        .then(response => { console.log(response.data.posts); return response.data.posts})
+        .then(response => { console.log(response.data.posts); return response.data.posts.reverse()})
     return {
         type: GET_TYPE,
         payload: request

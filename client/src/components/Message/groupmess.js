@@ -50,10 +50,18 @@ class GroupMess extends Component {
                                 <img onClick={this.handleMessClick} src={this.props.mess.content}></img> :
                             this.props.mess.type == 'sticker' ?
                                 <img onClick={this.handleMessClick} className="sticker_mess" src={this.props.mess.content}></img> :
+                            this.props.mess.type == 'replyWithReaction' ?
+                                <div className="message_content">
+                                    <p>
+                                        <b>Đã bày tỏ cảm xúc về câu chuyện</b>
+                                        <img onClick={this.handleMessClick} className="reaction_mess" src={this.props.mess.content}></img>
+                                    </p>
+                                </div>
+                                :
                             this.props.mess.type == 'replyStory' ?
                                 <div className="message_content">
                                     <p onClick={()=>{}}>
-                                        Đã trả lời story: {this.props.mess.content}
+                                        <b>Đã trả lời câu chuyện:</b> {this.props.mess.content}
                                     </p>
                                 </div>
                             :""

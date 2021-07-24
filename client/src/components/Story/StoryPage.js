@@ -310,11 +310,13 @@ class StoryPage extends Component {
                     this.props.history.push('/newfeed')
                 }else{
                     if(this.state.startIndex == response.payload.storyList[0].stories.length){
+                        this.pauseStory();
                         this.setState({ 
                             storyToShow: response.payload.storyList[0],
                             startIndex: this.state.startIndex -1
                         });
                     }else{
+                        this.pauseStory();
                         this.setState({ 
                             storyToShow: response.payload.storyList[0],
                         });
@@ -349,6 +351,30 @@ class StoryPage extends Component {
         }else{
             console.log("Hờ ớ");
         }   
+    }
+
+    sendReact = (reaction) => {
+        this.state.mess.content = reaction
+       
+        let dataToSubmit = this.state.mess;
+        dataToSubmit.type = "replyWithReaction"
+        replyStory(dataToSubmit).then(response=>{
+            if(response.messagelist){
+                this.setState({
+                    sendSucess: true,
+                    message: "success",
+                    mess:{
+                        ...this.state.mess,
+                        content: '',
+                    }
+                })
+            }else{
+                this.setState({
+                    sendSucess: true, 
+                    message: "error",  
+                })
+            }
+        });
     }
 
     render() {
@@ -434,7 +460,9 @@ class StoryPage extends Component {
                         <Trash onClick={this.deleteStory} size={25} strokeWidth={2} color="black"/>
                     </div>
                     <div className={this.state.mess.sentBy == this.state.mess.sentTo ? "hiden" : "display"}>
-                            <Reaction/>
+                            <Reaction
+                                sendReact = {(reaction) => this.sendReact(reaction)}
+                            />
                             <form  onSubmit={(event) => this.submitForm(event)}>
                             <div className="chat_box">
                                 <div className="chat_area">

@@ -196,9 +196,10 @@ class PostEdit extends Component {
                 console.log(this.props.products);
                 if (this.props.products.updatePost) {
                     this.props.close();
-                    this.props.handleSnackBar("Đã chỉnh sửa bài viết")
+                    this.props.handleSnackBar("Đã chỉnh sửa bài viết",true)
                 } else {
                     this.setState({ formError: true })
+                    this.props.handleSnackBar("Đã xảy ra lỗi",false)
                 }
             })
         } else {
@@ -228,7 +229,7 @@ class PostEdit extends Component {
                         <div className="row no-gutters">
                             <div className='col-xl-12 no-gutters'>
                                 {
-                                this.state.formData.description.value == "" ? <Skeleton variant="rect" width={300} height={50} />:
+                                this.state.formData.description.value == "" ? <Skeleton variant="rect" width={'100%'} height={50} />:
                                     <FormField
                                         id={'description'}
                                         change={(element) => this.updateForm(element)}
@@ -237,18 +238,19 @@ class PostEdit extends Component {
                                 
 
                                 }
-                                
-                                 <SearchLocationInput></SearchLocationInput>
-                            
+                                {this.state.formData.description.value == "" ? <Skeleton variant="rect" width={'100%'} height={50}  /> :
+                                <div className="location_container">
+                                    <SearchLocationInput></SearchLocationInput>
+                                </div>
+                                }
                                 <div className="field_container">
-                                {this.state.formData.description.value == "" ? <Skeleton variant="rect" width={300} height={50}  /> :
+                                {this.state.formData.description.value == "" ? <Skeleton variant="rect" width={'100%'} height={50}  /> :
                                     <div>
                                     <FormField
                                         id={'userTag'}
                                         change={(element) => this.updateForm(element)}
                                         formData={this.state.formData.userTag}
                                     />
-                                   
                                     </div>
                                 }
                                 </div>

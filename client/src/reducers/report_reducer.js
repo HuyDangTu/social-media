@@ -1,11 +1,13 @@
 import { LetterB } from 'tabler-icons-react';
 import {
-    DELETE_POST,
     GET_ALL_REPORTS,
     GET_REPORT_DETAIL,
     UPDATE_REPORT,
+    RESTRICT_USER,
     CLEAR,
     DELETE_RESTRICTED_FUNCTION,
+    DELETE_REPORT_POST,
+    DELETE_REPORT_COMMENT
 } from '../actions/types';
 
 export default function (state = {}, action) {
@@ -23,35 +25,59 @@ export default function (state = {}, action) {
             }
         }
         case UPDATE_REPORT: {
-            if(action.payload.report.reportType == "user" ){
-                let newUserInfo = {
-                    ...state.reportDetail.userId[0]
-                }
-                console.log(newUserInfo)
-                newUserInfo.restrictedFunctions = action.payload.restrictedFunctions
-                console.log(newUserInfo)
-                return {
-                    reportDetail: {
-                        ...state.reportDetail,
-                        status: action.payload.report.status,
-                        userId: [newUserInfo]
-                    }
-                }
+            // if(action.payload.report.reportType == "user" ){
+            //     let newUserInfo = {
+            //         ...state.reportDetail.userId[0]
+            //     }
+            //     console.log(newUserInfo)
+            //     newUserInfo.restrictedFunctions = action.payload.restrictedFunctions
+            //     console.log(newUserInfo)
+            //     return {
+            //         reportDetail: {
+            //             ...state.reportDetail,
+            //             status: action.payload.report.status,
+            //             userId: [newUserInfo]
+            //         }
+            //     }
+            // }else {
+               
+            // }
+            const newDetail = {
+                ...state.reportDetail,
+                status: action.payload.report.status
             }
-            else{
-                const newDetail = {
+            return {
+                reportDetail: newDetail
+            }
+        }
+        case RESTRICT_USER:{
+            let newUserInfo = {
+                ...state.reportDetail.userId[0]
+            }
+            console.log(newUserInfo)
+            newUserInfo.restrictedFunctions = action.payload.restrictedFunctions
+            console.log(newUserInfo)
+            return {
+                reportDetail: {
                     ...state.reportDetail,
-                    status: action.payload.report.status
-                }
-                return {
-                    reportDetail: newDetail
+                    status: action.payload.report.status,
+                    userId: [newUserInfo]
                 }
             }
         }
-        case DELETE_POST: {
+        case DELETE_REPORT_POST: {
             const newDetail = {
                 ...state.reportDetail,
-                status: action.payload.success
+                status: action.payload.report.status
+            }
+            return {
+                reportDetail: newDetail
+            }
+        }
+        case DELETE_REPORT_COMMENT: {
+            const newDetail = {
+                ...state.reportDetail,
+                status: action.payload.report.status
             }
             return {
                 reportDetail: newDetail

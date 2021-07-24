@@ -36,7 +36,6 @@ class Footer extends Component {
     }
     prepareCaller= ()=>{
         //Initializing a peer connection
-        
         var servers = { 'iceServers': [
             {
                 "url": "stun:global.stun.twilio.com:3478?transport=udp",
@@ -44,24 +43,24 @@ class Footer extends Component {
             },
             {
                 "url": "turn:global.turn.twilio.com:3478?transport=udp",
-                "username": "a31a0bb9ff39bf99636b6237259c12ea68278749bb8c2ca1313c2e16005bc30c",
+                "username": "798536d71d9d55fd39a9b7a796ee8f815ef34cc3010e6f34c451cf4bb4926c59",
                 "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                "credential": "tavCpzrRUabtfRix0mB/taq/HOn4smhHgrLw5+IGyK4="
+                "credential": "USM2dUQqwEUpv78KqDOKn91jATap3uLPt/SJVDZQoiw="
             },
             {
                 "url": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "username": "a31a0bb9ff39bf99636b6237259c12ea68278749bb8c2ca1313c2e16005bc30c",
+                "username": "798536d71d9d55fd39a9b7a796ee8f815ef34cc3010e6f34c451cf4bb4926c59",
                 "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "credential": "tavCpzrRUabtfRix0mB/taq/HOn4smhHgrLw5+IGyK4="
+                "credential": "USM2dUQqwEUpv78KqDOKn91jATap3uLPt/SJVDZQoiw="
             },
             {
                 "url": "turn:global.turn.twilio.com:443?transport=tcp",
-                "username": "a31a0bb9ff39bf99636b6237259c12ea68278749bb8c2ca1313c2e16005bc30c",
+                "username": "798536d71d9d55fd39a9b7a796ee8f815ef34cc3010e6f34c451cf4bb4926c59",
                 "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                "credential": "tavCpzrRUabtfRix0mB/taq/HOn4smhHgrLw5+IGyK4="
+                "credential": "USM2dUQqwEUpv78KqDOKn91jATap3uLPt/SJVDZQoiw="
             }
         ]
-                };
+        };
         this.caller = new window.RTCPeerConnection(servers);
         //Listen for ICE Candidates and send them to remote peers
         this.caller.onicecandidate = (evt)=> {

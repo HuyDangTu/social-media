@@ -46,17 +46,16 @@ function SearchLocationInput() {
 
     useEffect(() => {
         loadScript(
-            `https://maps.googleapis.com/maps/api/js?key=AIzaSyC2UANhvpqKx54aeIVGQk8q0FBCJThlVm4&libraries=places`,
+            `https://maps.googleapis.com/maps/api/js?key=AIzaSyD3r44u0kUzRPhog5wOz3GDC02pOuAzrDA&libraries=places,`,
             () => 
             handleScriptLoad(setQuery, autoCompleteRef)
         );
-    }, []);
+    },[]);
 
-    
     return (
         <div className="search-location-input">
             <input
-                 id="input_value"
+                id="input_value"
                 ref={autoCompleteRef}
                 onChange={event => setQuery(event.target.value)}
                 placeholder="Enter a City"

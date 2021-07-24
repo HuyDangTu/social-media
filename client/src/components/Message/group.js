@@ -139,9 +139,14 @@ class Group extends Component {
                                                                                    
                                                                                 </div> */}
 
-                                                        <h6> {con.lastMess ? (con.lastMess.type == 'event' ? '' : con.lastMess.sentBy._id == this.props.yourProfile._id ? 'Bạn: ' : con.lastMess.sentBy.userName + ': ') : ''}   {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' : con.lastMess.content : ''}</h6>
+                                                        <h6> {con.lastMess ? (con.lastMess.type == 'event' ? '' : 
+                                                        con.lastMess.sentBy._id == this.props.yourProfile._id ? 'Bạn: ' : 
+                                                        con.lastMess.sentBy.userName + ': ') : ''}   
+                                                        {con.lastMess ? con.lastMess.type == 'img' ? 'Đã gửi một hình ảnh' : 
+                                                        con.lastMess.type == 'sticker' ? 'Đã gửi một nhãn dán' :
+                                                        con.lastMess.type == 'replyWithReaction' ? 'Đã phản hồi câu chuyện' :  
+                                                        con.lastMess.content : ''}</h6>
                                                         <h5>{moment(con.lastMess ? con.lastMess.createdAt : '').fromNow()} </h5>
-                                                        
                                                     </div>
                                                   
                                                  

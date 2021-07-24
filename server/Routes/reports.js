@@ -475,7 +475,7 @@ router.post('/api/reports/delete_post', auth, admin, (req, res) => {
 
 router.post('/api/reports/delete_comment', auth, admin, (req, res) => {
     Comment.findByIdAndUpdate(req.body.commentId, {
-        $set: { hidden: true }}, {new: true })
+        $set: { hiden: true }}, {new: true })
     .exec((err, comment) => {
         if (err) res.status(400).send(err);
         Report.findByIdAndUpdate(req.body.reportId, {
@@ -492,7 +492,7 @@ router.post('/api/reports/delete_comment', auth, admin, (req, res) => {
                 "seenStatus": false
             });
             SaveNotification(notification);
-            res.status(200).json(report);
+            res.status(200).json({report});
         })
     })
 })

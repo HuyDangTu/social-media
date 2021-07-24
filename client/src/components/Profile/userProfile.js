@@ -246,7 +246,7 @@ class UserProfile extends Component {
                     }):''):''
                 }
                 </Dialog>
-            </Layout >
+            </Layout>
         )
     }
 }

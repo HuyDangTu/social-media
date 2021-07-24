@@ -478,7 +478,6 @@ $theGoldenRatio: 1.61803398875;
         }
         .receive_mess{
             margin-bottom:8px;
-        
             p{
             width: max-content;
             margin:0px;
@@ -509,7 +508,16 @@ $theGoldenRatio: 1.61803398875;
                 margin-bottom: 8px;
                object-fit: none;    
             }
-        
+            .reaction_mess{
+                width: 40px;
+                margin:0px;
+                border: solid 0.5px none;
+                height: 40px;
+                border-radius: 21px;
+                align-items: center;
+                margin-bottom: 8px;
+               object-fit: contain;    
+            }
         }}
         .sent{
             .avt{
@@ -558,6 +566,9 @@ $theGoldenRatio: 1.61803398875;
                         font-weight: 400;
                         margin-left: 8px;
                     }
+                    b{
+                        margin-right: 10px;
+                    }
                 }
                
                 img{
@@ -586,7 +597,16 @@ $theGoldenRatio: 1.61803398875;
                    
                    object-fit: none;    
                 }
-            
+                .reaction_mess{
+                    width: 40px;
+                    margin:0px;
+                    border: solid 0.5px none;
+                    height: 40px;
+                    border-radius: 21px;
+                    align-items: center;
+                    margin-bottom: 8px;
+                    object-fit: contain;    
+                }
             }
         }
        

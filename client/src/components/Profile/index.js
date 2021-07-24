@@ -67,6 +67,7 @@ class Profile extends Component {
 
         setSnack: false,
         addStorySuccess: false,
+        addStoryStatus: false,
 
         reportStatus: false,
         reportSuccess: false,
@@ -438,15 +439,17 @@ class Profile extends Component {
                             </ul>
                         </div>
                         {
-                        yourProfile ? yourProfile._id !== this.props.match.params.id ? this.props.user.userProfile?this.props.user.userProfile.privateMode===true ? yourProfile.followings.includes(this.props.match.params.id)===false?
-                        <div className="row body">
-                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain"></div>
-                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain">
-                            <h6>Tài khoản riêng tư theo dõi để thấy bài viết</h6>
+                        yourProfile ? 
+                        yourProfile._id !== this.props.match.params.id ? 
+                        this.props.user.userProfile?this.props.user.userProfile.privateMode===true ? 
+                        yourProfile.followings.includes(this.props.match.params.id)===false?
+                            <div className="row body">
+                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain"></div>
+                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain">
+                                <h6>Tài khoản riêng tư theo dõi để thấy bài viết</h6>
+                                </div>
+                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain"></div>
                             </div>
-                            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain"></div>
-                          
-                        </div>
                         :
                         <PostRow history={this.props.history} typelist={typelist}></PostRow>
                         :
@@ -532,10 +535,9 @@ class Profile extends Component {
                         >
                         <div className="wrapper">
                             <div className="row no-gutters">
-                                <div className="col-lg-3 no-gutters">
+                                <div className="col-xl-3 col-lg-3 no-gutters">
                                     <div className="row no-gutters form-header">
                                     <h5>Tin nổi bật</h5>
-                                    
                                     <FormField
                                         id={'name'}
                                         formData={this.state.formData.name}
@@ -552,23 +554,23 @@ class Profile extends Component {
                                                         name: this.state.formData.name.value,
                                                         storyList: [...this.state.highLightStory]
                                                     }
-                                                    console.log("dô",dataToSubmit);
+                                                    console.log("data",dataToSubmit);
                                                     this.props.dispatch(createHighLightStory(dataToSubmit)).then(response=>{
                                                         if(response.payload.success){
-                                                            this.setState({addStorySuccess: true,formMessage:"Thêm thành công",createHighlightStoryDiaglog: false,setSnack: true, })
+                                                            this.setState({addStorySuccess: true,formMessage:"Thêm thành công",createHighlightStoryDiaglog: false,addStoryStatus: true, })
                                                         }else{
-                                                            this.setState({addStorySuccess: false,formMessage:"Lỗi! Vui lòng thử lại :(",setSnack: true})
+                                                            this.setState({addStorySuccess: false,formMessage:"Lỗi! Vui lòng thử lại :(",addStoryStatus: true})
                                                         }
                                                     })
                                                 }else{
                                                     console.log(this.state.formError,this.state.highlightStory)
-                                                    this.setState({addStorySuccess: false,formMessage:"Vui lòng kiểm tra thông lại thông tin :(",setSnack: true})
+                                                    this.setState({addStorySuccess: false,formMessage:"Vui lòng kiểm tra thông lại thông tin :(",addStoryStatus: true})
                                                 }
                                         }}>Thêm mới</button>      
                                     </div>
                                 </div>
                                 </div>
-                                <div className="col-lg-9 no-gutters">
+                                <div className="col-xl-9 col-lg-9 no-gutters">
                                     <div className="row no-gutters form-content">
                                     {
                                         this.props.user.storylist.map((item,index)=>{
@@ -583,7 +585,7 @@ class Profile extends Component {
                                             </div>
                                         })
                                     }
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                         </div> 
@@ -596,8 +598,8 @@ class Profile extends Component {
                         vertical: 'bottom',
                         horizontal: 'left'
                     }}
-                    open={this.state.setSnack}
-                    onClose={() => this.setState({ setSnack: false })}
+                    open={this.state.addStoryStatus}
+                    onClose={() => this.setState({ addStoryStatus: false })}
                     autoHideDuration={1000}
                 >
                     <MuiAlert elevation={6} variant="filled" severity={`${this.state.addStorySuccess?"success":"warning"}`} >{this.state.formMessage}</MuiAlert>

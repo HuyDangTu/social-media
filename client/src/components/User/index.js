@@ -259,8 +259,7 @@ class UserDashboard extends Component {
                                     change={(element) => this.updateForm(element)}
                                     formData={this.state.formData.userTag}
                                 />
-                                 <SearchLocationInput></SearchLocationInput>
-                  
+                                <SearchLocationInput></SearchLocationInput>
                                 </div>
                                 <FileUpload
                                     imagesHandler={(images) => this.imagesHandler(images)}
@@ -275,7 +274,6 @@ class UserDashboard extends Component {
                             </div>
                         </div>
                    </form>
-                   
                 </div>
                 <Dialog className="dialog_cont" 
                     onClose={() => { this.setState({ alertFunctionIsRestricted: false })}} 

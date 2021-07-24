@@ -199,9 +199,11 @@ class Newfeed extends Component {
                                         }}
                                     />
                                     {
-                                        this.state.isloading?
-                                        <LoadingCard/>
-                                        : ""
+                                        
+                                        this.state.isloading? 
+                                            products.toShopSize == 0 ? "" : 
+                                         <LoadingCard/> : ""
+                                        
                                     }
                                 </div>
                             </div>

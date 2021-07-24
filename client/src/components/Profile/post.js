@@ -21,8 +21,7 @@ import { getPolicy } from '../../actions/policy_actions';
 import moment from 'moment';
 
 class PostRow extends Component {
-   render(
-   )
+   render()
    {
     return(
         <div className="row body">
@@ -30,7 +29,7 @@ class PostRow extends Component {
             this.props.typelist ? this.props.typelist.map(posts => {
                 return posts.hidden ? null :
                     (
-                        <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
+                    <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12 image_contain" onClick={()=>this.props.history.push(`/postDetail/${posts._id}`)}>
                         <div className="img_overlay">
                             <div className="overlay_info">
                                 <div className="hearts"> <Heart size={24} strokeWidth={1} color="white" fill="white"></Heart><h2>{posts.likes.length}</h2> </div>

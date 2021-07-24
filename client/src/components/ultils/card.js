@@ -145,6 +145,10 @@ class  Card extends Component {
     }
 
     closeEditor = () => {
+        let hashtag = this.findHashtags(this.props.description)
+        getTagId(hashtag).then((response)=>{
+            this.setState({tags : [...response]});
+        })
         this.setState({ showEditor: !this.state.showEditor })
     }
     
