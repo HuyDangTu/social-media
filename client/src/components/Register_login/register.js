@@ -172,7 +172,6 @@ class Register extends Component {
         event.preventDefault();
 
         let dataToSubmit = generateData(this.state.formData, 'register');
-
         let formIsValid = ifFormValid(this.state.formData, 'register');
 
         if (formIsValid) {
@@ -283,6 +282,16 @@ class Register extends Component {
                                                         change={(element) => this.updateForm(element)}
                                                     />
                                                     <FormField
+                                                        id={'nationality'}
+                                                        formData={this.state.formData.nationality}
+                                                        change={(element) => this.updateForm(element)}
+                                                    />
+                                                    <FormField
+                                                        id={'dob'}
+                                                        formData={this.state.formData.dob}
+                                                        change={(element) => this.updateForm(element)}
+                                                    />
+                                                    <FormField
                                                         id={'password'}
                                                         formData={this.state.formData.password}
                                                         change={(element) => this.updateForm(element)}
@@ -340,7 +349,7 @@ class Register extends Component {
                                                     formData={this.state.formData.nationality}
                                                     change={(element) => this.updateForm(element)}
                                                 />
-                                                 <FormField
+                                                <FormField
                                                     id={'dob'}
                                                     formData={this.state.formData.dob}
                                                     change={(element) => this.updateForm(element)}

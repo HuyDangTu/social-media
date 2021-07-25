@@ -234,14 +234,18 @@ export default function (state = {}, action) {
         case DELETE_STORY:{
             console.log(action.payload);
             let newStoryList = [...state.storyList]
-            if(action.payload.storyList[0].length !=0){
-                newStoryList = newStoryList.map(item => {
-                    if (item._id == action.payload.storyList[0]._id) {
-                        return action.payload.storyList[0]
-                    } else {
-                        return item
-                    }
-                })
+            if(action.payload.storyList == undefined){
+                if(action.payload.storyList[0].length !=0){
+                    newStoryList = newStoryList.map(item => {
+                        if (item._id == action.payload.storyList[0]._id) {
+                            return action.payload.storyList[0]
+                        } else {
+                            return item
+                        }
+                    })
+                }else{
+                    newStoryList = []
+                }
             }else{
                 newStoryList = []
             }

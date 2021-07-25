@@ -305,7 +305,7 @@ class StoryPage extends Component {
                 //Update start index
                 //story will rerender
                 const storyToShow = {...response.payload.storyList[0]}
-                if(response.payload.storyList[0].stories.length == 0)
+                if(!response.payload.storyList.length || response.payload.storyList[0].stories.length == 0)
                 {
                     this.props.history.push('/newfeed')
                 }else{

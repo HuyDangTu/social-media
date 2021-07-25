@@ -29,7 +29,9 @@
         height: 60vh; 
         box-shadow: 0px 10px 5px rgb(204, 204, 204), 2px -5px 10px  rgb(230, 227, 227);
         .wrapper{
-           
+            dipslay: flex;
+            flex-direction: column;
+            align-items: center;
             .title{
                 color: $primaryColor;
                 font-size: 20px;
@@ -40,7 +42,7 @@
             .formField_container{
                 .formBlock{
                     input{
-                        width: 100%;
+                        width: calc_width(350);
                         border: none;
                         border-radius: 5px;
                         padding: 5px;
@@ -65,5 +67,71 @@
             }
         }
         
+    }
+}
+
+@media screen and (max-width : 1280px){
+    .resetPass{
+        .content{
+        .wrapper{
+                .formField_container{
+                    .formBlock{
+                        input{
+                            width: calc_width(450);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width : 992px){
+    .resetPass{
+        .content{
+        .wrapper{
+                .formField_container{
+                    .formBlock{
+                        input{
+                            width: calc_width(500);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width : 768px){
+    .resetPass{
+        .content{
+        .wrapper{
+                .formField_container{
+                    .formBlock{
+                        input{
+                            width: calc_width(650);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media screen and (max-width : 576px){
+    .resetPass{
+        .content{
+        .wrapper{
+                .formField_container{
+                    .formBlock{
+                        input{
+                            width: calc_width(900);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

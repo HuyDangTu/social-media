@@ -191,7 +191,6 @@ function findComment(id){
     )
     return comment;
 }
-
 function SaveNotification(notification) {
     if (JSON.stringify(notification.sentTo) != JSON.stringify(notification.sentFrom)) {
         Notification.create(notification, (err, data) => {
@@ -474,13 +473,18 @@ router.post('/api/reports/delete_post', auth, admin, (req, res) => {
 })
 
 router.post('/api/reports/delete_comment', auth, admin, (req, res) => {
-    Comment.findByIdAndUpdate(req.body.commentId, {
-        $set: { hiden: true }}, {new: true })
+    // Comment.findByIdAndUpdate(req.body.commentId, {
+    //     $set: { hiden: true }}, {new: true })
+    Post.findByIdAndUpdate(req.body.postId, {
+        $pull: { comments: req.body.commentId }
+    }, {
+        new: true
+    })
     .exec((err, comment) => {
         if (err) res.status(400).send(err);
         Report.findByIdAndUpdate(req.body.reportId, {
             $set: { status: true }
-        }, {
+        },{
             new: true
         }).exec((err, report) => {
             if (err) res.status(400).json(err);

@@ -42,8 +42,8 @@ class Explore extends Component {
     LoadmoreCards = () => {
         let skip = this.state.skip + this.state.limit;
         this.props.dispatch(getRecommendPost(
-            skip,
             this.state.limit,
+            skip,
             this.props.user.recommendedPost
         ))
         .then(() => {

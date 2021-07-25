@@ -293,7 +293,7 @@ class ReportDetail extends Component {
                 }
             })
         }else{
-            this.props.dispatch(deleteComment(this.props.reports.reportDetail.comment[0]._id, this.state.id))
+            this.props.dispatch(deleteComment(this.props.reports.reportDetail.comment[0]._id, this.state.id, this.props.reports.reportDetail.post[0]._id))
             .then((response) => {
                 console.log(response)
                 if (response.payload.report) {

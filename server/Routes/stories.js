@@ -45,9 +45,9 @@ router.get('/api/story/getAll', auth, (req, res) => {
         {
             $match: { "disabled": false }
         },
-        // {
-        //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
-        // },
+        {
+            $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+        },
         {
             $lookup: { from: 'users', localField: 'viewedBy', foreignField: '_id', as: 'viewedBy' }
         },
@@ -103,9 +103,9 @@ router.get('/api/story/get', auth, (req, res) => {
         {
             $match: { "disabled": false }
         },
-        // {
-        //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
-        // },
+        {
+            $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+        },
         {
             "$project": {
                 "_id": 1,
@@ -154,9 +154,9 @@ function getStories(followings,id) {
         {
             $match: { "disabled": false }
         },
-        // {
-        //     $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
-        // },
+        {
+            $match: { "createdAt": { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+        },
         {
             $lookup: { from: 'users', localField: 'viewedBy', foreignField: '_id', as: 'viewedBy' }
         },
