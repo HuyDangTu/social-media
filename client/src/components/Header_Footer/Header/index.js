@@ -147,13 +147,13 @@ class Header extends Component {
                                         console.log(this.props.user)
                                     }
                 
-                                    {
+                                    {/* {
                                         this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
                                             return (
                                                 <NotificationDetail handleSeenNoti={this.handleSeenNoti} handleDeleteNoti={this.handleDeleteNoti} data={data} acceptfollow={this.acceptfollow} declinefollow={this.declinefollow} handleNotiClick={this.handleNotiClick}></NotificationDetail>
                                             )
                                         }) : null : null
-                                    }
+                                    } */}
                                     {
                                         this.props.notification ? this.props.notification.notifylist ? this.props.notification.notifylist.map(data => {
                                             return(

@@ -136,15 +136,16 @@ class Profile extends Component {
             this.setState({setfollowerDiaglog:false,  setType: 'posted',setfollowingDiaglog:false});
         }
     }
-    handleClickfollow = async (id) => {
-        if(this.props.user.userProfile?this.props.user.userProfile.privateMode===true:'')
+    handleClickfollow = async (user) => {
+        if(user.privateMode===true)
         {
-            await this.props.dispatch(requestfollow(id)).then(response=>{
-                this.setState({ setSnackfollow: true, setMessage: 'Đã theo dõi', severity: 'success' })
+            await this.props.dispatch(requestfollow(user._id)).then(response=>{
+                this.setState({ setSnackfollow: true, setMessage: 'Đã gửi yêu cầu', severity: 'success' })
+                this.props.dispatch(findProfile(this.props.match.params.id))
             })
         }
         else{
-            await this.props.dispatch(follow(id)).then(response=>{
+            await this.props.dispatch(follow(user._id)).then(response=>{
                 if(response.payload.restricted){
                     console.log(response.payload);
                     this.setState({alertFunctionIsRestricted: true, restrictedFunction: response.payload.restrictedFunction})
@@ -158,14 +159,15 @@ class Profile extends Component {
     
     }
     
-    handleClickunfollow = async (id) => {
-        if(this.props.user.userProfile?this.props.user.userProfile.request.includes(this.props.user.userData?this.props.user.userData._id:''):''){
-            await this.props.dispatch(undorequestfollow(id)).then(response=>{
+    handleClickunfollow = async (user) => {
+        if(user.request.includes(this.props.user.userData?this.props.user.userData._id:'')){
+            await this.props.dispatch(undorequestfollow(user._id)).then(response=>{
                 this.setState({ setSnack: true, setMessage: 'Đã hủy yêu cầu theo dõi', severity: 'warning' })
+                this.props.dispatch(findProfile(this.props.match.params.id))
             })
         }
         else{
-            await this.props.dispatch(unfollow(id)).then(response=>
+            await this.props.dispatch(unfollow(user._id)).then(response=>
                 {
                     if(response.payload.restricted){
                         console.log(response.payload);
@@ -303,12 +305,12 @@ class Profile extends Component {
                                                 {
                                                     
                                                         userProfile?userProfile.request.includes(yourProfile._id)?
-                                                        <Button className="follow_options" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}>Đã gửi yêu cầu</Button>
+                                                        <Button className="follow_options" onClick={() => this.handleClickunfollow(userProfile)}>Đã gửi yêu cầu</Button>
                                                         :
-                                                        yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile ? userProfile._id : 0) ?
-                                                        <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile ? userProfile._id : 0)}>Đang Theo dõi</Button>
+                                                        yourProfile ? yourProfile.followings ? yourProfile.followings.includes(userProfile._id) ?
+                                                        <Button className="secondary_btn" onClick={() => this.handleClickunfollow(userProfile)}>Đang Theo dõi</Button>
                                                         :
-                                                        <Button className="follow_options" onClick={() => this.handleClickfollow(userProfile ? userProfile._id : 0)}>Theo dõi</Button>
+                                                        <Button className="follow_options" onClick={() => this.handleClickfollow(userProfile)}>Theo dõi</Button>
                                                         : <Skeleton variant="rect" width={195} height={40} />
                                                         : <Skeleton variant="rect" width={195} height={40} />
                                                         :<Skeleton variant="rect" width={195} height={40} />
@@ -468,7 +470,7 @@ class Profile extends Component {
                 <Dialog className="dialog_cont"  onClose={() => {this.setState({ setfollowerDiaglog: false }); this.props.dispatch(findProfile(this.props.match.params.id))}} open={this.state.setfollowerDiaglog} >
                     <div className="dialog_header">
                         <h5>Danh sách theo dõi</h5>
-                        <CircleX size={24} strokeWidth={0.5} color="black"></CircleX>
+               
                     </div>
                     {
                         userProfile ? (userProfile.followers ? userProfile.followers.map(follower => {
@@ -479,12 +481,15 @@ class Profile extends Component {
                                         <Link to={`/user/${follower._id}`}> <h2>{follower.userName}</h2></Link>
                                     </div>
                                     {
-                                        yourProfile ? (yourProfile._id == follower._id ? <Button className="minibtn"> Trang cá nhân</Button>
+                                            yourProfile ? (yourProfile._id == follower._id ? <Button className="minibtn" onClick={()=>this.props.history.push(`/user/yourProfile._id`)}> Trang cá nhân</Button>
+                                            :
+                                            follower.request.includes(yourProfile._id)?
+                                            <Button className="minibtn" onClick={() => this.handleClickunfollow(follower)}>Đã gửi yêu cầu</Button>
                                             :
                                             yourProfile ? yourProfile.followings.includes(follower._id) ?
-                                                <Button className="minibtn" onClick={() => this.handleClickunfollow(follower._id)} > Đang theo dõi</Button>
+                                                <Button className="minibtn" onClick={() => this.handleClickunfollow(follower)} > Đang theo dõi</Button>
                                                 :
-                                                <Button className="minibtn" onClick={() => this.handleClickfollow(follower._id)}>Theo dõi</Button>
+                                                <Button className="minibtn" onClick={() => this.handleClickfollow(follower)}>Theo dõi</Button>
                                                 : null)
                                             : null
                             }
@@ -497,7 +502,7 @@ class Profile extends Component {
                 <Dialog className="dialog_cont"  onClose={() => {this.setState({ setfollowingDiaglog: false }); this.props.dispatch(findProfile(this.props.match.params.id))}} open={this.state.setfollowingDiaglog} >
                     <div className="dialog_header">
                         <h5>Danh sách đang theo dõi</h5>
-                        <CircleX size={24} strokeWidth={0.5} color="black"></CircleX>
+                   
                     </div>
                     {
                         userProfile ? (userProfile.followings ? userProfile.followings.map(following => {
@@ -510,10 +515,13 @@ class Profile extends Component {
                                     {
                                         yourProfile ? (yourProfile._id == following._id ? <Button className="minibtn"> Trang cá nhân</Button>
                                             :
+                                            following.request.includes(yourProfile._id)?
+                                            <Button className="minibtn" onClick={() => this.handleClickunfollow(following)}>Đã gửi yêu cầu</Button>
+                                            :
                                             yourProfile ? yourProfile.followings.includes(following._id) ?
-                                                <Button className="minibtn" onClick={() => this.handleClickunfollow(following._id)} > Đang theo dõi</Button>
+                                                <Button className="minibtn" onClick={() => this.handleClickunfollow(following)} > Đang theo dõi</Button>
                                                 :
-                                                <Button className="minibtn" onClick={() => this.handleClickfollow(following._id)}>Theo dõi</Button>
+                                                <Button className="minibtn" onClick={() => this.handleClickfollow(following)}>Theo dõi</Button>
                                                 : null)
                                             : null
                                     }

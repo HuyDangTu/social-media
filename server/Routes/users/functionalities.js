@@ -465,9 +465,9 @@ router.put('/api/users/follow/:followId', auth, (req, res) => {
         }, {
             new: true
         })
-            .populate("followers", "_id userName avt")
-            .populate("followings", "_id userName avt")
-            .populate("request", "_id userName avt")
+            .populate("followers", "_id userName avt privateMode request")
+            .populate("followings", "_id userName avt privateMode request")
+            .populate("request", "_id userName avt privateMode request")
             .then(results => {
                 User.findByIdAndUpdate(req.user._id, {
                     $push: { followings: req.params.followId }
@@ -894,8 +894,8 @@ router.post('/api/users/uploadimage', auth, formidable(), (req, res) => {
 
 router.get('/api/users/:id', auth, (req, res) => {
     User.findOne({ _id: req.params.id })
-        .populate("followers", "_id userName avt")
-        .populate("followings", "_id userName avt")
+        .populate("followers", "_id userName avt privateMode request")
+        .populate("followings", "_id userName avt privateMode request")
         .select("-password")
         .then(user => {
             if(!req.user.blockedUsers.includes(user._id) && !user.blockedUsers.includes(req.user._id)){
