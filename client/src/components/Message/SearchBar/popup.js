@@ -31,6 +31,7 @@ class Popup extends React.Component {
                     <div className="content">
                         {items &&
                             items.map((item, idx) => {
+                               if(item._id!=this.props.yourProfile._id){
                                 return (
                                     <div className="item" key={idx}>
                                         <div className="user_infor_wrapper">
@@ -56,6 +57,7 @@ class Popup extends React.Component {
                                         </div>
                                     </div>
                                 );
+                               }
                             })
                         }
 

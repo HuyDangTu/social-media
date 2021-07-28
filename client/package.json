@@ -46,7 +46,7 @@
     "tabler-icons-react": "^1.32.0"
   },
   "scripts": {
-    "start": "set HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem &&react-scripts start",
+    "start": "set HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

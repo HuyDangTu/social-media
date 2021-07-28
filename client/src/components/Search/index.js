@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Settings, Dots, Heart, Pencil, Phone, Photo, Sticker, Send, Ghost, Edit, Circle, CircleCheck, User, Users } from 'tabler-icons-react';
 import { default as SearchBar } from 'tabler-icons-react/dist/icons/search'
+import { ClickAwayListener } from '@material-ui/core';
 
 class Search extends React.Component {
     constructor(props) {
@@ -43,17 +44,20 @@ class Search extends React.Component {
 
     searchHandle(e){
         e.preventDefault();
+        return false
         // console.log(e.target[0]);
-        const keyword = e.target[0].value;
-        this.props.dispatch(search(keyword)).then((response) => {
-            this.props.history.push(`/search/${keyword}`)
-        })
+        // const keyword = e.target[0].value;
+        // this.props.dispatch(search(keyword)).then((response) => {
+        //     this.props.history.push(`/search/${keyword}`)
+        // })
     }
 
     render() {
         const { result, showResult,tags } = this.state;
         return (
+            
             <div className="search">
+                <ClickAwayListener onClickAway={()=>this.setState({showResult:false})}>
                 <div className="search-container">
                     <div className="content">
                         <form className="comment_form" onSubmit={(e) => this.searchHandle(e)}>
@@ -69,6 +73,7 @@ class Search extends React.Component {
                         <Popup isOpen={showResult} items={result} tags={tags} />
                     </div>
                 </div>
+                </ClickAwayListener>
             </div>
         );
     }

@@ -57,7 +57,6 @@ class Message extends Component {
         sendinguserlistid: [],
         view: 'ls',
         editmess: false,
-     
     }
 
     componentDidMount() {
@@ -492,11 +491,10 @@ class Message extends Component {
                                 this.state.sendinguserlist.map(sendlist => {
                                     return (
                                         <StyleClip label={sendlist} color="primary" onDelete={() => { this.removelist(sendlist) }}></StyleClip>
-
                                     )
                                 })
                             }
-                            <SearchBar sendinguserlistid={this.state.sendinguserlistid} removelist={this.removelist} addList={this.addList} />
+                            <SearchBar yourProfile={yourProfile} sendinguserlistid={this.state.sendinguserlistid} removelist={this.removelist} addList={this.addList} />
                         </div>
                         <hr></hr>
                         {/* <div className="suggest">

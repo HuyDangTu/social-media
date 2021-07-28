@@ -366,22 +366,17 @@ router.get('/api/posts/postDetail', auth, (req, res) => {
     findPost(items, req.user.hiddenPost, req.user.blockedUsers).then((post) => {
         console.log(post)
         if(post.length == 0){
-            console.log("11111111111111111111")
             return res.status(200).json({ NotFound: true });   
         }else{
             if(req.user.blockedUsers.includes(post[0].postedBy[0]._id)){
-                console.log("22222222222222222")
-                
                 return res.status(200).json({ NotFound: true });   
             } 
             else{
                 findBlockedUsers(post[0].postedBy[0]._id).then((result) => {
                     console.log("result", result);
                     if(result[0].blockedUsers.includes(Object(req.user._id))){
-                        console.log("3333333333333333333")
                         return res.status(200).json({ NotFound: true });
                     }else{
-                        console.log("4444444444444444444444444")
                         return res.status(200).json(post[0]);
                     }
                 })

@@ -227,9 +227,8 @@ router.get('/api/users/tagged/:id', auth, (req, res) => {
 })
 
 router.post('/api/users/getSavedPost', auth, (req, res) => {
-
     Post.find({_id:{$in: req.user.saved}})
-    .sort({ "createdAt": 0 })
+    .sort({ "createdAt": -1 })
     .exec((err, posts) => {
         if (err) return res.status(422).json({ error: err })
         res.status(200).json({posts})
@@ -326,7 +325,7 @@ router.put('/api/users/update/:id', auth, jsonParser, (req, res) => {
                         bio: req.body.bio,
                         name: req.body.name,
                         email: req.body.email.trim(),
-                        privateMode: req.body.privateMode,
+                        // privateMode: req.body.privateMode,
                         dob: req.body.dob,
                         nationality: req.body.nationality
                     }

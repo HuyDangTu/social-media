@@ -202,19 +202,42 @@ class ProfileSettings extends Component {
         })
     }
 
-    submitForm = (event) => {
+    // submitForm = (event) => {
+    //     this.setState({loading:true})
+    //     event.preventDefault();
+    //     this.state.formData.privateMode = this.state.privateMode;
+    //     let dataToSubmit = generateData(this.state.formData, 'update_pro')
+    //     console.log(dataToSubmit)
+    //     this.props.dispatch(changeProfile(this.props.user.userData._id, dataToSubmit))
+    //         .then(response => {
+    //             console.log(response);
+    //             if(response.payload.success == false)
+    //             {
+    //                 this.setState({loading:false,severity:'error', setSnack: true, formMessage: response.payload.message})
+                    
+    //             }
+    //             else
+    //             {
+    //                 this.setState({loading:false,severity:'success',edited:false, setSnack: true, formMessage: response.payload.message})
+    //                 this.props.dispatch(auth());
+    //             }
+                
+    //           //  this.props.dispatch(auth());
+                
+    //         })
+    // }
+
+    submitForm = async (event) => {
         this.setState({loading:true})
         event.preventDefault();
-        this.state.formData.privateMode = this.state.privateMode;
         let dataToSubmit = generateData(this.state.formData, 'update_pro')
         console.log(dataToSubmit)
-        this.props.dispatch(changeProfile(this.props.user.userData._id, dataToSubmit))
+        await this.props.dispatch(changeProfile(this.props.user.userData._id, dataToSubmit))
             .then(response => {
                 console.log(response);
-                if(response.payload.success == false)
+                if(response.payload.success === false)
                 {
-                    this.setState({loading:false,severity:'error', setSnack: true, formMessage: response.payload.message})
-                    
+                    this.setState({loading:false,severity:'error', setSnack: true, formMessage: response.payload.message})  
                 }
                 else
                 {
@@ -287,6 +310,7 @@ class ProfileSettings extends Component {
     }
 
     getUserForm() {
+        this.state.privateMode = this.props.user.userData.privateMode;
         this.state.formData.bio.value = this.props.user.userData.bio;
         this.state.formData.userName.value = this.props.user.userData.userName;
         this.state.formData.name.value = this.props.user.userData.name;
@@ -303,7 +327,7 @@ class ProfileSettings extends Component {
     componentDidMount() {
         this.getUserForm();
         console.log(this.props.user.userData)
-        this.setState({privateMode:this.props.user.userData.privateMode?this.props.user.userData.privateMode:false})
+        // this.setState({privateMode:this.props.user.userData.privateMode?this.props.user.userData.privateMode:false})
         this.props.dispatch(getBlockedUsers());
         const formData = this.state.formData;
         this.props.dispatch(getNationality()).then(response =>{
@@ -647,7 +671,6 @@ class ProfileSettings extends Component {
         )
     }
 }
-
 
 const mapStateToProps = (state) => {
     return {

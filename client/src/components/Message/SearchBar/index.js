@@ -63,7 +63,7 @@ class Search extends React.Component {
                                     />
                             </div>
                         </form>
-                        <Popup removelist={this.props.removelist} addList={this.props.addList} sendinguserlistid={this.props.sendinguserlistid} isOpen={showResult} items={result} tags={tags} />
+                        <Popup yourProfile={this.props.yourProfile} removelist={this.props.removelist} addList={this.props.addList} sendinguserlistid={this.props.sendinguserlistid} isOpen={showResult} items={result} tags={tags} />
                     </div>
                 </div>
             </div>

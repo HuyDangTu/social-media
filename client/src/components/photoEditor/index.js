@@ -6,6 +6,8 @@ import {createStory} from '../../actions/product_actions';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { useHistory } from "react-router-dom";
 import { useStore, useDispatch } from 'react-redux';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const myTheme = {
   // Theme object to extends default dark theme.
@@ -24,11 +26,17 @@ const PhotoEditor = (props) => {
     }
 
     const [isLoading,setIsLoading] = useState(props.isLoading);
+    const [isEmpty,setIsEmpty] = useState(false);
+
     // const [errors, setErrors] = useState(0);
     
     useEffect(() => {
         setIsLoading(props.isLoading);
     }, [props.isLoading]);
+
+    useEffect(() => {
+        setIsEmpty(props.isEmpty);
+    }, [props.isEmpty]);
 
     return (
         <div className={`photoEditor ${isLoading ? "disable" : ""}`} >
@@ -42,17 +50,25 @@ const PhotoEditor = (props) => {
                     <button className="btn btn-complete" onClick={()=>{
                         var list = document.getElementsByTagName("canvas")
                         var dataURL = list[0].toDataURL('image/jpeg', 1.0);
-                        setIsLoading(true);
-                        dispatch(createStory(dataURL,state.user.userData._id)).then((response) => {
-                            console.log(response)
-                            if(response.payload.success)
-                            {   props.onSuccess()
-                                setIsLoading(false);
-                            }
-                            else{
-                                console.log("ERROR")
-                            }
-                        })
+                        if(dataURL == `data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gIoSUNDX1BST0ZJTEUAAQEAAAIYAAAAAAIQAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAAHRyWFlaAAABZAAAABRnWFlaAAABeAAAABRiWFlaAAABjAAAABRyVFJDAAABoAAAAChnVFJDAAABoAAAAChiVFJDAAABoAAAACh3dHB0AAAByAAAABRjcHJ0AAAB3AAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAFgAAAAcAHMAUgBHAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFhZWiAAAAAAAABvogAAOPUAAAOQWFlaIAAAAAAAAGKZAAC3hQAAGNpYWVogAAAAAAAAJKAAAA+EAAC2z3BhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABYWVogAAAAAAAA9tYAAQAAAADTLW1sdWMAAAAAAAAAAQAAAAxlblVTAAAAIAAAABwARwBvAG8AZwBsAGUAIABJAG4AYwAuACAAMgAwADEANv/bAEMAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/bAEMBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAJYBLAMBEQACEQEDEQH/xAAVAAEBAAAAAAAAAAAAAAAAAAAAC//EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8An/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/9k=`){
+                            //console.log("ERROR")
+                            setIsEmpty(true);
+                        }else{
+                            //console.log("SUCCESS")
+                            setIsLoading(true);
+                            dispatch(createStory(dataURL,state.user.userData._id)).then((response) => {
+                                console.log(response)
+                                if(response.payload.success)
+                                {   
+                                    props.onSuccess()
+                                    setIsLoading(false);
+                                }
+                                else{
+                                    setIsLoading(false);
+                                    setIsEmpty(true);
+                                }
+                            })
+                        }
                     }}>Add</button>
                 </div>
                 {
@@ -62,11 +78,21 @@ const PhotoEditor = (props) => {
                     </div>
                 }
             </div>
-           
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left'
+                }}
+                open={isEmpty}
+                onClose={() => setIsEmpty(false)}
+                autoHideDuration={2000}
+            >
+                    <MuiAlert elevation={6} variant="filled" severity={"error"} >Kiểm tra và thử lại!</MuiAlert>
+            </Snackbar>
             <ImageEditor
                 includeUI={{
                     loadImage: {
-                        path: 'https://images.unsplash.com/photo-1622010651495-9305d921c012?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80',
+                        path: '',
                         name: 'SampleImage',
                     },
                     theme: myTheme,

@@ -148,7 +148,6 @@ class Register extends Component {
         })
     }
 
-
     componentDidMount(){
         const formData = this.state.formData;
 

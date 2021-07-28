@@ -43,21 +43,21 @@ class Footer extends Component {
             },
             {
                 "url": "turn:global.turn.twilio.com:3478?transport=udp",
-                "username": "e2e85dffbdccd5668ea97c54ebd60b7bc005e1b59ec1d1a5e1709f9281ea3508",
+                "username": "68e4f24ef90901b45e096ebc937611bb27c33656214c08d4b1885c9c19c240f1",
                 "urls": "turn:global.turn.twilio.com:3478?transport=udp",
-                "credential": "08BH+9BNC24frPWICgYaV1mOZlWFyROgpBp97/vgSSM="
+                "credential": "3rxn3/JfFZpyRMIU+j/8kuEvmhyihxy++8Icf+/LTFw="
             },
             {
                 "url": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "username": "e2e85dffbdccd5668ea97c54ebd60b7bc005e1b59ec1d1a5e1709f9281ea3508",
+                "username": "68e4f24ef90901b45e096ebc937611bb27c33656214c08d4b1885c9c19c240f1",
                 "urls": "turn:global.turn.twilio.com:3478?transport=tcp",
-                "credential": "08BH+9BNC24frPWICgYaV1mOZlWFyROgpBp97/vgSSM="
+                "credential": "3rxn3/JfFZpyRMIU+j/8kuEvmhyihxy++8Icf+/LTFw="
             },
             {
                 "url": "turn:global.turn.twilio.com:443?transport=tcp",
-                "username": "e2e85dffbdccd5668ea97c54ebd60b7bc005e1b59ec1d1a5e1709f9281ea3508",
+                "username": "68e4f24ef90901b45e096ebc937611bb27c33656214c08d4b1885c9c19c240f1",
                 "urls": "turn:global.turn.twilio.com:443?transport=tcp",
-                "credential": "08BH+9BNC24frPWICgYaV1mOZlWFyROgpBp97/vgSSM="
+                "credential": "3rxn3/JfFZpyRMIU+j/8kuEvmhyihxy++8Icf+/LTFw="
             }
         ]
         };
@@ -74,11 +74,11 @@ class Footer extends Component {
             if (window.URL) {
                 document.getElementById("remoteview").srcObject = evt.stream;   
                 document.getElementById("remoteview").play();
-              //  ReactDOM.findDOMNode(this.remoteview).muted=false;
+                document.getElementById("remoteview").muted=false;
             } else {
                 document.getElementById("remoteview").src = evt.stream;
                 document.getElementById("remoteview").play();
-               // ReactDOM.findDOMNode(this.remoteview).muted=false;
+                document.getElementById("remoteview").muted=false;
             }
         };
     }
